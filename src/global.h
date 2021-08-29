@@ -1,4 +1,6 @@
-#include"executor.h"
+#pragma once
+
+#include "executor.h"
 
 extern float BLOCK_SIZE;
 extern uint BLOCK_COUNT;

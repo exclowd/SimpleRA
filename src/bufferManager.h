@@ -1,4 +1,6 @@
-#include"page.h"
+#pragma once
+
+#include "page.h"
 
 /**
  * @brief The BufferManager is responsible for reading pages to the main memory.

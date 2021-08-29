@@ -1,3 +1,5 @@
+#pragma once
+
 #include "tableCatalogue.h"
 
 using namespace std;

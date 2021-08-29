@@ -1,3 +1,5 @@
+#pragma once
+
 #include "table.h"
 
 /**
@@ -10,7 +12,7 @@ class TableCatalogue {
     unordered_map<string, Table *> tables;
 
 public:
-    TableCatalogue() {}
+    TableCatalogue() = default;
 
     void insertTable(Table *table);
 

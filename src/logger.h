@@ -1,3 +1,5 @@
+#pragma once
+
 #include<iostream>
 #include<bits/stdc++.h>
 #include<sys/stat.h>
