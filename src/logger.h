@@ -1,19 +1,20 @@
 #include<iostream>
 #include<bits/stdc++.h>
-#include<sys/stat.h> 
+#include<sys/stat.h>
 #include<fstream>
 
 using namespace std;
 
-class Logger{
+class Logger {
 
     string logFile = "log";
     ofstream fout;
-    
-    public:
+
+public:
 
     Logger();
-    void log(string logString);
+
+    void log(const string& logString);
 };
 
 extern Logger logger;

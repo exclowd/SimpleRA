@@ -1,13 +1,12 @@
-#include "global.h"
+#include "../global.h"
+
 /**
  * @brief 
  * SYNTAX: R <- SELECT column_name bin_op [column_name | int_literal] FROM relation_name
  */
-bool syntacticParseSELECTION()
-{
+bool syntacticParseSELECTION() {
     logger.log("syntacticParseSELECTION");
-    if (tokenizedQuery.size() != 8 || tokenizedQuery[6] != "FROM")
-    {
+    if (tokenizedQuery.size() != 8 || tokenizedQuery[6] != "FROM") {
         cout << "SYNTAC ERROR" << endl;
         return false;
     }
@@ -29,52 +28,43 @@ bool syntacticParseSELECTION()
         parsedQuery.selectionBinaryOperator = EQUAL;
     else if (binaryOperator == "!=")
         parsedQuery.selectionBinaryOperator = NOT_EQUAL;
-    else
-    {
+    else {
         cout << "SYNTAC ERROR" << endl;
         return false;
     }
     regex numeric("[-]?[0-9]+");
     string secondArgument = tokenizedQuery[5];
-    if (regex_match(secondArgument, numeric))
-    {
+    if (regex_match(secondArgument, numeric)) {
         parsedQuery.selectType = INT_LITERAL;
         parsedQuery.selectionIntLiteral = stoi(secondArgument);
-    }
-    else
-    {
+    } else {
         parsedQuery.selectType = COLUMN;
         parsedQuery.selectionSecondColumnName = secondArgument;
     }
     return true;
 }
 
-bool semanticParseSELECTION()
-{
+bool semanticParseSELECTION() {
     logger.log("semanticParseSELECTION");
 
-    if (tableCatalogue.isTable(parsedQuery.selectionResultRelationName))
-    {
+    if (tableCatalogue.isTable(parsedQuery.selectionResultRelationName)) {
         cout << "SEMANTIC ERROR: Resultant relation already exists" << endl;
         return false;
     }
 
-    if (!tableCatalogue.isTable(parsedQuery.selectionRelationName))
-    {
+    if (!tableCatalogue.isTable(parsedQuery.selectionRelationName)) {
         cout << "SEMANTIC ERROR: Relation doesn't exist" << endl;
         return false;
     }
 
-    if (!tableCatalogue.isColumnFromTable(parsedQuery.selectionFirstColumnName, parsedQuery.selectionRelationName))
-    {
+    if (!tableCatalogue.isColumnFromTable(parsedQuery.selectionFirstColumnName, parsedQuery.selectionRelationName)) {
         cout << "SEMANTIC ERROR: Column doesn't exist in relation" << endl;
         return false;
     }
 
-    if (parsedQuery.selectType == COLUMN)
-    {
-        if (!tableCatalogue.isColumnFromTable(parsedQuery.selectionSecondColumnName, parsedQuery.selectionRelationName))
-        {
+    if (parsedQuery.selectType == COLUMN) {
+        if (!tableCatalogue.isColumnFromTable(parsedQuery.selectionSecondColumnName,
+                                              parsedQuery.selectionRelationName)) {
             cout << "SEMANTIC ERROR: Column doesn't exist in relation" << endl;
             return false;
         }
@@ -82,41 +72,37 @@ bool semanticParseSELECTION()
     return true;
 }
 
-bool evaluateBinOp(int value1, int value2, BinaryOperator binaryOperator)
-{
-    switch (binaryOperator)
-    {
-    case LESS_THAN:
-        return (value1 < value2);
-    case GREATER_THAN:
-        return (value1 > value2);
-    case LEQ:
-        return (value1 <= value2);
-    case GEQ:
-        return (value1 >= value2);
-    case EQUAL:
-        return (value1 == value2);
-    case NOT_EQUAL:
-        return (value1 != value2);
-    default:
-        return false;
+bool evaluateBinOp(int value1, int value2, BinaryOperator binaryOperator) {
+    switch (binaryOperator) {
+        case LESS_THAN:
+            return (value1 < value2);
+        case GREATER_THAN:
+            return (value1 > value2);
+        case LEQ:
+            return (value1 <= value2);
+        case GEQ:
+            return (value1 >= value2);
+        case EQUAL:
+            return (value1 == value2);
+        case NOT_EQUAL:
+            return (value1 != value2);
+        default:
+            return false;
     }
 }
 
-void executeSELECTION()
-{
+void executeSELECTION() {
     logger.log("executeSELECTION");
 
     Table table = *tableCatalogue.getTable(parsedQuery.selectionRelationName);
-    Table* resultantTable = new Table(parsedQuery.selectionResultRelationName, table.columns);
+    auto *resultantTable = new Table(parsedQuery.selectionResultRelationName, table.columns);
     Cursor cursor = table.getCursor();
     vector<int> row = cursor.getNext();
     int firstColumnIndex = table.getColumnIndex(parsedQuery.selectionFirstColumnName);
     int secondColumnIndex;
     if (parsedQuery.selectType == COLUMN)
         secondColumnIndex = table.getColumnIndex(parsedQuery.selectionSecondColumnName);
-    while (!row.empty())
-    {
+    while (!row.empty()) {
 
         int value1 = row[firstColumnIndex];
         int value2;
@@ -128,11 +114,10 @@ void executeSELECTION()
             resultantTable->writeRow<int>(row);
         row = cursor.getNext();
     }
-    if(resultantTable->blockify())
+    if (resultantTable->blockify())
         tableCatalogue.insertTable(resultantTable);
-    else{
-        cout<<"Empty Table"<<endl;
+    else {
+        cout << "Empty Table" << endl;
         delete resultantTable;
     }
-    return;
 }

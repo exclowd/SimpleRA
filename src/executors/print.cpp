@@ -1,13 +1,12 @@
-#include "global.h"
+#include "../global.h"
+
 /**
  * @brief 
  * SYNTAX: PRINT relation_name
  */
-bool syntacticParsePRINT()
-{
+bool syntacticParsePRINT() {
     logger.log("syntacticParsePRINT");
-    if (tokenizedQuery.size() != 2)
-    {
+    if (tokenizedQuery.size() != 2) {
         cout << "SYNTAX ERROR" << endl;
         return false;
     }
@@ -16,21 +15,17 @@ bool syntacticParsePRINT()
     return true;
 }
 
-bool semanticParsePRINT()
-{
+bool semanticParsePRINT() {
     logger.log("semanticParsePRINT");
-    if (!tableCatalogue.isTable(parsedQuery.printRelationName))
-    {
+    if (!tableCatalogue.isTable(parsedQuery.printRelationName)) {
         cout << "SEMANTIC ERROR: Relation doesn't exist" << endl;
         return false;
     }
     return true;
 }
 
-void executePRINT()
-{
+void executePRINT() {
     logger.log("executePRINT");
-    Table* table = tableCatalogue.getTable(parsedQuery.printRelationName);
+    Table *table = tableCatalogue.getTable(parsedQuery.printRelationName);
     table->print();
-    return;
 }

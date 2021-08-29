@@ -20,19 +20,27 @@
  * </p>
  *
  */
-class BufferManager{
+class BufferManager {
 
-    deque<Page> pages; 
-    bool inPool(string pageName);
-    Page getFromPool(string pageName);
+    deque<Page> pages;
+
+    bool inPool(const string& pageName);
+
+    Page getFromPool(const string& pageName);
+
     Page insertIntoPool(string tableName, int pageIndex);
 
-    public:
-    
+public:
+
     BufferManager();
+
     Page getPage(string tableName, int pageIndex);
+
     void writePage(string pageName, vector<vector<int>> rows);
-    void deleteFile(string tableName, int pageIndex);
-    void deleteFile(string fileName);
-    void writePage(string tableName, int pageIndex, vector<vector<int>> rows, int rowCount);
+
+    void deleteFile(const string& tableName, int pageIndex);
+
+    static void deleteFile(const string& fileName);
+
+    static void writePage(string tableName, int pageIndex, vector<vector<int>> rows, int rowCount);
 };

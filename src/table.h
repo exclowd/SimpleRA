@@ -1,7 +1,6 @@
 #include "cursor.h"
 
-enum IndexingStrategy
-{
+enum IndexingStrategy {
     BTREE,
     HASH,
     NOTHING
@@ -16,13 +15,12 @@ enum IndexingStrategy
  * JOIN, SORT, CROSS and DISTINCT). 
  *
  */
-class Table
-{
+class Table {
     vector<unordered_set<int>> distinctValuesInColumns;
 
 public:
-    string sourceFileName = "";
-    string tableName = "";
+    string sourceFileName;
+    string tableName;
     vector<string> columns;
     vector<uint> distinctValuesPerColumnCount;
     uint columnCount = 0;
@@ -31,25 +29,40 @@ public:
     uint maxRowsPerBlock = 0;
     vector<uint> rowsPerBlockCount;
     bool indexed = false;
-    string indexedColumn = "";
+    string indexedColumn;
     IndexingStrategy indexingStrategy = NOTHING;
-    
-    bool extractColumnNames(string firstLine);
+
+    bool extractColumnNames(const string& firstLine);
+
     bool blockify();
+
     void updateStatistics(vector<int> row);
+
     Table();
-    Table(string tableName);
-    Table(string tableName, vector<string> columns);
+
+    Table(const string& tblName);
+
+    Table(const string& tblName, const vector<string>& c);
+
     bool load();
-    bool isColumn(string columnName);
-    void renameColumn(string fromColumnName, string toColumnName);
+
+    bool isColumn(const string& columnName);
+
+    void renameColumn(const string& fromColumnName, const string& toColumnName);
+
     void print();
+
     void makePermanent();
-    bool isPermanent();
-    void getNextPage(Cursor *cursor);
-    Cursor getCursor();
-    int getColumnIndex(string columnName);
-    void unload();
+
+    bool isPermanent() const;
+
+    void getNextPage(Cursor *cursor) const;
+
+    Cursor getCursor() const;
+
+    int getColumnIndex(const string& columnName);
+
+    void unload() const;
 
     /**
  * @brief Static function that takes a vector of valued and prints them out in a
@@ -58,18 +71,16 @@ public:
  * @tparam T current usaages include int and string
  * @param row 
  */
-template <typename T>
-void writeRow(vector<T> row, ostream &fout)
-{
-    logger.log("Table::printRow");
-    for (int columnCounter = 0; columnCounter < row.size(); columnCounter++)
-    {
-        if (columnCounter != 0)
-            fout << ", ";
-        fout << row[columnCounter];
+    template<typename T>
+    void writeRow(vector<T> row, ostream &fout) {
+        logger.log("Table::printRow");
+        for (int columnCounter = 0; columnCounter < (int)row.size(); columnCounter++) {
+            if (columnCounter != 0)
+                fout << ", ";
+            fout << row[columnCounter];
+        }
+        fout << endl;
     }
-    fout << endl;
-}
 
 /**
  * @brief Static function that takes a vector of valued and prints them out in a
@@ -78,12 +89,11 @@ void writeRow(vector<T> row, ostream &fout)
  * @tparam T current usaages include int and string
  * @param row 
  */
-template <typename T>
-void writeRow(vector<T> row)
-{
-    logger.log("Table::printRow");
-    ofstream fout(this->sourceFileName, ios::app);
-    this->writeRow(row, fout);
-    fout.close();
-}
+    template<typename T>
+    void writeRow(vector<T> row) {
+        logger.log("Table::printRow");
+        ofstream fout(this->sourceFileName, ios::app);
+        this->writeRow(row, fout);
+        fout.close();
+    }
 };

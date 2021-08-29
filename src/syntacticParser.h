@@ -2,8 +2,7 @@
 
 using namespace std;
 
-enum QueryType
-{
+enum QueryType {
     CLEAR,
     CROSS,
     DISTINCT,
@@ -21,8 +20,7 @@ enum QueryType
     UNDETERMINED
 };
 
-enum BinaryOperator
-{
+enum BinaryOperator {
     LESS_THAN,
     GREATER_THAN,
     LEQ,
@@ -32,22 +30,19 @@ enum BinaryOperator
     NO_BINOP_CLAUSE
 };
 
-enum SortingStrategy
-{
+enum SortingStrategy {
     ASC,
     DESC,
     NO_SORT_CLAUSE
 };
 
-enum SelectType
-{
+enum SelectType {
     COLUMN,
     INT_LITERAL,
     NO_SELECT_CLAUSE
 };
 
-class ParsedQuery
-{
+class ParsedQuery {
 
 public:
     QueryType queryType = UNDETERMINED;
@@ -102,24 +97,40 @@ public:
     string sourceFileName = "";
 
     ParsedQuery();
+
     void clear();
 };
 
 bool syntacticParse();
+
 bool syntacticParseCLEAR();
+
 bool syntacticParseCROSS();
+
 bool syntacticParseDISTINCT();
+
 bool syntacticParseEXPORT();
+
 bool syntacticParseINDEX();
+
 bool syntacticParseJOIN();
+
 bool syntacticParseLIST();
+
 bool syntacticParseLOAD();
+
 bool syntacticParsePRINT();
+
 bool syntacticParsePROJECTION();
+
 bool syntacticParseRENAME();
+
 bool syntacticParseSELECTION();
+
 bool syntacticParseSORT();
+
 bool syntacticParseSOURCE();
 
-bool isFileExists(string tableName);
+bool isFileExists(const string& tableName);
+
 bool isQueryFile(string fileName);

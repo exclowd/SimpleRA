@@ -5,11 +5,9 @@
  * SYNTAX: CLEAR <relation_name> 
  */
 
-bool syntacticParseCLEAR()
-{
+bool syntacticParseCLEAR() {
     logger.log("syntacticParseCLEAR");
-    if (tokenizedQuery.size() != 2)
-    {
+    if (tokenizedQuery.size() != 2) {
         cout << "SYNTAX ERROR" << endl;
         return false;
     }
@@ -18,8 +16,7 @@ bool syntacticParseCLEAR()
     return true;
 }
 
-bool semanticParseCLEAR()
-{
+bool semanticParseCLEAR() {
     logger.log("semanticParseCLEAR");
     //Table should exist
     if (tableCatalogue.isTable(parsedQuery.clearRelationName))
@@ -28,8 +25,7 @@ bool semanticParseCLEAR()
     return false;
 }
 
-void executeCLEAR()
-{
+void executeCLEAR() {
     logger.log("executeCLEAR");
     //Deleting table from the catalogue deletes all temporary files
     tableCatalogue.deleteTable(parsedQuery.clearRelationName);

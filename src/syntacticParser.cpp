@@ -1,12 +1,10 @@
 #include "global.h"
 
-bool syntacticParse()
-{
+bool syntacticParse() {
     logger.log("syntacticParse");
     string possibleQueryType = tokenizedQuery[0];
 
-    if (tokenizedQuery.size() < 2)
-    {
+    if (tokenizedQuery.size() < 2) {
         cout << "SYNTAX ERROR" << endl;
         return false;
     }
@@ -23,15 +21,13 @@ bool syntacticParse()
         return syntacticParsePRINT();
     else if (possibleQueryType == "RENAME")
         return syntacticParseRENAME();
-    else if(possibleQueryType == "EXPORT")
+    else if (possibleQueryType == "EXPORT")
         return syntacticParseEXPORT();
-    else if(possibleQueryType == "SOURCE")
+    else if (possibleQueryType == "SOURCE")
         return syntacticParseSOURCE();
-    else
-    {
+    else {
         string resultantRelationName = possibleQueryType;
-        if (tokenizedQuery[1] != "<-" || tokenizedQuery.size() < 3)
-        {
+        if (tokenizedQuery[1] != "<-" || tokenizedQuery.size() < 3) {
             cout << "SYNTAX ERROR" << endl;
             return false;
         }
@@ -48,8 +44,7 @@ bool syntacticParse()
             return syntacticParseDISTINCT();
         else if (possibleQueryType == "SORT")
             return syntacticParseSORT();
-        else
-        {
+        else {
             cout << "SYNTAX ERROR" << endl;
             return false;
         }
@@ -57,12 +52,9 @@ bool syntacticParse()
     return false;
 }
 
-ParsedQuery::ParsedQuery()
-{
-}
+ParsedQuery::ParsedQuery() = default;
 
-void ParsedQuery::clear()
-{
+void ParsedQuery::clear() {
     logger.log("ParseQuery::clear");
     this->queryType = UNDETERMINED;
 
@@ -124,10 +116,9 @@ void ParsedQuery::clear()
  * @return true 
  * @return false 
  */
-bool isFileExists(string tableName)
-{
+bool isFileExists(const string& tableName) {
     string fileName = "../data/" + tableName + ".csv";
-    struct stat buffer;
+    struct stat buffer{};
     return (stat(fileName.c_str(), &buffer) == 0);
 }
 
@@ -139,8 +130,8 @@ bool isFileExists(string tableName)
  * @return true 
  * @return false 
  */
-bool isQueryFile(string fileName){
+bool isQueryFile(string fileName) {
     fileName = "../data/" + fileName + ".ra";
-    struct stat buffer;
+    struct stat buffer{};
     return (stat(fileName.c_str(), &buffer) == 0);
 }

@@ -6,18 +6,23 @@
  * be added(removed) to(from) the tableCatalogue. 
  *
  */
-class TableCatalogue
-{
-
-    unordered_map<string, Table*> tables;
+class TableCatalogue {
+    unordered_map<string, Table *> tables;
 
 public:
     TableCatalogue() {}
-    void insertTable(Table* table);
-    void deleteTable(string tableName);
-    Table* getTable(string tableName);
-    bool isTable(string tableName);
-    bool isColumnFromTable(string columnName, string tableName);
+
+    void insertTable(Table *table);
+
+    void deleteTable(const string& tableName);
+
+    Table *getTable(const string& tableName);
+
+    bool isTable(const string& tableName);
+
+    bool isColumnFromTable(string columnName, const string& tableName);
+
     void print();
+
     ~TableCatalogue();
 };
