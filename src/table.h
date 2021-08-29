@@ -40,7 +40,7 @@ public:
 
     Table();
 
-    Table(const string& tblName);
+    explicit Table(const string& tblName);
 
     Table(const string& tblName, const vector<string>& c);
 
@@ -54,11 +54,11 @@ public:
 
     void makePermanent();
 
-    bool isPermanent() const;
+    [[nodiscard]] bool isPermanent() const;
 
     void getNextPage(Cursor *cursor) const;
 
-    Cursor getCursor() const;
+    [[nodiscard]] Cursor getCursor() const;
 
     int getColumnIndex(const string& columnName);
 
