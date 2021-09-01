@@ -1,4 +1,5 @@
 #include "global.h"
+#include <sys/stat.h>
 
 bool syntacticParse() {
     logger.log("syntacticParse");
@@ -116,7 +117,7 @@ void ParsedQuery::clear() {
  * @return true 
  * @return false 
  */
-bool isFileExists(const string& tableName) {
+bool isFileExists(const string &tableName) {
     string fileName = "../data/" + tableName + ".csv";
     struct stat buffer{};
     return (stat(fileName.c_str(), &buffer) == 0);

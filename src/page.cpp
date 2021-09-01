@@ -1,6 +1,7 @@
 #include <utility>
 
 #include "global.h"
+#include <vector>
 
 /**
  * @brief Construct a new Page object. Never used as part of the code
@@ -9,7 +10,6 @@
 Page::Page() {
     this->pageName = "";
     this->tableName = "";
-    this->pageIndex = -1;
     this->rowCount = 0;
     this->columnCount = 0;
     this->rows.clear();
@@ -27,10 +27,10 @@ Page::Page() {
  * @param tblName
  * @param pgIndex
  */
-Page::Page(const string& tblName, int pgIndex) {
+Page::Page(const string &tblName, int pgIndex) {
     logger.log("Page::Page");
     this->tableName = tblName;
-    this->pageIndex = std::to_string(pgIndex);
+    std::to_string(pgIndex);
     this->pageName = "../data/temp/" + this->tableName + "_Page" + to_string(pgIndex);
     Table table = *tableCatalogue.getTable(tblName);
     this->columnCount = table.columnCount;
@@ -65,13 +65,13 @@ vector<int> Page::getRow(int rowIndex) {
     return this->rows[rowIndex];
 }
 
-Page::Page(string tblName, int pgIndex, vector<vector<int>> _rows, int rCount) {
+Page::Page(string tblName, size_t pgIndex, vector<vector<int>> _rows, int rCount) {
     logger.log("Page::Page");
     this->tableName = std::move(tblName);
-    this->pageIndex = std::to_string(pgIndex);
+    std::to_string(pgIndex);
     this->rows = _rows;
     this->rowCount = rCount;
-    this->columnCount = (int)_rows[0].size();
+    this->columnCount = (int) _rows[0].size();
     this->pageName = "../data/temp/" + this->tableName + "_Page" + to_string(pgIndex);
 }
 

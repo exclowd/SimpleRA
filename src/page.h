@@ -1,6 +1,7 @@
 #pragma once
 
-#include"logger.h"
+#include "logger.h"
+#include <vector>
 
 /**
  * @brief The Page object is the main memory representation of a physical page
@@ -16,10 +17,9 @@
 class Page {
 
     string tableName;
-    string pageIndex;
     size_t columnCount;
     size_t rowCount;
-    vector<vector<int>> rows;
+    vector<vector<int>> rows{};
 
 public:
 
@@ -27,9 +27,9 @@ public:
 
     Page();
 
-    Page(const string& tblName, int pgIndex);
+    Page(const string &tblName, int pgIndex);
 
-    Page(string tblName, int pgIndex, vector<vector<int>> _rows, int rCount);
+    Page(string tblName, size_t pgIndex, vector<vector<int>> _rows, int rCount);
 
     vector<int> getRow(int rowIndex);
 

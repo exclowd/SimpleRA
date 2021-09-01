@@ -133,6 +133,6 @@ bool syntacticParseSORT();
 
 bool syntacticParseSOURCE();
 
-bool isFileExists(const string& tableName);
+bool isFileExists(const string &tableName);
 
 bool isQueryFile(string fileName);

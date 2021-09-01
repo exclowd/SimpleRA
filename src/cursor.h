@@ -1,6 +1,7 @@
 #pragma once
 
 #include "bufferManager.h"
+#include <vector>
 
 /**
  * @brief The cursor is an important component of the system. To read from a
@@ -16,7 +17,7 @@ public:
     int pagePointer;
 
 public:
-    Cursor(const string& tblName, int pgIndex);
+    Cursor(const string &tblName, int pgIndex);
 
     vector<int> getNext();
 

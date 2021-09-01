@@ -1,6 +1,8 @@
 #pragma once
 
 #include "cursor.h"
+#include <unordered_set>
+
 
 enum IndexingStrategy {
     BTREE,
@@ -34,7 +36,7 @@ public:
     string indexedColumn;
     IndexingStrategy indexingStrategy = NOTHING;
 
-    bool extractColumnNames(const string& firstLine);
+    bool extractColumnNames(const string &firstLine);
 
     bool blockify();
 
@@ -42,15 +44,15 @@ public:
 
     Table();
 
-    explicit Table(const string& tblName);
+    explicit Table(const string &tblName);
 
-    Table(const string& tblName, const vector<string>& c);
+    Table(const string &tblName, const vector<string> &c);
 
     bool load();
 
-    bool isColumn(const string& columnName);
+    bool isColumn(const string &columnName);
 
-    void renameColumn(const string& fromColumnName, const string& toColumnName);
+    void renameColumn(const string &fromColumnName, const string &toColumnName);
 
     void print();
 
@@ -62,7 +64,7 @@ public:
 
     [[nodiscard]] Cursor getCursor() const;
 
-    int getColumnIndex(const string& columnName);
+    int getColumnIndex(const string &columnName);
 
     void unload() const;
 
@@ -76,7 +78,7 @@ public:
     template<typename T>
     void writeRow(vector<T> row, ostream &fout) {
         logger.log("Table::printRow");
-        for (int columnCounter = 0; columnCounter < (int)row.size(); columnCounter++) {
+        for (int columnCounter = 0; columnCounter < (int) row.size(); columnCounter++) {
             if (columnCounter != 0)
                 fout << ", ";
             fout << row[columnCounter];

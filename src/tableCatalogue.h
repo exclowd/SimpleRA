@@ -1,6 +1,8 @@
 #pragma once
 
 #include "table.h"
+#include <chrono>
+#include <unordered_map>
 
 /**
  * @brief The TableCatalogue acts like an index of tables existing in the
@@ -8,6 +10,8 @@
  * be added(removed) to(from) the tableCatalogue. 
  *
  */
+
+
 class TableCatalogue {
     unordered_map<string, Table *> tables;
 
@@ -16,13 +20,13 @@ public:
 
     void insertTable(Table *table);
 
-    void deleteTable(const string& tableName);
+    void deleteTable(const string &tableName);
 
-    Table *getTable(const string& tableName);
+    Table *getTable(const string &tableName);
 
-    bool isTable(const string& tableName);
+    bool isTable(const string &tableName);
 
-    bool isColumnFromTable(string columnName, const string& tableName);
+    bool isColumnFromTable(const string &columnName, const string &tableName);
 
     void print();
 

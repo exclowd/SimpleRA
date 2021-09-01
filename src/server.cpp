@@ -1,5 +1,6 @@
 //Server Code
 #include "global.h"
+#include <regex>
 
 using namespace std;
 
@@ -16,10 +17,9 @@ void doCommand() {
     logger.log("doCommand");
     if (syntacticParse() && semanticParse())
         executeCommand();
-    return;
 }
 
-int main(void) {
+int main() {
 
     regex delim("[^\\s,]+");
     string command;

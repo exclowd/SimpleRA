@@ -1,6 +1,7 @@
 #pragma once
 
 #include "page.h"
+#include <deque>
 
 /**
  * @brief The BufferManager is responsible for reading pages to the main memory.
@@ -26,23 +27,23 @@ class BufferManager {
 
     deque<Page> pages;
 
-    bool inPool(const string& pageName);
+    bool inPool(const string &pageName);
 
-    Page getFromPool(const string& pageName);
+    Page getFromPool(const string &pageName);
 
-    Page insertIntoPool(string tableName, int pageIndex);
+    Page insertIntoPool(const string &tableName, int pageIndex);
 
 public:
 
     BufferManager();
 
-    Page getPage(string tableName, int pageIndex);
+    Page getPage(const string &tableName, int pageIndex);
 
-    void writePage(string pageName, vector<vector<int>> rows);
+//    void writePage(string pageName, vector<vector<int>> rows);
 
-    void deleteFile(const string& tableName, int pageIndex);
+    void deleteFile(const string &tableName, int pageIndex);
 
-    static void deleteFile(const string& fileName);
+    static void deleteFile(const string &fileName);
 
-    static void writePage(string tableName, int pageIndex, vector<vector<int>> rows, int rowCount);
+    static void writePage(string tableName, size_t pageIndex, vector<vector<int>> rows, int rowCount);
 };

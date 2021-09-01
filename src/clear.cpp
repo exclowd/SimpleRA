@@ -29,5 +29,4 @@ void executeCLEAR() {
     logger.log("executeCLEAR");
     //Deleting table from the catalogue deletes all temporary files
     tableCatalogue.deleteTable(parsedQuery.clearRelationName);
-    return;
 }

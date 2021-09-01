@@ -1,6 +1,10 @@
 #include <utility>
+#include <vector>
+#include <algorithm>
 
 #include "global.h"
+#include "bufferManager.h"
+
 
 BufferManager::BufferManager() {
     logger.log("BufferManager::BufferManager");
@@ -14,7 +18,7 @@ BufferManager::BufferManager() {
  * @param pageIndex 
  * @return Page 
  */
-Page BufferManager::getPage(string tableName, int pageIndex) {
+Page BufferManager::getPage(const string &tableName, int pageIndex) {
     logger.log("BufferManager::getPage");
     string pageName = "../data/temp/" + tableName + "_Page" + to_string(pageIndex);
     if (this->inPool(pageName))
@@ -30,13 +34,11 @@ Page BufferManager::getPage(string tableName, int pageIndex) {
  * @return true 
  * @return false 
  */
-bool BufferManager::inPool(const string& pageName) {
+bool BufferManager::inPool(const string &pageName) {
     logger.log("BufferManager::inPool");
-    for (auto page: this->pages) {
-        if (pageName == page.pageName)
-            return true;
-    }
-    return false;
+    return any_of(this->pages.begin(), this->pages.end(), [&](auto x) {
+        return x.pageName == pageName;
+    });
 }
 
 /**
@@ -47,7 +49,7 @@ bool BufferManager::inPool(const string& pageName) {
  * @param pageName 
  * @return Page 
  */
-Page BufferManager::getFromPool(const string& pageName) {
+Page BufferManager::getFromPool(const string &pageName) {
     logger.log("BufferManager::getFromPool");
     for (auto page: this->pages)
         if (pageName == page.pageName)
@@ -63,9 +65,9 @@ Page BufferManager::getFromPool(const string& pageName) {
  * @param pageIndex 
  * @return Page 
  */
-Page BufferManager::insertIntoPool(string tableName, int pageIndex) {
+Page BufferManager::insertIntoPool(const string &tableName, int pageIndex) {
     logger.log("BufferManager::insertIntoPool");
-    Page page(std::move(tableName), pageIndex);
+    Page page(tableName, pageIndex);
     if (this->pages.size() >= BLOCK_COUNT)
         pages.pop_front();
     pages.push_back(page);
@@ -81,9 +83,9 @@ Page BufferManager::insertIntoPool(string tableName, int pageIndex) {
  * @param rows 
  * @param rowCount 
  */
-void BufferManager::writePage(string tableName, int pageIndex, vector<vector<int>> rows, int rowCount) {
+void BufferManager::writePage(string tableName, size_t pageIndex, vector<vector<int>> rows, int rowCount) {
     logger.log("BufferManager::writePage");
-    Page page(std::move(tableName), pageIndex, rows, rowCount);
+    Page page(std::move(tableName), pageIndex, std::move(rows), rowCount);
     page.writePage();
 }
 
@@ -92,7 +94,7 @@ void BufferManager::writePage(string tableName, int pageIndex, vector<vector<int
  *
  * @param fileName 
  */
-void BufferManager::deleteFile(const string& fileName) {
+void BufferManager::deleteFile(const string &fileName) {
 
     if (remove(fileName.c_str()))
         logger.log("BufferManager::deleteFile: Err");
@@ -106,7 +108,7 @@ void BufferManager::deleteFile(const string& fileName) {
  * @param tableName 
  * @param pageIndex 
  */
-void BufferManager::deleteFile(const string& tableName, int pageIndex) {
+void BufferManager::deleteFile(const string &tableName, int pageIndex) {
     logger.log("BufferManager::deleteFile");
     string fileName = "../data/temp/" + tableName + "_Page" + to_string(pageIndex);
     this->deleteFile(fileName);

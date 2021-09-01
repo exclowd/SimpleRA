@@ -1,6 +1,7 @@
 #include "global.h"
+#include <vector>
 
-Cursor::Cursor(const string& tblName, int pgIndex) {
+Cursor::Cursor(const string &tblName, int pgIndex) {
     logger.log("Cursor::Cursor");
     this->page = bufferManager.getPage(tblName, pgIndex);
     this->pagePointer = 0;

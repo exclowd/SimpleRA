@@ -7,7 +7,7 @@ backgroundColor: black
 
 # SimpleRA
 
-_A laughably-minimalist, integer-only, read-only Relational Database Management System that makes the author question why they ever bothered to write it up!_  
+_A laughably-minimalist, integer-only, read-only Relational Database Management System that makes the author question why they ever bothered to write it up!  
   
 
 ## _Data Systems, Monsoon 2020_
@@ -112,7 +112,7 @@ RENAME <toColumnName> TO <fromColumnName> FROM <table_name>
 ```
 
 - Naturally <table_name> should be a loaded table in the system and <fromColumnName> should be an exsiting column in the table
-- <toColumnName> should not be another column in the table
+- \<toColumnName> should not be another column in the table 
 
 Run: `RENAME b TO c FROM B`
 

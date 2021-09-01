@@ -50,7 +50,3 @@ void executeCommand() {
     }
 
 }
-
-void printRowCount(int rowCount) {
-    cout << "\n\nRow Count: " << rowCount << endl;
-}

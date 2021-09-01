@@ -34,4 +34,7 @@ void executeSOURCE();
 
 bool evaluateBinOp(int value1, int value2, BinaryOperator binaryOperator);
 
-void printRowCount(int rowCount);
+template<typename T>
+void printRowCount(T rowCount) {
+    cout << "\n\nRow Count: " << rowCount << endl;
+}
