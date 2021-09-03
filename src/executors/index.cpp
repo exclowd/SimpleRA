@@ -17,11 +17,11 @@ bool syntacticParseINDEX() {
     parsedQuery.indexRelationName = tokenizedQuery[4];
     string indexingStrategy = tokenizedQuery[6];
     if (indexingStrategy == "BTREE")
-        parsedQuery.indexingStrategy = BTREE;
+        parsedQuery.indexingStrategy = IndexingStrategy::BTREE;
     else if (indexingStrategy == "HASH")
-        parsedQuery.indexingStrategy = HASH;
+        parsedQuery.indexingStrategy = IndexingStrategy::HASH;
     else if (indexingStrategy == "NOTHING")
-        parsedQuery.indexingStrategy = NOTHING;
+        parsedQuery.indexingStrategy = IndexingStrategy::NOTHING;
     else {
         cout << "SYNTAX ERROR" << endl;
         return false;

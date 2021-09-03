@@ -26,7 +26,7 @@ Table::Table(const string &tblName) {
 
 /**
  * @brief Construct a new Table:: Table object used when an assignment command
- * is encountered. To create the table object both the table name and the
+ * is encountered. To create the table object both the table tableName and the
  * c the table holds should be specified.
  *
  * @param tblName
@@ -38,7 +38,7 @@ Table::Table(const string &tblName, const vector<string> &c) {
     this->tableName = tblName;
     this->columns = c;
     this->columnCount = c.size();
-    this->maxRowsPerBlock = (uint) ((BLOCK_SIZE * 1000) / (32 * columnCount));
+    this->maxRowsPerBlock = (size_t) ((BLOCK_SIZE * 1000) / (32 * columnCount));
     this->writeRow<string>(c);
 }
 
@@ -69,7 +69,7 @@ bool Table::load() {
  * file. 
  *
  * @param line 
- * @return true if column names successfully extracted (i.e. no column name
+ * @return true if column names successfully extracted (i.e. no column tableName
  * repeats)
  * @return false otherwise
  */
@@ -86,7 +86,7 @@ bool Table::extractColumnNames(const string &firstLine) {
         this->columns.emplace_back(word);
     }
     this->columnCount = this->columns.size();
-    this->maxRowsPerBlock = (uint) ((BLOCK_SIZE * 1000) / (32 * this->columnCount));
+    this->maxRowsPerBlock = (size_t) ((BLOCK_SIZE * 1000) / (32 * this->columnCount));
     return true;
 }
 
@@ -104,9 +104,8 @@ bool Table::blockify() {
     vector<int> row(this->columnCount, 0);
     vector<vector<int>> rowsInPage(this->maxRowsPerBlock, row);
     int pageCounter = 0;
-    unordered_set<int> dummy;
-    dummy.clear();
-    this->distinctValuesInColumns.assign(this->columnCount, dummy);
+    unordered_set<int> temp{};
+    this->distinctValuesInColumns.assign(this->columnCount, temp);
     this->distinctValuesPerColumnCount.assign(this->columnCount, 0);
     getline(fin, line);
     while (getline(fin, line)) {
@@ -197,7 +196,7 @@ void Table::renameColumn(const string &fromColumnName, const string &toColumnNam
  */
 void Table::print() {
     logger.log("Table::print");
-    uint count = min((long long) PRINT_COUNT, this->rowCount);
+    size_t count = min(PRINT_COUNT, this->rowCount);
 
     //print headings
     this->writeRow(this->columns, cout);
@@ -243,7 +242,7 @@ void Table::makePermanent() {
 
     Cursor cursor(this->tableName, 0);
     vector<int> row;
-    for (int rowCounter = 0; rowCounter < this->rowCount; rowCounter++) {
+    for (int rowCounter = 0; rowCounter < (int) this->rowCount; rowCounter++) {
         row = cursor.getNext();
         this->writeRow(row, fout);
     }

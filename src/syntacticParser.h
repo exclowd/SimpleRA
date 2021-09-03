@@ -60,7 +60,7 @@ public:
 
     string exportRelationName;
 
-    IndexingStrategy indexingStrategy = NOTHING;
+    IndexingStrategy indexingStrategy = IndexingStrategy::NOTHING;
     string indexColumnName;
     string indexRelationName;
 

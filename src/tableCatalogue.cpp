@@ -51,7 +51,7 @@ void TableCatalogue::print() {
 
 TableCatalogue::~TableCatalogue() {
     logger.log("TableCatalogue::~TableCatalogue");
-    for (const auto& table: this->tables) {
+    for (const auto &table: this->tables) {
         table.second->unload();
         delete table.second;
     }

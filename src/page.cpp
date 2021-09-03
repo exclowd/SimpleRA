@@ -16,11 +16,11 @@ Page::Page() {
 }
 
 /**
- * @brief Construct a new Page:: Page object given the table name and page
+ * @brief Construct a new Page:: Page object given the table tableName and page
  * index. When tables are loaded they are broken up into blocks of BLOCK_SIZE
  * and each block is stored in a different file named
  * "<tablename>_Page<pageindex>". For example, If the Page being loaded is of
- * table "R" and the pgIndex is 2 then the file name is "R_Page2". The page
+ * table "R" and the pgIndex is 2 then the file tableName is "R_Page2". The page
  * loads the rows (or tuples) into a vector of rows (where each row is a vector
  * of integers).
  *
@@ -34,7 +34,7 @@ Page::Page(const string &tblName, int pgIndex) {
     this->pageName = "../data/temp/" + this->tableName + "_Page" + to_string(pgIndex);
     Table table = *tableCatalogue.getTable(tblName);
     this->columnCount = table.columnCount;
-    uint maxRowCount = table.maxRowsPerBlock;
+    size_t maxRowCount = table.maxRowsPerBlock;
     vector<int> row(columnCount, 0);
     this->rows.assign(maxRowCount, row);
 
@@ -68,7 +68,6 @@ vector<int> Page::getRow(int rowIndex) {
 Page::Page(string tblName, size_t pgIndex, vector<vector<int>> _rows, int rCount) {
     logger.log("Page::Page");
     this->tableName = std::move(tblName);
-    std::to_string(pgIndex);
     this->rows = _rows;
     this->rowCount = rCount;
     this->columnCount = (int) _rows[0].size();

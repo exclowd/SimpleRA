@@ -31,7 +31,7 @@ bool semanticParseRENAME() {
     }
 
     if (tableCatalogue.isColumnFromTable(parsedQuery.renameToColumnName, parsedQuery.renameRelationName)) {
-        cout << "SEMANTIC ERROR: Column with name already exists" << endl;
+        cout << "SEMANTIC ERROR: Column with tableName already exists" << endl;
         return false;
     }
     return true;

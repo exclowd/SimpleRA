@@ -5,8 +5,8 @@
 #include <vector>
 
 extern float BLOCK_SIZE;
-extern uint BLOCK_COUNT;
-extern uint PRINT_COUNT;
+extern size_t BLOCK_COUNT;
+extern size_t PRINT_COUNT;
 extern vector<string> tokenizedQuery;
 extern ParsedQuery parsedQuery;
 extern TableCatalogue tableCatalogue;

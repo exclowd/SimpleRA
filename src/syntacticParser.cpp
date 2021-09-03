@@ -70,7 +70,7 @@ void ParsedQuery::clear() {
 
     this->exportRelationName = "";
 
-    this->indexingStrategy = NOTHING;
+    this->indexingStrategy = IndexingStrategy::NOTHING;
     this->indexColumnName = "";
     this->indexRelationName = "";
 

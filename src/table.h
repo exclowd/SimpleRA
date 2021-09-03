@@ -4,7 +4,7 @@
 #include <unordered_set>
 
 
-enum IndexingStrategy {
+enum class IndexingStrategy {
     BTREE,
     HASH,
     NOTHING
@@ -26,15 +26,15 @@ public:
     string sourceFileName;
     string tableName;
     vector<string> columns;
-    vector<uint> distinctValuesPerColumnCount;
-    uint columnCount = 0;
-    long long int rowCount = 0;
-    uint blockCount = 0;
-    uint maxRowsPerBlock = 0;
-    vector<uint> rowsPerBlockCount;
+    vector<size_t> distinctValuesPerColumnCount;
+    size_t columnCount = 0;
+    size_t rowCount = 0;
+    size_t blockCount = 0;
+    size_t maxRowsPerBlock = 0;
+    vector<size_t> rowsPerBlockCount;
     bool indexed = false;
     string indexedColumn;
-    IndexingStrategy indexingStrategy = NOTHING;
+    IndexingStrategy indexingStrategy = IndexingStrategy::NOTHING;
 
     bool extractColumnNames(const string &firstLine);
 
@@ -77,7 +77,7 @@ public:
  */
     template<typename T>
     void writeRow(vector<T> row, ostream &fout) {
-        logger.log("Table::printRow");
+        logger.log("Table::writeRow");
         for (int columnCounter = 0; columnCounter < (int) row.size(); columnCounter++) {
             if (columnCounter != 0)
                 fout << ", ";
@@ -95,7 +95,7 @@ public:
  */
     template<typename T>
     void writeRow(vector<T> row) {
-        logger.log("Table::printRow");
+        logger.log("Table::writeRow");
         ofstream fout(this->sourceFileName, ios::app);
         this->writeRow(row, fout);
         fout.close();
