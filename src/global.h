@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "executor.h"
 #include <vector>
 
@@ -10,4 +9,5 @@ extern size_t PRINT_COUNT;
 extern vector<string> tokenizedQuery;
 extern ParsedQuery parsedQuery;
 extern TableCatalogue tableCatalogue;
+extern MatrixCatalogue matrixCatalogue;
 extern BufferManager bufferManager;

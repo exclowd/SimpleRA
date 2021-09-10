@@ -5,6 +5,13 @@
 #include <algorithm>
 #include "matrix.h"
 
+Matrix::Matrix(const string &matName) {
+    logger.log("Matrix::Matrix");
+    this->sourceFileName = "../data/" + matName + ".csv";
+    this->matrixName = matName;
+}
+
+
 bool Matrix::load() {
     logger.log("Matrix::load");
     fstream fin(this->sourceFileName, ios::in);
@@ -32,4 +39,5 @@ bool Matrix::extractColumnSize(const string& firstline) {
     this->size = cnt;
     return true;
 }
+
 

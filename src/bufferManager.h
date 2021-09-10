@@ -25,25 +25,29 @@
  */
 class BufferManager {
 
-    deque<Page> pages;
+    deque<Page*> pages;
 
     bool inPool(const string &pageName);
 
     Page getFromPool(const string &pageName);
 
-    Page insertIntoPool(const string &tableName, int pageIndex);
+    Page insertIntoPool(const string &tableName, size_t pageIndex);
 
 public:
 
     BufferManager();
 
-    Page getPage(const string &tableName, int pageIndex);
+    static void deleteFile(const string &fileName);
 
-//    void writePage(string pageName, vector<vector<int>> rows);
+    Page getPage(const string &tableName, size_t pageIndex);
+
+    static void writePage(string tableName, size_t pageIndex, vector<vector<int>> rows, int rowCount);
 
     void deleteFile(const string &tableName, int pageIndex);
 
-    static void deleteFile(const string &fileName);
+    Page getMatrixPage(const string &tableName, size_t rowIndex, size_t colIndex);
 
-    static void writePage(string tableName, size_t pageIndex, vector<vector<int>> rows, int rowCount);
+    static void writeMatrixPage(string matrixName, size_t rowIndex, size_t colIndex, vector<vector<int>> data);
+
+    void deleteMatrixFile(const string &matrixName, int rowIndex, int colIndex);
 };

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "tableCatalogue.h"
+#include "matrixCatalogue.h"
 
 using namespace std;
 
@@ -75,8 +76,10 @@ public:
     string joinSecondColumnName;
 
     string loadRelationName;
+    string loadMatrixName;
 
     string printRelationName;
+    string printMatrixName;
 
     string projectionResultRelationName;
     vector<string> projectionColumnList;
@@ -98,6 +101,8 @@ public:
     string sortResultRelationName;
     string sortColumnName;
     string sortRelationName;
+
+    string transposeMatrixName;
 
     string sourceFileName;
 

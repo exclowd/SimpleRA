@@ -29,5 +29,4 @@ void executeEXPORT() {
     logger.log("executeEXPORT");
     Table *table = tableCatalogue.getTable(parsedQuery.exportRelationName);
     table->makePermanent();
-    return;
 }

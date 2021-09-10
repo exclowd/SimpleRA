@@ -6,24 +6,26 @@
 #include "cursor.h"
 
 class Matrix {
-    Matrix();
+public:
+    Matrix() = default;
+    explicit Matrix(const string&);
 
     bool blockify();
 
     bool load();
-    void print();
     void makePermanent();
-    [[nodiscard]] bool isPermanent() const;
-    [[nodiscard]] Cursor getCursor() const;
+    void print() const;
+    void transpose();
     void unload() const;
 
-private:
+    [[nodiscard]] bool isPermanent() const;
+    [[nodiscard]] Cursor getCursor() const;
+
     bool extractColumnSize(const string&);
 
     string sourceFileName;
     string matrixName;
-    size_t size;
-    size_t blockCount;
-
+    size_t size{};
+    size_t blockCount{};
 };
 

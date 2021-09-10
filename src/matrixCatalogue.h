@@ -15,11 +15,11 @@ class MatrixCatalogue {
 public:
     MatrixCatalogue() = default;
 
-    void insertmatrix(Matrix *matrix);
+    void insertMatrix(Matrix *matrix);
 
-    void deletematrix(const string &matrixName);
+    void deleteMatrix(const string &matrixName);
 
-    Matrix *getmatrix(const string &matrixName);
+    Matrix *getMatrix(const string &matrixName);
 
     bool isMatrix(const string &matrixName);
 
