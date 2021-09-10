@@ -2,7 +2,6 @@
 
 #include "logger.h"
 #include <vector>
-#include <unordered_map>
 
 /**
  * @brief The Page object is the main memory representation of a physical page
@@ -18,6 +17,11 @@
 class PageBase {
 public:
     string pageName;
+
+    size_t rowCount;
+    size_t columnCount;
+
+    string entityName;
 };
 
 class Page : public PageBase {
@@ -34,27 +38,5 @@ public:
     void writePage();
 
 public:
-    string tableName;
-    size_t columnCount;
-    size_t rowCount;
     vector<vector<int>> rows{};
-};
-
-template<typename T>
-class MatrixPage : public PageBase {
-public:
-    using storage_type = T;
-
-    MatrixPage();
-
-    MatrixPage(const string &matName, size_t rowIndex, size_t colIndex);
-
-    MatrixPage(const string &matName, size_t rowIndex, size_t colIndex, size_t rCount, size_t cCount);
-
-    void writePage();
-
-private:
-    string matrixName;
-    size_t size;
-    storage_type data;
 };

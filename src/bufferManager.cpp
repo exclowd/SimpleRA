@@ -42,7 +42,7 @@ Page BufferManager::getFromPool(const string &pageName) {
 }
 
 /**
- * @brief Inserts page indicated by tableName and pageIndex into pool. If the
+ * @brief Inserts page indicated by entityName and pageIndex into pool. If the
  * pool is full, the pool ejects the oldest inserted page from the pool and adds
  * the current page at the end. It naturally follows a queue data structure. 
  *
@@ -106,7 +106,7 @@ void BufferManager::writePage(string tableName, size_t pageIndex, vector<vector<
 
 /**
  * @brief Overloaded function that calls deleteFile(fileName) by constructing
- * the fileName from the tableName and pageIndex.
+ * the fileName from the entityName and pageIndex.
  *
  * @param tableName 
  * @param pageIndex 

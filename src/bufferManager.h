@@ -25,7 +25,7 @@
  */
 class BufferManager {
 
-    deque<Page*> pages;
+    deque<Page> pages;
 
     bool inPool(const string &pageName);
 

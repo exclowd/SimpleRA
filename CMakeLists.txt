@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-# set the project tableName
+# set the project entityName
 project(SimpleRA)
 
 set(CMAKE_CXX_STANDARD 17)

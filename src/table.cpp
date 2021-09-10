@@ -26,7 +26,7 @@ Table::Table(const string &tblName) {
 
 /**
  * @brief Construct a new Table:: Table object used when an assignment command
- * is encountered. To create the table object both the table tableName and the
+ * is encountered. To create the table object both the table entityName and the
  * c the table holds should be specified.
  *
  * @param tblName
@@ -69,7 +69,7 @@ bool Table::load() {
  * file. 
  *
  * @param line 
- * @return true if column names successfully extracted (i.e. no column tableName
+ * @return true if column names successfully extracted (i.e. no column entityName
  * repeats)
  * @return false otherwise
  */

@@ -18,15 +18,15 @@ bool Matrix::load() {
     string line;
     if (getline(fin, line)) {
         fin.close();
-        if (this->extractColumnSize(line))
+        if (this->extractSize(line))
             this->blockify();
     }
     fin.close();
     return false;
 }
 
-bool Matrix::extractColumnSize(const string& firstline) {
-    logger.log("Matrix:extractColumnSize");
+bool Matrix::extractSize(const string& firstline) {
+    logger.log("Matrix:extractSize");
     string word;
     stringstream s(firstline);
     while (getline(s, word, ',')) {

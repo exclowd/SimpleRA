@@ -1,50 +1,52 @@
 #include <utility>
 
 #include "global.h"
+#include "matrixPage.h"
 #include <vector>
 
 /**
  * @brief Construct a new MatrixPage object. Never used as part of the code
  *
  */
-MatrixPage::MatrixPage() {
+template<>
+MatrixPage<vector<vector<int>>>::MatrixPage() {
     this->pageName = "";
-    this->matrixName = "";
+    this->entityName = "";
     this->rowCount = 0;
     this->columnCount = 0;
-    this->rows.clear();
+    this->data.clear();
 }
 
 /**
- * @brief Construct a new MatrixPage:: MatrixPage object given the matrix matrixName and page
+ * @brief Construct a new MatrixPage:: MatrixPage object given the matrix entityName and page
  * index. When matrixs are loaded they are broken up into blocks of BLOCK_SIZE
  * and each block is stored in a different file named
  * "<matrixname>_Page<pageindex>". For example, If the MatrixPage being loaded is of
- * matrix "R" and the pgIndex is 2 then the file matrixName is "R_Page2". The page
+ * matrix "R" and the pgIndex is 2 then the file entityName is "R_Page2". The page
  * loads the rows (or tuples) into a vector of rows (where each row is a vector
  * of integers).
  *
  * @param tblName
  * @param pgIndex
  */
-MatrixPage::MatrixPage(const string &tblName, int pgIndex) {
+template<>
+MatrixPage<vector<vector<int>>>::MatrixPage(const string &matName, size_t rowIndex, size_t colIndex) {
     logger.log("MatrixPage::MatrixPage");
-    this->matrixName = tblName;
-    std::to_string(pgIndex);
-    this->pageName = "../data/temp/" + this->matrixName + "_Page" + to_string(pgIndex);
-    Table matrix = *matrixCatalogue.getTable(tblName);
-    this->columnCount = matrix.columnCount;
-    size_t maxRowCount = matrix.maxRowsPerBlock;
+    this->entityName = matName;
+    this->pageName = "../data/temp/" + this->entityName + "_MPage" + to_string(rowIndex) + ":" + to_string(colIndex);
+    Matrix matrix = *matrixCatalogue.getMatrix(matName);
+    this->rowCount = matrix.rowsPerBlockCount[rowIndex];
+    this->columnCount = matrix.columnsPerBlockCount[columnCount];
+    size_t maxCount = matrix.maxDimPerBlock;
     vector<int> row(columnCount, 0);
-    this->rows.assign(maxRowCount, row);
-
+    this->data.assign(rowCount, row);
     ifstream fin(pageName, ios::in);
-    this->rowCount = matrix.rowsPerBlockCount[pgIndex];
+    this->rowCount = matrix.rowsPerBlockCount[rowIndex];
     int number;
     for (int rowCounter = 0; rowCounter < (int) this->rowCount; rowCounter++) {
-        for (int columnCounter = 0; columnCounter < (int) columnCount; columnCounter++) {
+        for (int columnCounter = 0; columnCounter < (int) this->columnCount; columnCounter++) {
             fin >> number;
-            this->rows[rowCounter][columnCounter] = number;
+            this->data[rowCounter][columnCounter] = number;
         }
     }
     fin.close();
@@ -56,36 +58,36 @@ MatrixPage::MatrixPage(const string &tblName, int pgIndex) {
  * @param rowIndex 
  * @return vector<int> 
  */
-vector<int> MatrixPage::getRow(int rowIndex) {
-    logger.log("MatrixPage::getRow");
-    vector<int> result;
-    result.clear();
-    if (rowIndex >= (int) this->rowCount)
-        return result;
-    return this->rows[rowIndex];
+template<>
+auto MatrixPage<vector<vector<int>>>::getData() {
+    logger.log("MatrixPage::getData");
+    return this->data;
 }
 
-MatrixPage::MatrixPage(string tblName, size_t pgIndex, vector<vector<int>> _rows, int rCount) {
+template<>
+MatrixPage<vector<vector<int>>>::MatrixPage(const string &matName, size_t rowIndex, size_t colIndex,
+                                            vector<vector<int>> _data, size_t rCount, size_t cCount) {
     logger.log("MatrixPage::MatrixPage");
-    this->matrixName = std::move(tblName);
-    this->rows = _rows;
+    this->entityName = matName;
+    this->data = std::move(_data);
     this->rowCount = rCount;
-    this->columnCount = (int) _rows[0].size();
-    this->pageName = "../data/temp/" + this->matrixName + "_Page" + to_string(pgIndex);
+    this->columnCount = cCount;
+    this->pageName = "../data/temp/" + this->entityName + "_Page" + to_string(rowIndex) + ":" + to_string(colIndex);
 }
 
 /**
  * @brief writes current page contents to file.
  * 
  */
-void MatrixPage::writePage() {
+template<>
+void MatrixPage<vector<vector<int>>>::writePage() {
     logger.log("MatrixPage::writePage");
     ofstream fout(this->pageName, ios::trunc);
     for (int rowCounter = 0; rowCounter < (int) this->rowCount; rowCounter++) {
         for (int columnCounter = 0; columnCounter < (int) this->columnCount; columnCounter++) {
             if (columnCounter != 0)
                 fout << " ";
-            fout << this->rows[rowCounter][columnCounter];
+            fout << this->data[rowCounter][columnCounter];
         }
         fout << endl;
     }

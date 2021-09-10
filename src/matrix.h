@@ -21,7 +21,11 @@ public:
     [[nodiscard]] bool isPermanent() const;
     [[nodiscard]] Cursor getCursor() const;
 
-    bool extractColumnSize(const string&);
+    bool extractSize(const string&);
+
+    vector<size_t> rowsPerBlockCount;
+    vector<size_t> columnsPerBlockCount;
+    size_t maxDimPerBlock{};
 
     string sourceFileName;
     string matrixName;

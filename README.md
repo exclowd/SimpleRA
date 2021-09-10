@@ -26,7 +26,7 @@ Post compilation, an executable names ```server``` will be created in the ```src
 ```
 ## To setup your Git Repository
 - Join the course github organisation using the invite link.
-- Join or create a team corresponding to your team tableName on the organisation.
+- Join or create a team corresponding to your team entityName on the organisation.
 - Your repository will be initialised with a template code on succesful authorisation.
 - Now clone your personal repo using ```git clone "your repo link"```.
 - After you have cloned your repo to your system add the main repo as an upstream to your repo so whenever a change is pushed by TA's you can access it.
