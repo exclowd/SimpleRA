@@ -19,8 +19,12 @@ bool semanticParse() {
             return semanticParseLIST();
         case LOAD:
             return semanticParseLOAD();
+        case LOADMATRIX:
+            return semanticParseLOADMATRIX();
         case PRINT:
             return semanticParsePRINT();
+        case PRINTMATRIX:
+            return semanticParsePRINTMATRIX();
         case PROJECTION:
             return semanticParsePROJECTION();
         case RENAME:
@@ -31,6 +35,8 @@ bool semanticParse() {
             return semanticParseSORT();
         case SOURCE:
             return semanticParseSOURCE();
+        case TRANSPOSE:
+            return semanticParseTRANSPOSE();
         default:
             cout << "SEMANTIC ERROR" << endl;
     }

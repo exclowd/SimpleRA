@@ -20,7 +20,11 @@ void executeLIST();
 
 void executeLOAD();
 
+void executeLOADMATRIX();
+
 void executePRINT();
+
+void executePRINTMATRIX();
 
 void executePROJECTION();
 
@@ -31,6 +35,8 @@ void executeSELECTION();
 void executeSORT();
 
 void executeSOURCE();
+
+void executeTRANSPOSE();
 
 bool evaluateBinOp(int value1, int value2, BinaryOperator binaryOperator);
 

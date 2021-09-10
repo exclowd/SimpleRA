@@ -27,8 +27,14 @@ void executeCommand() {
         case LOAD:
             executeLOAD();
             break;
+        case LOADMATRIX:
+            executeLOADMATRIX();
+            break;
         case PRINT:
             executePRINT();
+            break;
+        case PRINTMATRIX:
+            executePRINTMATRIX();
             break;
         case PROJECTION:
             executePROJECTION();
@@ -44,6 +50,9 @@ void executeCommand() {
             break;
         case SOURCE:
             executeSOURCE();
+            break;
+        case TRANSPOSE:
+            executeTRANSPOSE();
             break;
         default:
             cout << "PARSING ERROR" << endl;

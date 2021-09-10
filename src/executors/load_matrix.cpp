@@ -2,11 +2,11 @@
 
 /**
  * @brief 
- * SYNTAX: LOAD MATRIX relation_name
+ * SYNTAX: LOAD relation_name
  */
-bool syntacticParseLOAD() {
-    logger.log("syntacticParseLOADMATRIX");
-    if (tokenizedQuery.size() != 2) {
+bool syntacticParseLOADMATRIX() {
+    logger.log("syntacticParseLOAD");
+    if (tokenizedQuery.size() != 3) {
         cout << "SYNTAX ERROR" << endl;
         return false;
     }
@@ -15,8 +15,8 @@ bool syntacticParseLOAD() {
     return true;
 }
 
-bool semanticParseLOAD() {
-    logger.log("semanticParseLOADMATIRX");
+bool semanticParseLOADMATRIX() {
+    logger.log("semanticParseLOAD");
     if (tableCatalogue.isTable(parsedQuery.loadRelationName)) {
         cout << "SEMANTIC ERROR: Relation already exists" << endl;
         return false;
@@ -29,8 +29,8 @@ bool semanticParseLOAD() {
     return true;
 }
 
-void executeLOAD() {
-    logger.log("executeLOADMATRIX");
+void executeLOADMATRIX() {
+    logger.log("executeLOAD");
 
     auto *table = new Table(parsedQuery.loadRelationName);
     if (table->load()) {

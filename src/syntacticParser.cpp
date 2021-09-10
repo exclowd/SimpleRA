@@ -17,15 +17,17 @@ bool syntacticParse() {
     else if (possibleQueryType == "LIST")
         return syntacticParseLIST();
     else if (possibleQueryType == "LOAD")
-        return syntacticParseLOAD();
+        return tokenizedQuery[1] == "MATRIX" ? syntacticParseLOADMATRIX() : syntacticParseLOAD();
     else if (possibleQueryType == "PRINT")
-        return syntacticParsePRINT();
+        return tokenizedQuery[1] == "MATRIX" ? syntacticParsePRINTMATRIX() : syntacticParsePRINT();
     else if (possibleQueryType == "RENAME")
         return syntacticParseRENAME();
     else if (possibleQueryType == "EXPORT")
         return syntacticParseEXPORT();
     else if (possibleQueryType == "SOURCE")
         return syntacticParseSOURCE();
+    else if (possibleQueryType == "TRANSPOSE")
+        return syntacticParseTRANSPOSE();
     else {
         string resultantRelationName = possibleQueryType;
         if (tokenizedQuery[1] != "<-" || tokenizedQuery.size() < 3) {

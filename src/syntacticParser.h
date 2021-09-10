@@ -13,12 +13,15 @@ enum QueryType {
     JOIN,
     LIST,
     LOAD,
+    LOADMATRIX,
     PRINT,
+    PRINTMATRIX,
     PROJECTION,
     RENAME,
     SELECTION,
     SORT,
     SOURCE,
+    TRANSPOSE,
     UNDETERMINED
 };
 
@@ -121,7 +124,11 @@ bool syntacticParseLIST();
 
 bool syntacticParseLOAD();
 
+bool syntacticParseLOADMATRIX();
+
 bool syntacticParsePRINT();
+
+bool syntacticParsePRINTMATRIX();
 
 bool syntacticParsePROJECTION();
 
@@ -132,6 +139,8 @@ bool syntacticParseSELECTION();
 bool syntacticParseSORT();
 
 bool syntacticParseSOURCE();
+
+bool syntacticParseTRANSPOSE();
 
 bool isFileExists(const string &tableName);
 
