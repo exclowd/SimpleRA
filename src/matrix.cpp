@@ -25,7 +25,7 @@ bool Matrix::load() {
     return false;
 }
 
-bool Matrix::extractSize(const string& firstline) {
+bool Matrix::extractSize(const string &firstline) {
     logger.log("Matrix:extractSize");
     string word;
     stringstream s(firstline);

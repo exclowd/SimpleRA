@@ -1,6 +1,7 @@
 #pragma once
 
 #include "page.h"
+#include "matrixPage.h"
 #include <deque>
 
 /**
@@ -25,13 +26,16 @@
  */
 class BufferManager {
 
-    deque<Page> pages;
+    deque<PageBase*> pages;
 
     bool inPool(const string &pageName);
 
-    Page getFromPool(const string &pageName);
+    PageBase* getFromPool(const string &pageName);
 
-    Page insertIntoPool(const string &tableName, size_t pageIndex);
+    Page insertIntoPool(const string &tblName, size_t pageIndex);
+
+    template<typename T>
+    MatrixPage<T> insertIntoPool(const string &matName, size_t rowIndex, size_t colIndex);
 
 public:
 
@@ -41,13 +45,14 @@ public:
 
     Page getPage(const string &tableName, size_t pageIndex);
 
-    static void writePage(string tableName, size_t pageIndex, vector<vector<int>> rows, int rowCount);
+    static void writePage(const string& tableName, size_t pgIndex, const vector<vector<int>>& rows, int rowCount);
 
     void deleteFile(const string &tableName, int pageIndex);
 
-    Page getMatrixPage(const string &tableName, size_t rowIndex, size_t colIndex);
+    template<typename T>
+    MatrixPage<T> getPage(const string &matrixName, size_t rowIndex, size_t colIndex);
 
-    static void writeMatrixPage(string matrixName, size_t rowIndex, size_t colIndex, vector<vector<int>> data);
+    static void writePage(const string& matrixName, size_t rowIndex, size_t colIndex, const vector<vector<int>>& data, size_t rCount, size_t cCount);
 
-    void deleteMatrixFile(const string &matrixName, int rowIndex, int colIndex);
+    void deleteFile(const string &matrixName, int rowIndex, int colIndex);
 };

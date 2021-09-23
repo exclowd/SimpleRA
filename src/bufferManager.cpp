@@ -4,13 +4,12 @@
 
 #include "global.h"
 #include "bufferManager.h"
+#include "matrixPage.h"
 
-
-BufferManager::BufferManager() {
+BufferManager::BufferManager()
+{
     logger.log("BufferManager::BufferManager");
 }
-
-
 
 /**
  * @brief Checks to see if a page exists in the pool
@@ -19,11 +18,11 @@ BufferManager::BufferManager() {
  * @return true 
  * @return false 
  */
-bool BufferManager::inPool(const string &pageName) {
+bool BufferManager::inPool(const string &pageName)
+{
     logger.log("BufferManager::inPool");
-    return any_of(this->pages.begin(), this->pages.end(), [&](auto x) {
-        return x.pageName == pageName;
-    });
+    return any_of(this->pages.begin(), this->pages.end(), [&](auto x)
+                  { return x.pageName == pageName; });
 }
 
 /**
@@ -34,10 +33,11 @@ bool BufferManager::inPool(const string &pageName) {
  * @param pageName 
  * @return Page 
  */
-Page BufferManager::getFromPool(const string &pageName) {
+PageBase* BufferManager::getFromPool(const string &pageName)
+{
     logger.log("BufferManager::getFromPool");
-    for (auto page: this->pages)
-        if (pageName == page.pageName)
+    for (auto page : this->pages)
+        if (pageName == page->pageName)
             return page;
 }
 
@@ -46,13 +46,34 @@ Page BufferManager::getFromPool(const string &pageName) {
  * pool is full, the pool ejects the oldest inserted page from the pool and adds
  * the current page at the end. It naturally follows a queue data structure. 
  *
- * @param tableName 
+ * @param tblName
  * @param pageIndex 
  * @return Page 
  */
-Page BufferManager::insertIntoPool(const string &tableName, size_t pageIndex) {
+Page BufferManager::insertIntoPool(const string &tblName, size_t pageIndex)
+{
     logger.log("BufferManager::insertIntoPool");
-    Page page(tableName, pageIndex);
+    Page page(tblName, pageIndex);
+    if (this->pages.size() >= BLOCK_COUNT)
+        pages.pop_front();
+    pages.push_back(page);
+    return page;
+}
+
+/**
+ * @brief Inserts page indicated by entityName and pageIndex into pool. If the
+ * pool is full, the pool ejects the oldest inserted page from the pool and adds
+ * the current page at the end. It naturally follows a queue data structure.
+ *
+ * @param matName
+ * @param pageIndex
+ * @return Page
+ */
+ template<>
+MatrixPage<matrix_data_t> BufferManager::insertIntoPool(const string &matName, size_t rowIndex, size_t colIndex)
+{
+    logger.log("BufferManager::insertIntoPool");
+    auto page = new MatrixPage(matName, rowIndex, colIndex);
     if (this->pages.size() >= BLOCK_COUNT)
         pages.pop_front();
     pages.push_back(page);
@@ -64,11 +85,13 @@ Page BufferManager::insertIntoPool(const string &tableName, size_t pageIndex) {
  *
  * @param fileName
  */
-void BufferManager::deleteFile(const string &fileName) {
+void BufferManager::deleteFile(const string &fileName)
+{
 
     if (remove(fileName.c_str()))
         logger.log("BufferManager::deleteFile: Err");
-    else logger.log("BufferManager::deleteFile: Success");
+    else
+        logger.log("BufferManager::deleteFile: Success");
 }
 
 /**
@@ -79,7 +102,8 @@ void BufferManager::deleteFile(const string &fileName) {
  * @param pageIndex
  * @return Page
  */
-Page BufferManager::getPage(const string &tableName, size_t pageIndex) {
+Page BufferManager::getPage(const string &tableName, size_t pageIndex)
+{
     logger.log("BufferManager::getPage");
     string pageName = "../data/temp/" + tableName + "_Page" + to_string(pageIndex);
     if (this->inPool(pageName))
@@ -93,16 +117,16 @@ Page BufferManager::getPage(const string &tableName, size_t pageIndex) {
  * called when new tables are created using assignment statements.
  *
  * @param tableName 
- * @param pageIndex 
+ * @param pgIndex
  * @param rows 
  * @param rowCount 
  */
-void BufferManager::writePage(string tableName, size_t pageIndex, vector<vector<int>> rows, int rowCount) {
+void BufferManager::writePage(const string &tableName, size_t pgIndex, const vector<vector<int>> &rows, int rowCount)
+{
     logger.log("BufferManager::writePage");
-    Page page(std::move(tableName), pageIndex, std::move(rows), rowCount);
+    Page page(tableName, pgIndex, rows, rowCount);
     page.writePage();
 }
-
 
 /**
  * @brief Overloaded function that calls deleteFile(fileName) by constructing
@@ -111,12 +135,12 @@ void BufferManager::writePage(string tableName, size_t pageIndex, vector<vector<
  * @param tableName 
  * @param pageIndex 
  */
-void BufferManager::deleteFile(const string &tableName, int pageIndex) {
+void BufferManager::deleteFile(const string &tableName, int pageIndex)
+{
     logger.log("BufferManager::deleteFile");
     string fileName = "../data/temp/" + tableName + "_Page" + to_string(pageIndex);
     this->deleteFile(fileName);
 }
-
 
 /**
  * @brief Function called to read a page from the buffer manager. If the page is
@@ -126,13 +150,14 @@ void BufferManager::deleteFile(const string &tableName, int pageIndex) {
  * @param pageIndex
  * @return Page
  */
-Page BufferManager::getMatrixPage(const string &matrixName, size_t rowIndex, size_t colIndex) {
+MatrixPage BufferManager::getPage(const string &matrixName, size_t rowIndex, size_t colIndex)
+{
     logger.log("BufferManager::getMatrixPage");
     string pageName = "../data/temp/" + matrixName + "_MPage" + to_string(rowIndex) + ":" + to_string(colIndex);
     if (this->inPool(pageName))
-        return this->getFromPool(pageName);
+        return *dynamic_cast<MatrixPage<>*>(this->getFromPool(pageName);
     else
-        return this->insertIntoPool(matrixName, pageIndex);
+        return this->insertIntoPool(matrixName, rowIndex, colIndex);
 }
 
 /**
@@ -144,12 +169,13 @@ Page BufferManager::getMatrixPage(const string &matrixName, size_t rowIndex, siz
  * @param rows
  * @param rowCount
  */
-void BufferManager::writeMatrixPage(string matrixName, size_t rowIndex, size_t colIndex, vector<vector<int>> data) {
+void BufferManager::writePage(const string &matrixName, size_t rowIndex, size_t colIndex, const vector<vector<int>> &data, size_t rCount, size_t cCount)
+{
     logger.log("BufferManager::writeMatrixPage");
-    MatrixPage page(std::move(matrixName), rowIndex, colIndex, std::move(data));
+    // TODO create sparse and Dense matrix pages
+    MatrixPage page(matrixName, rowIndex, colIndex, data, rCount, cCount);
     page.writePage();
 }
-
 
 /**
  * @brief Overloaded function that calls deleteFile(fileName) by constructing
@@ -158,9 +184,9 @@ void BufferManager::writeMatrixPage(string matrixName, size_t rowIndex, size_t c
  * @param matrixName
  * @param pageIndex
  */
-void BufferManager::deleteMatrixFile(const string &matrixName, int rowIndex, int colIndex) {
+void BufferManager::deleteFile(const string &matrixName, int rowIndex, int colIndex)
+{
     logger.log("BufferManager::deleteMatrixFile");
     string fileName = "../data/temp/" + matrixName + "_MPage" + to_string(rowIndex) + ":" + to_string(colIndex);
     this->deleteFile(fileName);
 }
-

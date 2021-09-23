@@ -22,6 +22,10 @@ public:
     size_t columnCount;
 
     string entityName;
+
+    void writePage() {
+
+    }
 };
 
 class Page : public PageBase {
@@ -29,14 +33,14 @@ class Page : public PageBase {
 public:
     Page();
 
-    Page(const string &tblName, int pgIndex);
+    Page(const string &tblName, size_t pgIndex);
 
     Page(string tblName, size_t pgIndex, vector<vector<int>> _rows, int rCount);
 
     vector<int> getRow(int rowIndex);
 
-    void writePage();
+    void writePage() override;
 
-public:
+private:
     vector<vector<int>> rows{};
 };

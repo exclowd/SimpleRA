@@ -9,7 +9,7 @@
  *
  */
 template<>
-MatrixPage<vector<vector<int>>>::MatrixPage() {
+MatrixPage<matrix_data_t>::MatrixPage() {
     this->pageName = "";
     this->entityName = "";
     this->rowCount = 0;
@@ -30,7 +30,7 @@ MatrixPage<vector<vector<int>>>::MatrixPage() {
  * @param pgIndex
  */
 template<>
-MatrixPage<vector<vector<int>>>::MatrixPage(const string &matName, size_t rowIndex, size_t colIndex) {
+MatrixPage<matrix_data_t>::MatrixPage(const string &matName, size_t rowIndex, size_t colIndex) {
     logger.log("MatrixPage::MatrixPage");
     this->entityName = matName;
     this->pageName = "../data/temp/" + this->entityName + "_MPage" + to_string(rowIndex) + ":" + to_string(colIndex);
@@ -59,13 +59,13 @@ MatrixPage<vector<vector<int>>>::MatrixPage(const string &matName, size_t rowInd
  * @return vector<int> 
  */
 template<>
-auto MatrixPage<vector<vector<int>>>::getData() {
+vector<vector<int>> MatrixPage<matrix_data_t>::getData() {
     logger.log("MatrixPage::getData");
     return this->data;
 }
 
 template<>
-MatrixPage<vector<vector<int>>>::MatrixPage(const string &matName, size_t rowIndex, size_t colIndex,
+MatrixPage<matrix_data_t>::MatrixPage(const string &matName, size_t rowIndex, size_t colIndex,
                                             vector<vector<int>> _data, size_t rCount, size_t cCount) {
     logger.log("MatrixPage::MatrixPage");
     this->entityName = matName;
@@ -80,7 +80,7 @@ MatrixPage<vector<vector<int>>>::MatrixPage(const string &matName, size_t rowInd
  * 
  */
 template<>
-void MatrixPage<vector<vector<int>>>::writePage() {
+void MatrixPage<matrix_data_t>::writePage() {
     logger.log("MatrixPage::writePage");
     ofstream fout(this->pageName, ios::trunc);
     for (int rowCounter = 0; rowCounter < (int) this->rowCount; rowCounter++) {
@@ -93,3 +93,4 @@ void MatrixPage<vector<vector<int>>>::writePage() {
     }
     fout.close();
 }
+

@@ -27,7 +27,7 @@ Page::Page() {
  * @param tblName
  * @param pgIndex
  */
-Page::Page(const string &tblName, int pgIndex) {
+Page::Page(const string &tblName, size_t pgIndex) {
     logger.log("Page::Page");
     this->entityName = tblName;
     this->pageName = "../data/temp/" + this->entityName + "_Page" + to_string(pgIndex);
@@ -36,7 +36,6 @@ Page::Page(const string &tblName, int pgIndex) {
     size_t maxRowCount = table.maxRowsPerBlock;
     vector<int> row(columnCount, 0);
     this->rows.assign(maxRowCount, row);
-
     ifstream fin(pageName, ios::in);
     this->rowCount = table.rowsPerBlockCount[pgIndex];
     int number;

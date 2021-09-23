@@ -20,21 +20,26 @@
 using matrix_hash_t = unordered_map<pair<size_t, size_t>, int>;
 using matrix_data_t = vector<vector<int>>;
 
-template<typename T>
+template<typename T = matrix_data_t>
 class MatrixPage : public PageBase {
 public:
     static_assert(std::is_same_v<T, matrix_hash_t> || std::is_same_v<T, matrix_data_t>);
+    static constexpr bool is_sparse = std::is_same_v<T, matrix_hash_t>;
 
     MatrixPage();
 
     MatrixPage(const string &matName, size_t rowIndex, size_t colIndex);
 
-    MatrixPage(const string &matName, size_t rowIndex, size_t colIndex, vector<vector<int>> _data, size_t rCount, size_t cCount);
+    MatrixPage(const string &matName, size_t rowIndex, size_t colIndex, vector<vector<int>> _data, size_t rCount,
+               size_t cCount);
 
-    auto getData();
+    vector<vector<int>> getData();
 
-    void writePage();
+    void writePage() override;
 
 private:
     T data;
 };
+
+using matrix_sparse_t = MatrixPage<matrix_hash_t>;
+using matrix_t = MatrixPage<matrix_data_t>;
