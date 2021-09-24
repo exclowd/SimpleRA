@@ -3,9 +3,9 @@
 #include "executor.h"
 #include <vector>
 
-extern float BLOCK_SIZE;
-extern size_t BLOCK_COUNT;
-extern size_t PRINT_COUNT;
+extern const size_t BLOCK_SIZE;
+extern const size_t BLOCK_COUNT;
+extern const size_t PRINT_COUNT;
 extern vector<string> tokenizedQuery;
 extern ParsedQuery parsedQuery;
 extern TableCatalogue tableCatalogue;

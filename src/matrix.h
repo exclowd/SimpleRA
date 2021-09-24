@@ -25,14 +25,12 @@ public:
 
     [[nodiscard]] bool isPermanent() const;
 
-    [[nodiscard]] Cursor getCursor() const;
-
     bool extractSize(const string &);
 
     vector<size_t> rowsPerBlockCount;
     vector<size_t> columnsPerBlockCount;
-    size_t maxDimPerBlock{};
-
+//    static constexpr size_t maxDimPerBlock = ;
+    bool is_sparse = false;
     string sourceFileName;
     string matrixName;
     size_t size{};

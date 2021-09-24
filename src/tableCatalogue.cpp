@@ -3,7 +3,7 @@
 #include "global.h"
 
 void TableCatalogue::insertTable(Table *table) {
-    logger.log("TableCatalogue::~insertTable");
+    logger.log("TableCatalogue::insertTable");
     this->tables[table->tableName] = table;
 }
 

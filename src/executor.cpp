@@ -24,6 +24,9 @@ void executeCommand() {
         case LIST:
             executeLIST();
             break;
+        case LISTMATRIX:
+            executeLISTMATRIX();
+            break;
         case LOAD:
             executeLOAD();
             break;

@@ -35,6 +35,6 @@ void executeLOADMATRIX() {
     auto *matrix = new Matrix(parsedQuery.loadMatrixName);
     if (matrix->load()) {
         matrixCatalogue.insertMatrix(matrix);
-        cout << "Loaded Table. Column Count: " << matrix->columnCount << " Row Count: " << matrix->rowCount << endl;
+        cout << "Loaded Matrix. Size: " << matrix->size << endl;
     }
 }

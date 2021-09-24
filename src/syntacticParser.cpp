@@ -15,7 +15,7 @@ bool syntacticParse() {
     else if (possibleQueryType == "INDEX")
         return syntacticParseINDEX();
     else if (possibleQueryType == "LIST")
-        return syntacticParseLIST();
+        return tokenizedQuery[1] == "MATRIX" ? syntacticParseLISTMATRIX() : syntacticParseLIST();
     else if (possibleQueryType == "LOAD")
         return tokenizedQuery[1] == "MATRIX" ? syntacticParseLOADMATRIX() : syntacticParseLOAD();
     else if (possibleQueryType == "PRINT")

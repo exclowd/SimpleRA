@@ -13,6 +13,7 @@ enum QueryType {
     INDEX,
     JOIN,
     LIST,
+    LISTMATRIX,
     LOAD,
     LOADMATRIX,
     PRINT,
@@ -126,6 +127,8 @@ bool syntacticParseINDEX();
 bool syntacticParseJOIN();
 
 bool syntacticParseLIST();
+
+bool syntacticParseLISTMATRIX();
 
 bool syntacticParseLOAD();
 

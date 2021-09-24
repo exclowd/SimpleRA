@@ -18,6 +18,8 @@ bool semanticParseJOIN();
 
 bool semanticParseLIST();
 
+bool semanticParseLISTMATRIX();
+
 bool semanticParseLOAD();
 
 bool semanticParseLOADMATRIX();

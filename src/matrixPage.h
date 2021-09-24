@@ -15,31 +15,43 @@
  * or Teams with justification and gaining approval from the TAs. 
  *</p>
  */
-
-
-using matrix_hash_t = unordered_map<pair<size_t, size_t>, int>;
-using matrix_data_t = vector<vector<int>>;
-
-template<typename T = matrix_data_t>
 class MatrixPage : public PageBase {
 public:
-    static_assert(std::is_same_v<T, matrix_hash_t> || std::is_same_v<T, matrix_data_t>);
-    static constexpr bool is_sparse = std::is_same_v<T, matrix_hash_t>;
-
-    MatrixPage();
+    MatrixPage() {
+        this->pageName = "";
+        this->entityName = "";
+        this->rowCount = 0;
+        this->columnCount = 0;
+        this->data.clear();
+    }
 
     MatrixPage(const string &matName, size_t rowIndex, size_t colIndex);
 
     MatrixPage(const string &matName, size_t rowIndex, size_t colIndex, vector<vector<int>> _data, size_t rCount,
                size_t cCount);
 
-    vector<vector<int>> getData();
+    void writePage() override;
+
+private:
+    vector<vector<int>> data;
+};
+
+class MatrixPageSparse : public PageBase {
+public:
+    MatrixPageSparse() {
+        this->pageName = "";
+        this->entityName = "";
+        this->rowCount = 0;
+        this->columnCount = 0;
+        this->data.clear();
+    }
+
+    MatrixPageSparse(const string &matName, size_t pgIndex);
+
+    MatrixPageSparse(const string &matName, size_t pgIndex, vector<tuple<int, int, int>> _data, size_t rCount);
 
     void writePage() override;
 
 private:
-    T data;
+    vector<tuple<int, int, int>> data;
 };
-
-using matrix_sparse_t = MatrixPage<matrix_hash_t>;
-using matrix_t = MatrixPage<matrix_data_t>;

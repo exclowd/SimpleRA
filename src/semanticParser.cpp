@@ -17,6 +17,8 @@ bool semanticParse() {
             return semanticParseJOIN();
         case LIST:
             return semanticParseLIST();
+        case LISTMATRIX:
+            return semanticParseLISTMATRIX();
         case LOAD:
             return semanticParseLOAD();
         case LOADMATRIX:

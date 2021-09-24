@@ -34,8 +34,9 @@ class BufferManager {
 
     Page insertIntoPool(const string &tblName, size_t pageIndex);
 
-    template<typename T>
-    MatrixPage<T> insertIntoPool(const string &matName, size_t rowIndex, size_t colIndex);
+    MatrixPage insertIntoPool(const string &matName, size_t rowIndex, size_t colIndex);
+
+    MatrixPageSparse insertIntoPoolSparse(const string &matName, size_t pgIndex);
 
 public:
 
@@ -43,16 +44,21 @@ public:
 
     static void deleteFile(const string &fileName);
 
-    Page getPage(const string &tableName, size_t pageIndex);
+    Page getPage(const string &tableName, size_t pgIndex);
 
     static void writePage(const string& tableName, size_t pgIndex, const vector<vector<int>>& rows, int rowCount);
 
-    void deleteFile(const string &tableName, int pageIndex);
+    void deleteFile(const string &tableName, int pgIndex);
 
-    template<typename T>
-    MatrixPage<T> getPage(const string &matrixName, size_t rowIndex, size_t colIndex);
+    MatrixPage getPage(const string &matrixName, size_t rowIndex, size_t colIndex);
+
+    MatrixPageSparse getPageSparse(const string &matrixName, size_t pgIndex);
 
     static void writePage(const string& matrixName, size_t rowIndex, size_t colIndex, const vector<vector<int>>& data, size_t rCount, size_t cCount);
 
+    static void writePageSparse(const string& matrixName, size_t pgIndex, const vector<tuple<int,int,int>>& data, size_t rCount);
+
     void deleteFile(const string &matrixName, int rowIndex, int colIndex);
+
+    void deleteFileSparse(const string &matrixName, int pgIndex);
 };

@@ -18,6 +18,8 @@ void executeJOIN();
 
 void executeLIST();
 
+void executeLISTMATRIX();
+
 void executeLOAD();
 
 void executeLOADMATRIX();

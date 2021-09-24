@@ -4,6 +4,7 @@
 #include <sstream>
 #include <algorithm>
 #include "matrix.h"
+#include "global.h"
 
 Matrix::Matrix(const string &matName) {
     logger.log("Matrix::Matrix");
@@ -19,7 +20,7 @@ bool Matrix::load() {
     if (getline(fin, line)) {
         fin.close();
         if (this->extractSize(line))
-            this->blockify();
+            return this->blockify();
     }
     fin.close();
     return false;
@@ -38,6 +39,47 @@ bool Matrix::extractSize(const string &firstline) {
     auto cnt = count(firstline.begin(), firstline.end(), ',');
     this->size = cnt;
     return true;
+}
+
+bool Matrix::blockify() {
+    logger.log("Matrix::blockify");
+    fstream fin(this->sourceFileName, ios::in);
+
+    return false;
+}
+
+void Matrix::transpose() {
+
+}
+
+void Matrix::print() const {
+
+}
+
+void Matrix::makePermanent() {
+    logger.log("Matrix::makePermanent");
+    if (!this->isPermanent())
+        BufferManager::deleteFile(this->sourceFileName);
+    string newSourceFile = "../data/" + this->matrixName + ".csv";
+    ofstream fout(newSourceFile, ios::out);
+
+
+}
+
+bool Matrix::isPermanent() const {
+    logger.log("Matrix::isPermanent");
+    if (this->sourceFileName == "../data/" + this->matrixName + ".csv")
+        return true;
+    return false;
+}
+
+void Matrix::unload() const {
+    logger.log("Matrix::unload");
+    for (long long int i = 0; i < this->blockCount; i++) {
+        for (long long int j = 0; j < this->blockCount; j++) {
+            bufferManager.deleteFile(this->matrixName, i, j);
+        }
+    }
 }
 
 

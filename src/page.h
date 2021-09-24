@@ -23,9 +23,9 @@ public:
 
     string entityName;
 
-    void writePage() {
+    virtual void writePage() = 0;
 
-    }
+    virtual ~PageBase() = default;
 };
 
 class Page : public PageBase {
@@ -41,6 +41,11 @@ public:
 
     void writePage() override;
 
+    ~Page() override = default;
+
 private:
     vector<vector<int>> rows{};
 };
+
+
+using page_t = Page;
