@@ -32,7 +32,6 @@ public:
 
     void writePage() override;
 
-private:
     vector<vector<int>> data;
 };
 
@@ -52,6 +51,5 @@ public:
 
     void writePage() override;
 
-private:
     vector<tuple<int, int, int>> data;
 };

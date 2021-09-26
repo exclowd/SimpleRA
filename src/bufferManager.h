@@ -46,6 +46,8 @@ public:
 
     Page getPage(const string &tableName, size_t pgIndex);
 
+    void updatePage(const string &tableName, size_t pgIndex);
+
     static void writePage(const string& tableName, size_t pgIndex, const vector<vector<int>>& rows, int rowCount);
 
     void deleteFile(const string &tableName, int pgIndex);
@@ -54,11 +56,15 @@ public:
 
     MatrixPageSparse getPageSparse(const string &matrixName, size_t pgIndex);
 
+    void updatePage(const string &matrixName, size_t rowIndex, size_t colIndex);
+
+    void updatePageSparse(const string &matrixName, size_t pgIndex);
+
     static void writePage(const string& matrixName, size_t rowIndex, size_t colIndex, const vector<vector<int>>& data, size_t rCount, size_t cCount);
 
     static void writePageSparse(const string& matrixName, size_t pgIndex, const vector<tuple<int,int,int>>& data, size_t rCount);
 
-    void deleteFile(const string &matrixName, int rowIndex, int colIndex);
+    void deleteFile(const string &matrixName, size_t rowIndex, size_t colIndex);
 
-    void deleteFileSparse(const string &matrixName, int pgIndex);
+    void deleteFileSparse(const string &matrixName, size_t pgIndex);
 };

@@ -19,7 +19,7 @@ BufferManager::BufferManager() {
  */
 bool BufferManager::inPool(const string &pageName) {
     logger.log("BufferManager::inPool");
-    return any_of(this->pages.begin(), this->pages.end(), [&](auto x) { return x.pageName == pageName; });
+    return any_of(this->pages.begin(), this->pages.end(), [&](auto x) { return x->pageName == pageName; });
 }
 
 /**
@@ -198,7 +198,13 @@ void
 BufferManager::writePage(const string &matrixName, size_t rowIndex, size_t colIndex, const vector<vector<int>> &data,
                          size_t rCount, size_t cCount) {
     logger.log("BufferManager::writePage");
-    MatrixPage page(matrixName, rowIndex, colIndex, data, rCount, cCount);
+    vector<vector<int>> _data(rCount, vector<int>(cCount));
+    for (size_t i = 0; i < rCount; i++) {
+        for (size_t j = 0; j < cCount; j++) {
+            _data[i][j] = data[i][j];
+        }
+    }
+    MatrixPage page(matrixName, rowIndex, colIndex, _data, rCount, cCount);
     page.writePage();
 }
 
@@ -225,15 +231,42 @@ void BufferManager::writePageSparse(const string &matrixName, size_t pgIndex, co
  * @param matrixName
  * @param pageIndex
  */
-void BufferManager::deleteFile(const string &matrixName, int rowIndex, int colIndex) {
+void BufferManager::deleteFile(const string &matrixName, size_t rowIndex, size_t colIndex) {
     logger.log("BufferManager::deleteFile");
     string fileName = "../data/temp/" + matrixName + "_MPage" + to_string(rowIndex) + ":" + to_string(colIndex);
     this->deleteFile(fileName);
 }
 
 
-void BufferManager::deleteFileSparse(const string &matrixName, int pgIndex) {
+void BufferManager::deleteFileSparse(const string &matrixName, size_t pgIndex) {
     logger.log("BufferManager::deleteFileSparse");
     string fileName = "../data/temp/" + matrixName + "_MSPage" + to_string(pgIndex);
     this->deleteFile(fileName);
+}
+
+void BufferManager::updatePage(const string &tableName, size_t pgIndex) {
+    logger.log("BufferManager::getPage");
+    string pageName = "../data/temp/" + tableName + "_Page" + to_string(pgIndex);
+    if (this->inPool(pageName)) {
+        auto ptr = this->getFromPool(pageName);
+        ptr = new Page(tableName, pgIndex);
+    }
+}
+
+void BufferManager::updatePage(const string &matrixName, size_t rowIndex, size_t colIndex) {
+    logger.log("BufferManager::getPage");
+    string pageName = "../data/temp/" + matrixName + "_MPage" + to_string(rowIndex) + ":" + to_string(colIndex);
+    if (this->inPool(pageName)) {
+        auto ptr = this->getFromPool(pageName);
+        ptr = new MatrixPage(matrixName, rowIndex, colIndex);
+    }
+}
+
+void BufferManager::updatePageSparse(const string &matrixName, size_t pgIndex) {
+    logger.log("BufferManager::getPage");
+    string pageName = "../data/temp/" + matrixName + "_MSPage" + to_string(pgIndex);
+    if (this->inPool(pageName)) {
+        auto ptr = this->getFromPool(pageName);
+        ptr = new MatrixPageSparse(matrixName, pgIndex);
+    }
 }

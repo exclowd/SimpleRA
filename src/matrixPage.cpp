@@ -24,7 +24,6 @@ MatrixPage::MatrixPage(const string &matName, size_t rowIndex, size_t colIndex) 
     Matrix matrix = *matrixCatalogue.getMatrix(matName);
     this->rowCount = matrix.rowsPerBlockCount[rowIndex];
     this->columnCount = matrix.columnsPerBlockCount[colIndex];
-    size_t maxCount = matrix.maxDimPerBlock;
     vector<int> row(columnCount, 0);
     this->data.assign(rowCount, row);
     ifstream fin(pageName, ios::in);
@@ -47,7 +46,7 @@ MatrixPage::MatrixPage(const string &matName, size_t rowIndex, size_t colIndex,
     this->data = std::move(_data);
     this->rowCount = rCount;
     this->columnCount = cCount;
-    this->pageName = "../data/temp/" + this->entityName + "_Page" + to_string(rowIndex) + ":" + to_string(colIndex);
+    this->pageName = "../data/temp/" + this->entityName + "_MPage" + to_string(rowIndex) + ":" + to_string(colIndex);
 }
 
 /**

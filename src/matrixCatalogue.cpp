@@ -2,7 +2,7 @@
 // Created by exclowd on 9/10/21.
 //
 #include "global.h"
-#include "matrixCatalogue.h"
+//#include "matrixCatalogue.h"
 
 void MatrixCatalogue::insertMatrix(Matrix *matrix) {
     logger.log("MatrixCatalogue::insertMatrix");
@@ -10,7 +10,7 @@ void MatrixCatalogue::insertMatrix(Matrix *matrix) {
 }
 
 void MatrixCatalogue::deleteMatrix(const string &matrixName) {
-    logger.log("MatrixCatalogue::deleteMatrx");
+    logger.log("MatrixCatalogue::deleteMatrix");
     this->matrices[matrixName]->unload();
     auto temp = this->matrices[matrixName];
     this->matrices.erase(matrixName);
@@ -25,9 +25,7 @@ Matrix *MatrixCatalogue::getMatrix(const string &matrixName) {
 
 bool MatrixCatalogue::isMatrix(const string &matrixName) {
     logger.log("MatrixCatalogue::isMatrix");
-    if (this->matrices.count(matrixName))
-        return true;
-    return false;
+    return this->matrices.count(matrixName) > 0;
 }
 
 void MatrixCatalogue::print() {

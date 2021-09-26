@@ -46,6 +46,3 @@ public:
 private:
     vector<vector<int>> rows{};
 };
-
-
-using page_t = Page;

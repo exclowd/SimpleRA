@@ -3,6 +3,7 @@
 //
 #pragma once
 
+#include <cmath>
 #include "cursor.h"
 
 class Matrix {
@@ -29,8 +30,8 @@ public:
 
     vector<size_t> rowsPerBlockCount;
     vector<size_t> columnsPerBlockCount;
-//    static constexpr size_t maxDimPerBlock = ;
-    bool is_sparse = false;
+    size_t maxDimPerBlock{};
+    bool isSparse = false;
     string sourceFileName;
     string matrixName;
     size_t size{};
