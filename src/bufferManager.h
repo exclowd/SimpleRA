@@ -62,7 +62,7 @@ public:
                           size_t rCount, size_t cCount);
 
     static void
-    writePageSparse(const string &matrixName, size_t pgIndex, const vector<tuple<int, int, int>> &data, size_t rCount);
+    writePageSparse(const string &matrixName, size_t pgIndex, const vector<tuple<size_t, size_t, int>> &data, size_t rCount);
 
     void deleteFile(const string &matrixName, size_t rowIndex, size_t colIndex);
 

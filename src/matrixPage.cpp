@@ -101,7 +101,7 @@ MatrixPageSparse::MatrixPageSparse(const string &matName, size_t pgIndex) {
 }
 
 
-MatrixPageSparse::MatrixPageSparse(const string &matName, size_t pgIndex, vector<tuple<int, int, int>> _data,
+MatrixPageSparse::MatrixPageSparse(const string &matName, size_t pgIndex, vector<tuple<size_t, size_t, int>> _data,
                                    size_t rCount) {
     logger.log("MatrixPageSparse::MatrixPageSparse");
     this->entityName = matName;

@@ -71,7 +71,7 @@ bool Matrix::blockify() {
         if (nz > 0) this->rowsPerBlockCount.push_back(nz);
         this->columnsPerBlockCount = vector<size_t>(this->rowsPerBlockCount.size(), 3);
         size_t pageCounter = 0;
-        vector<tuple<int, int, int>> rowsInPage;
+        vector<tuple<size_t, size_t, int>> rowsInPage;
         ifstream filein(this->sourceFileName, ios::in);
         this->blockCount = 0;
         for (size_t i = 0; i < this->size; i++) {
@@ -147,6 +147,7 @@ void Matrix::transpose() {
             for (auto&[x, y, z]: p1.data) {
                 swap(x, y);
             }
+            sort(p1.data.begin(), p1.data.end());
             BufferManager::writePageSparse(this->matrixName, pgIndex, p1.data, this->rowsPerBlockCount[pgIndex]);
             bufferManager.updatePageSparse(this->matrixName, pgIndex);
         }
@@ -195,28 +196,28 @@ struct hash_pair {
 void Matrix::print() const {
     logger.log("Matrix::print");
     if (this->isSparse) {
-        size_t pgIndex = 0;
-        unordered_map<pair<size_t, size_t>, int, hash_pair> mp;
-        auto loadPage = [&]() {
+        unordered_map<pair<size_t, size_t>, pair<int, int>, hash_pair> mp;
+        vector<size_t> pgPtr(this->blockCount, 0);
+        for (size_t pgIndex = 0; pgIndex < this->blockCount; pgIndex++) {
             auto p = bufferManager.getPageSparse(this->matrixName, pgIndex);
-            for (auto&[x, y, z]: p.data) {
-                mp[{x, y}] = z;
+            auto[a, b, c] = p.data[pgPtr[pgIndex]++];
+            mp[{a, b}] = {c, pgIndex};
+        }
+        auto getVal = [&](size_t x, size_t y) {
+            if (mp.count({x, y}) != 0) {
+                auto[val, pgIndex] = mp[{x, y}];
+                mp.erase({x, y});
+                auto p = bufferManager.getPageSparse(this->matrixName, pgIndex);
+                auto[a, b, c] = p.data[pgPtr[pgIndex]++];
+                mp[{a, b}] = {c, pgIndex};
+                return val;
             }
+            return 0;
         };
-        loadPage();
-        for (size_t i = 0; i < min(this->size, 20ul) ; i++) {
-            for (size_t j = 0; j < min(this->size, 20ul); j++) {
+        for (size_t i = 0; i < min(this->size, 20ul); i++) {
+            for (size_t j = 0; j < this->size; j++) {
                 if (j != 0) cout << ",";
-                if (mp.empty() && pgIndex != this->blockCount) {
-                    pgIndex++;
-                    loadPage();
-                };
-                if (mp.find({i, j}) != mp.end()) {
-                    cout << mp[{i, j}];
-                    mp.erase({i, j});
-                } else {
-                    cout << 0;
-                }
+                cout << getVal(i, j);
             }
             cout << endl;
         }
@@ -246,28 +247,28 @@ void Matrix::makePermanent() {
     string newSourceFile = "../data/" + this->matrixName + ".csv";
     ofstream fout(newSourceFile, ios::out);
     if (this->isSparse) {
-        size_t pgIndex = 0;
-        unordered_map<pair<size_t, size_t>, int, hash_pair> mp;
-        auto loadPage = [&]() {
+        unordered_map<pair<size_t, size_t>, pair<int, int>, hash_pair> mp;
+        vector<size_t> pgPtr(this->blockCount, 0);
+        for (size_t pgIndex = 0; pgIndex < this->blockCount; pgIndex++) {
             auto p = bufferManager.getPageSparse(this->matrixName, pgIndex);
-            for (auto&[x, y, z]: p.data) {
-                mp[{x, y}] = z;
+            auto[a, b, c] = p.data[pgPtr[pgIndex]++];
+            mp[{a, b}] = {c, pgIndex};
+        }
+        auto getVal = [&](size_t x, size_t y) {
+            if (mp.count({x, y}) != 0) {
+                auto[val, pgIndex] = mp[{x, y}];
+                mp.erase({x, y});
+                auto p = bufferManager.getPageSparse(this->matrixName, pgIndex);
+                auto[a, b, c] = p.data[pgPtr[pgIndex]++];
+                mp[{a, b}] = {c, pgIndex};
+                return val;
             }
+            return 0;
         };
-        loadPage();
         for (size_t i = 0; i < this->size; i++) {
             for (size_t j = 0; j < this->size; j++) {
                 if (j != 0) fout << ",";
-                if (mp.empty() && pgIndex != this->blockCount) {
-                    pgIndex++;
-                    loadPage();
-                }
-                if (mp.find({i, j}) != mp.end()) {
-                    fout << mp[{i, j}];
-                    mp.erase({i, j});
-                } else {
-                    fout << 0;
-                }
+                fout << getVal(i, j);
             }
             fout << endl;
         }

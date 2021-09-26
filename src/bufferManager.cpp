@@ -221,7 +221,7 @@ BufferManager::writePage(const string &matrixName, size_t rowIndex, size_t colIn
  * @param rows
  * @param rowCount
  */
-void BufferManager::writePageSparse(const string &matrixName, size_t pgIndex, const vector<tuple<int, int, int>> &data,
+void BufferManager::writePageSparse(const string &matrixName, size_t pgIndex, const vector<tuple<size_t, size_t, int>> &data,
                                     size_t rCount) {
     logger.log("BufferManager::writePageSparse");
     MatrixPageSparse page(matrixName, pgIndex, data, rCount);

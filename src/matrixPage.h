@@ -47,9 +47,9 @@ public:
 
     MatrixPageSparse(const string &matName, size_t pgIndex);
 
-    MatrixPageSparse(const string &matName, size_t pgIndex, vector<tuple<int, int, int>> _data, size_t rCount);
+    MatrixPageSparse(const string &matName, size_t pgIndex, vector<tuple<size_t, size_t, int>> _data, size_t rCount);
 
     void writePage() override;
 
-    vector<tuple<int, int, int>> data;
+    vector<tuple<size_t, size_t, int>> data;
 };
