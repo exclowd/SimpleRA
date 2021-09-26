@@ -252,7 +252,7 @@ void BufferManager::updatePage(const string &tableName, size_t pgIndex) {
     logger.log("BufferManager::updatePage");
     string pageName = "../data/temp/" + tableName + "_Page" + to_string(pgIndex);
     if (this->inPool(pageName)) {
-        for (auto& page: this->pages)
+        for (auto &page: this->pages)
             if (pageName == page->pageName)
                 page = new Page(tableName, pgIndex);
     }
@@ -262,7 +262,7 @@ void BufferManager::updatePage(const string &matrixName, size_t rowIndex, size_t
     logger.log("BufferManager::updatePage");
     string pageName = "../data/temp/" + matrixName + "_MPage" + to_string(rowIndex) + ":" + to_string(colIndex);
     if (this->inPool(pageName)) {
-        for (auto& page: this->pages)
+        for (auto &page: this->pages)
             if (pageName == page->pageName)
                 page = new MatrixPage(matrixName, rowIndex, colIndex);
     }
@@ -272,7 +272,7 @@ void BufferManager::updatePageSparse(const string &matrixName, size_t pgIndex) {
     logger.log("BufferManager::updatePageSparse");
     string pageName = "../data/temp/" + matrixName + "_MSPage" + to_string(pgIndex);
     if (this->inPool(pageName)) {
-        for (auto& page: this->pages)
+        for (auto &page: this->pages)
             if (pageName == page->pageName)
                 page = new MatrixPageSparse(matrixName, pgIndex);
     }

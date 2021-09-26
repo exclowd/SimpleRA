@@ -3,7 +3,6 @@
 //
 #include <sstream>
 #include <algorithm>
-#include <cassert>
 #include "matrix.h"
 #include "global.h"
 
@@ -13,7 +12,6 @@ Matrix::Matrix(const string &matName) {
     this->matrixName = matName;
     this->maxDimPerBlock = floor(sqrt((1024 / sizeof(int)) * BLOCK_SIZE));
 }
-
 
 bool Matrix::load() {
     logger.log("Matrix::load");
@@ -63,19 +61,51 @@ bool Matrix::blockify() {
     }
     if ((double) zero >= 0.6 * (double) this->size * (double) this->size) this->isSparse = true;
     fin.close();
-    auto cnt = this->size;
-
-
-    while (cnt >= this->maxDimPerBlock) {
-        cnt -= this->maxDimPerBlock;
-        this->columnsPerBlockCount.push_back(this->maxDimPerBlock);
-    }
-    if (cnt > 0) this->columnsPerBlockCount.push_back(cnt);
-    assert(this->columnsPerBlockCount.size() == this->blockCount);
-    this->rowsPerBlockCount = this->columnsPerBlockCount;
     if (this->isSparse) {
-
+        auto nz = this->size * this->size - zero;
+        this->maxDimPerBlock = (size_t) ((BLOCK_SIZE * 1024) / (sizeof(int) * 3));
+        while (nz >= this->maxDimPerBlock) {
+            nz -= this->maxDimPerBlock;
+            this->rowsPerBlockCount.push_back(this->maxDimPerBlock);
+        }
+        if (nz > 0) this->rowsPerBlockCount.push_back(nz);
+        this->columnsPerBlockCount = vector<size_t>(this->rowsPerBlockCount.size(), 3);
+        size_t pageCounter = 0;
+        vector<tuple<int, int, int>> rowsInPage;
+        ifstream filein(this->sourceFileName, ios::in);
+        this->blockCount = 0;
+        for (size_t i = 0; i < this->size; i++) {
+            getline(filein, line);
+            std::stringstream ss(line);
+            std::string cell;
+            for (size_t j = 0; j < this->size; j++) {
+                if (!getline(ss, cell, ','))
+                    return false;
+                auto p = stoi(cell);
+                if (p == 0) continue;
+                rowsInPage.emplace_back(i, j, p);
+                pageCounter++;
+                if (pageCounter == this->rowsPerBlockCount[this->blockCount]) {
+                    BufferManager::writePageSparse(this->matrixName, this->blockCount, rowsInPage, pageCounter);
+                    this->blockCount++;
+                    pageCounter = 0;
+                    rowsInPage.clear();
+                }
+            }
+        }
+        if (this->rowsPerBlockCount.size() != this->blockCount)
+            return false;
+        return true;
     } else {
+        auto cnt = this->size;
+        while (cnt >= this->maxDimPerBlock) {
+            cnt -= this->maxDimPerBlock;
+            this->columnsPerBlockCount.push_back(this->maxDimPerBlock);
+        }
+        if (cnt > 0) this->columnsPerBlockCount.push_back(cnt);
+        if (this->columnsPerBlockCount.size() != this->blockCount)
+            return false;
+        this->rowsPerBlockCount = this->columnsPerBlockCount;
         for (size_t j = 0; j < this->blockCount; j++) {
             ifstream filein(this->sourceFileName, ios::in);
             for (size_t i = 0; i < this->blockCount; i++) {
@@ -107,15 +137,20 @@ bool Matrix::blockify() {
         }
         return true;
     }
-    return false;
 }
 
 void Matrix::transpose() {
     logger.log("Matrix::transpose");
     if (this->isSparse) {
-
+        for (size_t pgIndex = 0; pgIndex < this->blockCount; pgIndex++) {
+            auto p1 = bufferManager.getPageSparse(this->matrixName, pgIndex);
+            for (auto&[x, y, z]: p1.data) {
+                swap(x, y);
+            }
+            BufferManager::writePageSparse(this->matrixName, pgIndex, p1.data, this->rowsPerBlockCount[pgIndex]);
+            bufferManager.updatePageSparse(this->matrixName, pgIndex);
+        }
     } else {
-        cout << "Hello" << endl;
         for (size_t r = 0; r < this->blockCount; r++) {
             for (size_t c = r + 1; c < this->blockCount; c++) {
                 auto p1 = bufferManager.getPage(this->matrixName, r, c);
@@ -147,10 +182,44 @@ void Matrix::transpose() {
     }
 }
 
+struct hash_pair {
+    template<class T1, class T2>
+    size_t operator()(const pair<T1, T2> &p) const {
+        auto hash1 = hash<T1>{}(p.first);
+        auto hash2 = hash<T2>{}(p.second);
+        return hash1 ^ hash2;
+    }
+};
+
+
 void Matrix::print() const {
     logger.log("Matrix::print");
     if (this->isSparse) {
-
+        size_t pgIndex = 0;
+        unordered_map<pair<size_t, size_t>, int, hash_pair> mp;
+        auto loadPage = [&]() {
+            auto p = bufferManager.getPageSparse(this->matrixName, pgIndex);
+            for (auto&[x, y, z]: p.data) {
+                mp[{x, y}] = z;
+            }
+        };
+        loadPage();
+        for (size_t i = 0; i < this->size; i++) {
+            for (size_t j = 0; j < this->size; j++) {
+                if (j != 0) cout << ",";
+                if (mp.empty() && pgIndex != this->blockCount) {
+                    pgIndex++;
+                    loadPage();
+                };
+                if (mp.find({i, j}) != mp.end()) {
+                    cout << mp[{i, j}];
+                    mp.erase({i, j});
+                } else {
+                    cout << 0;
+                }
+            }
+            cout << endl;
+        }
     } else {
         size_t i = 0;
         for (size_t r = 0; r < this->blockCount; r++) {
@@ -169,6 +238,7 @@ void Matrix::print() const {
     }
 }
 
+
 void Matrix::makePermanent() {
     logger.log("Matrix::makePermanent");
     if (!this->isPermanent())
@@ -176,7 +246,31 @@ void Matrix::makePermanent() {
     string newSourceFile = "../data/" + this->matrixName + ".csv";
     ofstream fout(newSourceFile, ios::out);
     if (this->isSparse) {
-
+        size_t pgIndex = 0;
+        unordered_map<pair<size_t, size_t>, int, hash_pair> mp;
+        auto loadPage = [&]() {
+            auto p = bufferManager.getPageSparse(this->matrixName, pgIndex);
+            for (auto&[x, y, z]: p.data) {
+                mp[{x, y}] = z;
+            }
+        };
+        loadPage();
+        for (size_t i = 0; i < this->size; i++) {
+            for (size_t j = 0; j < this->size; j++) {
+                if (j != 0) fout << ",";
+                if (mp.empty() && pgIndex != this->blockCount) {
+                    pgIndex++;
+                    loadPage();
+                }
+                if (mp.find({i, j}) != mp.end()) {
+                    fout << mp[{i, j}];
+                    mp.erase({i, j});
+                } else {
+                    fout << 0;
+                }
+            }
+            fout << endl;
+        }
     } else {
         for (size_t r = 0; r < this->blockCount; r++) {
             for (size_t i = 0; i < this->rowsPerBlockCount[r]; i++) {
