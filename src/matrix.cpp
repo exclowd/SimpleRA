@@ -148,7 +148,17 @@ void Matrix::print() const {
     if (this->isSparse) {
 
     } else {
-
+        for (size_t r = 0; r < this->blockCount; r++) {
+            for (size_t i = 0; i < this->rowsPerBlockCount[r]; i++) {
+                for (size_t c = 0; c < this->blockCount; c++) {
+                    auto p = bufferManager.getPage(this->matrixName, r, c);
+                    for (size_t j = 0; j < this->columnsPerBlockCount[c]; j++) {
+                        cout << p.data[i][j] <<  ",";
+                    }
+                }
+                cout << endl;
+            }
+        }
     }
 }
 
@@ -162,7 +172,15 @@ void Matrix::makePermanent() {
 
     } else {
         for (size_t r = 0; r < this->blockCount; r++) {
-
+            for (size_t i = 0; i < this->rowsPerBlockCount[r]; i++) {
+                for (size_t c = 0; c < this->blockCount; c++) {
+                    auto p = bufferManager.getPage(this->matrixName, r, c);
+                    for (size_t j = 0; j < this->columnsPerBlockCount[c]; j++) {
+                        fout << p.data[i][j] <<  ",";
+                    }
+                }
+                fout << endl;
+            }
         }
     }
 }
