@@ -204,8 +204,8 @@ void Matrix::print() const {
             }
         };
         loadPage();
-        for (size_t i = 0; i < this->size; i++) {
-            for (size_t j = 0; j < this->size; j++) {
+        for (size_t i = 0; i < min(this->size, 20ul) ; i++) {
+            for (size_t j = 0; j < min(this->size, 20ul); j++) {
                 if (j != 0) cout << ",";
                 if (mp.empty() && pgIndex != this->blockCount) {
                     pgIndex++;
@@ -297,7 +297,9 @@ bool Matrix::isPermanent() const {
 void Matrix::unload() const {
     logger.log("Matrix::unload");
     if (this->isSparse) {
-
+        for (size_t i = 0; i < this->blockCount; i++) {
+            bufferManager.deleteFileSparse(this->matrixName, i);
+        }
     } else {
         for (size_t i = 0; i < this->blockCount; i++) {
             for (size_t j = 0; j < this->blockCount; j++) {
