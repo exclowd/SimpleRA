@@ -12,6 +12,8 @@ bool semanticParseDISTINCT();
 
 bool semanticParseEXPORT();
 
+bool semanticParseEXPORTMATRIX();
+
 bool semanticParseINDEX();
 
 bool semanticParseJOIN();

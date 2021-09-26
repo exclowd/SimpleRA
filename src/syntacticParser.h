@@ -9,6 +9,7 @@ enum QueryType {
     CLEAR,
     CROSS,
     DISTINCT,
+    EXPORTMATRIX,
     EXPORT,
     INDEX,
     JOIN,
@@ -64,6 +65,7 @@ public:
     string distinctRelationName;
 
     string exportRelationName;
+    string exportMatrixName;
 
     IndexingStrategy indexingStrategy = IndexingStrategy::NOTHING;
     string indexColumnName;
@@ -121,6 +123,8 @@ bool syntacticParseCROSS();
 bool syntacticParseDISTINCT();
 
 bool syntacticParseEXPORT();
+
+bool syntacticParseEXPORTMATRIX();
 
 bool syntacticParseINDEX();
 

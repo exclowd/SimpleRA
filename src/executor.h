@@ -12,6 +12,8 @@ void executeDISTINCT();
 
 void executeEXPORT();
 
+void executeEXPORTMATRIX();
+
 void executeINDEX();
 
 void executeJOIN();

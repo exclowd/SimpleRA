@@ -169,10 +169,11 @@ void BufferManager::deleteFile(const string &tableName, int pgIndex) {
 MatrixPage BufferManager::getPage(const string &matrixName, size_t rowIndex, size_t colIndex) {
     logger.log("BufferManager::getPage");
     string pageName = "../data/temp/" + matrixName + "_MPage" + to_string(rowIndex) + ":" + to_string(colIndex);
-    if (this->inPool(pageName))
+    if (this->inPool(pageName)) {
         return *dynamic_cast<MatrixPage *>(this->getFromPool(pageName));
-    else
+    } else {
         return this->insertIntoPool(matrixName, rowIndex, colIndex);
+    }
 }
 
 
@@ -245,28 +246,31 @@ void BufferManager::deleteFileSparse(const string &matrixName, size_t pgIndex) {
 }
 
 void BufferManager::updatePage(const string &tableName, size_t pgIndex) {
-    logger.log("BufferManager::getPage");
+    logger.log("BufferManager::updatePage");
     string pageName = "../data/temp/" + tableName + "_Page" + to_string(pgIndex);
     if (this->inPool(pageName)) {
-        auto ptr = this->getFromPool(pageName);
-        ptr = new Page(tableName, pgIndex);
+        for (auto& page: this->pages)
+            if (pageName == page->pageName)
+                page = new Page(tableName, pgIndex);
     }
 }
 
 void BufferManager::updatePage(const string &matrixName, size_t rowIndex, size_t colIndex) {
-    logger.log("BufferManager::getPage");
+    logger.log("BufferManager::updatePage");
     string pageName = "../data/temp/" + matrixName + "_MPage" + to_string(rowIndex) + ":" + to_string(colIndex);
     if (this->inPool(pageName)) {
-        auto ptr = this->getFromPool(pageName);
-        ptr = new MatrixPage(matrixName, rowIndex, colIndex);
+        for (auto& page: this->pages)
+            if (pageName == page->pageName)
+                page = new MatrixPage(matrixName, rowIndex, colIndex);
     }
 }
 
 void BufferManager::updatePageSparse(const string &matrixName, size_t pgIndex) {
-    logger.log("BufferManager::getPage");
+    logger.log("BufferManager::updatePageSparse");
     string pageName = "../data/temp/" + matrixName + "_MSPage" + to_string(pgIndex);
     if (this->inPool(pageName)) {
-        auto ptr = this->getFromPool(pageName);
-        ptr = new MatrixPageSparse(matrixName, pgIndex);
+        for (auto& page: this->pages)
+            if (pageName == page->pageName)
+                page = new MatrixPageSparse(matrixName, pgIndex);
     }
 }

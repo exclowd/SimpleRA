@@ -110,9 +110,11 @@ bool Matrix::blockify() {
 }
 
 void Matrix::transpose() {
+    logger.log("Matrix::transpose");
     if (this->isSparse) {
 
     } else {
+        cout << "Hello" << endl;
         for (size_t r = 0; r < this->blockCount; r++) {
             for (size_t c = r + 1; c < this->blockCount; c++) {
                 auto p1 = bufferManager.getPage(this->matrixName, r, c);
@@ -139,12 +141,15 @@ void Matrix::transpose() {
             }
             BufferManager::writePage(this->matrixName, r, r, p1.data, this->rowsPerBlockCount[r],
                                      this->columnsPerBlockCount[r]);
+            cout << "before update" << endl;
             bufferManager.updatePage(this->matrixName, r, r);
+            cout << "done update" << endl;
         }
     }
 }
 
 void Matrix::print() const {
+    logger.log("Matrix::print");
     if (this->isSparse) {
 
     } else {
@@ -152,8 +157,9 @@ void Matrix::print() const {
             for (size_t i = 0; i < this->rowsPerBlockCount[r]; i++) {
                 for (size_t c = 0; c < this->blockCount; c++) {
                     auto p = bufferManager.getPage(this->matrixName, r, c);
-                    for (size_t j = 0; j < this->columnsPerBlockCount[c]; j++) {
-                        cout << p.data[i][j] <<  ",";
+                    cout << p.data[i][0];
+                    for (size_t j = 1; j < this->columnsPerBlockCount[c]; j++) {
+                        cout << "," << p.data[i][j];
                     }
                 }
                 cout << endl;
@@ -175,8 +181,9 @@ void Matrix::makePermanent() {
             for (size_t i = 0; i < this->rowsPerBlockCount[r]; i++) {
                 for (size_t c = 0; c < this->blockCount; c++) {
                     auto p = bufferManager.getPage(this->matrixName, r, c);
-                    for (size_t j = 0; j < this->columnsPerBlockCount[c]; j++) {
-                        fout << p.data[i][j] <<  ",";
+                    fout << p.data[i][0];
+                    for (size_t j = 1; j < this->columnsPerBlockCount[c]; j++) {
+                        fout << "," << p.data[i][j];
                     }
                 }
                 fout << endl;

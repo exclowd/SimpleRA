@@ -23,7 +23,7 @@ bool syntacticParse() {
     else if (possibleQueryType == "RENAME")
         return syntacticParseRENAME();
     else if (possibleQueryType == "EXPORT")
-        return syntacticParseEXPORT();
+        return tokenizedQuery[1] == "MATRIX" ? syntacticParseEXPORTMATRIX() : syntacticParseEXPORT();
     else if (possibleQueryType == "SOURCE")
         return syntacticParseSOURCE();
     else if (possibleQueryType == "TRANSPOSE")

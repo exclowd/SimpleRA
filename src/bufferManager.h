@@ -25,20 +25,18 @@
  *
  */
 class BufferManager {
-
-    deque<PageBase*> pages;
+public:
+    deque<PageBase *> pages;
 
     bool inPool(const string &pageName);
 
-    PageBase* getFromPool(const string &pageName);
+    PageBase *getFromPool(const string &pageName);
 
     Page insertIntoPool(const string &tblName, size_t pageIndex);
 
     MatrixPage insertIntoPool(const string &matName, size_t rowIndex, size_t colIndex);
 
     MatrixPageSparse insertIntoPoolSparse(const string &matName, size_t pgIndex);
-
-public:
 
     BufferManager();
 
@@ -48,7 +46,7 @@ public:
 
     void updatePage(const string &tableName, size_t pgIndex);
 
-    static void writePage(const string& tableName, size_t pgIndex, const vector<vector<int>>& rows, int rowCount);
+    static void writePage(const string &tableName, size_t pgIndex, const vector<vector<int>> &rows, int rowCount);
 
     void deleteFile(const string &tableName, int pgIndex);
 
@@ -60,9 +58,11 @@ public:
 
     void updatePageSparse(const string &matrixName, size_t pgIndex);
 
-    static void writePage(const string& matrixName, size_t rowIndex, size_t colIndex, const vector<vector<int>>& data, size_t rCount, size_t cCount);
+    static void writePage(const string &matrixName, size_t rowIndex, size_t colIndex, const vector<vector<int>> &data,
+                          size_t rCount, size_t cCount);
 
-    static void writePageSparse(const string& matrixName, size_t pgIndex, const vector<tuple<int,int,int>>& data, size_t rCount);
+    static void
+    writePageSparse(const string &matrixName, size_t pgIndex, const vector<tuple<int, int, int>> &data, size_t rCount);
 
     void deleteFile(const string &matrixName, size_t rowIndex, size_t colIndex);
 

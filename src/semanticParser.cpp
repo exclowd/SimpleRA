@@ -11,6 +11,8 @@ bool semanticParse() {
             return semanticParseDISTINCT();
         case EXPORT:
             return semanticParseEXPORT();
+        case EXPORTMATRIX:
+            return semanticParseEXPORTMATRIX();
         case INDEX:
             return semanticParseINDEX();
         case JOIN:

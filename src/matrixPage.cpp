@@ -24,13 +24,12 @@ MatrixPage::MatrixPage(const string &matName, size_t rowIndex, size_t colIndex) 
     Matrix matrix = *matrixCatalogue.getMatrix(matName);
     this->rowCount = matrix.rowsPerBlockCount[rowIndex];
     this->columnCount = matrix.columnsPerBlockCount[colIndex];
-    vector<int> row(columnCount, 0);
-    this->data.assign(rowCount, row);
+//    vector<int> row(columnCount, 0);
+    this->data.assign(rowCount, vector<int>(columnCount));
     ifstream fin(pageName, ios::in);
-    this->rowCount = matrix.rowsPerBlockCount[rowIndex];
-    int number;
     for (int rowCounter = 0; rowCounter < (int) this->rowCount; rowCounter++) {
         for (int columnCounter = 0; columnCounter < (int) this->columnCount; columnCounter++) {
+            int number;
             fin >> number;
             this->data[rowCounter][columnCounter] = number;
         }
@@ -85,7 +84,7 @@ void MatrixPage::writePage() {
  * @param pgIndex
  */
 MatrixPageSparse::MatrixPageSparse(const string &matName, size_t pgIndex) {
-    logger.log("MatrixPageSparse::MatrixPage[sparse]");
+    logger.log("MatrixPageSparse::MatrixPageSparse");
     this->entityName = matName;
     this->pageName = "../data/temp/" + this->entityName + "_MSPage" + to_string(pgIndex);
     Matrix matrix = *matrixCatalogue.getMatrix(matName);
