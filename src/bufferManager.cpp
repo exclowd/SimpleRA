@@ -1,6 +1,7 @@
 #include <utility>
 #include <vector>
 #include <algorithm>
+#include <cassert>
 
 #include "global.h"
 #include "bufferManager.h"
@@ -199,6 +200,8 @@ void
 BufferManager::writePage(const string &matrixName, size_t rowIndex, size_t colIndex, const vector<vector<int>> &data,
                          size_t rCount, size_t cCount) {
     logger.log("BufferManager::writePage");
+    assert(data.size() == rCount);
+    assert(data[0].size() == cCount);
     vector<vector<int>> _data(rCount, vector<int>(cCount));
     for (size_t i = 0; i < rCount; i++) {
         for (size_t j = 0; j < cCount; j++) {

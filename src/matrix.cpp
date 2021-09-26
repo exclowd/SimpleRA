@@ -79,6 +79,7 @@ bool Matrix::blockify() {
         for (size_t j = 0; j < this->blockCount; j++) {
             ifstream filein(this->sourceFileName, ios::in);
             for (size_t i = 0; i < this->blockCount; i++) {
+                cout << "loading " << i << " " << j << "\r";
                 vector<vector<int>> data(this->rowsPerBlockCount[i]);
                 for (size_t row = 0; row < this->rowsPerBlockCount[i]; row++) {
                     getline(filein, line);
@@ -124,9 +125,9 @@ void Matrix::transpose() {
                         swap(p1.data[i][j], p2.data[j][i]);
                     }
                 }
-                BufferManager::writePage(this->matrixName, r, c, p2.data, this->rowsPerBlockCount[r],
+                BufferManager::writePage(this->matrixName, r, c, p1.data, this->rowsPerBlockCount[r],
                                          this->columnsPerBlockCount[c]);
-                BufferManager::writePage(this->matrixName, c, r, p1.data, this->rowsPerBlockCount[c],
+                BufferManager::writePage(this->matrixName, c, r, p2.data, this->rowsPerBlockCount[c],
                                          this->columnsPerBlockCount[r]);
                 bufferManager.updatePage(this->matrixName, r, c);
                 bufferManager.updatePage(this->matrixName, c, r);
@@ -141,9 +142,7 @@ void Matrix::transpose() {
             }
             BufferManager::writePage(this->matrixName, r, r, p1.data, this->rowsPerBlockCount[r],
                                      this->columnsPerBlockCount[r]);
-            cout << "before update" << endl;
             bufferManager.updatePage(this->matrixName, r, r);
-            cout << "done update" << endl;
         }
     }
 }
@@ -153,13 +152,15 @@ void Matrix::print() const {
     if (this->isSparse) {
 
     } else {
+        size_t i = 0;
         for (size_t r = 0; r < this->blockCount; r++) {
-            for (size_t i = 0; i < this->rowsPerBlockCount[r]; i++) {
+            for (; i < this->rowsPerBlockCount[r] && i < 20; i++) {
+                size_t j = 0;
                 for (size_t c = 0; c < this->blockCount; c++) {
                     auto p = bufferManager.getPage(this->matrixName, r, c);
-                    cout << p.data[i][0];
-                    for (size_t j = 1; j < this->columnsPerBlockCount[c]; j++) {
-                        cout << "," << p.data[i][j];
+                    for (; j < this->columnsPerBlockCount[c] && j < 20; j++) {
+                        if (j != 0) cout << ",";
+                        cout << p.data[i][j];
                     }
                 }
                 cout << endl;
@@ -181,9 +182,9 @@ void Matrix::makePermanent() {
             for (size_t i = 0; i < this->rowsPerBlockCount[r]; i++) {
                 for (size_t c = 0; c < this->blockCount; c++) {
                     auto p = bufferManager.getPage(this->matrixName, r, c);
-                    fout << p.data[i][0];
-                    for (size_t j = 1; j < this->columnsPerBlockCount[c]; j++) {
-                        fout << "," << p.data[i][j];
+                    for (size_t j = 0; j < this->columnsPerBlockCount[c]; j++) {
+                        if (c != 0 || j != 0) fout << ',';
+                        fout << p.data[i][j];
                     }
                 }
                 fout << endl;
