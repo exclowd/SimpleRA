@@ -24,7 +24,6 @@ MatrixPage::MatrixPage(const string &matName, size_t rowIndex, size_t colIndex) 
     Matrix matrix = *matrixCatalogue.getMatrix(matName);
     this->rowCount = matrix.rowsPerBlockCount[rowIndex];
     this->columnCount = matrix.columnsPerBlockCount[colIndex];
-//    vector<int> row(columnCount, 0);
     this->data.assign(rowCount, vector<int>(columnCount));
     ifstream fin(pageName, ios::in);
     for (int rowCounter = 0; rowCounter < (int) this->rowCount; rowCounter++) {

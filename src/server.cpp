@@ -55,4 +55,7 @@ int main() {
 
         doCommand();
     }
+
+    bufferManager.cleanUp();
+    return 0;
 }
