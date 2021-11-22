@@ -47,6 +47,8 @@ bool syntacticParse() {
             return syntacticParseDISTINCT();
         else if (possibleQueryType == "SORT")
             return syntacticParseSORT();
+        else if (possibleQueryType == "GROUP")
+            return syntacticParseGROUPBY();
         else {
             cout << "SYNTAX ERROR" << endl;
             return false;
@@ -71,6 +73,8 @@ void ParsedQuery::clear() {
     this->distinctRelationName = "";
 
     this->exportRelationName = "";
+    this->exportMatrixName = "";
+
 
     this->indexingStrategy = IndexingStrategy::NOTHING;
     this->indexColumnName = "";
@@ -84,8 +88,10 @@ void ParsedQuery::clear() {
     this->joinSecondColumnName = "";
 
     this->loadRelationName = "";
+    this->loadMatrixName = "";
 
     this->printRelationName = "";
+    this->printMatrixName = "";
 
     this->projectionResultRelationName = "";
     this->projectionColumnList.clear();
@@ -109,6 +115,8 @@ void ParsedQuery::clear() {
     this->sortRelationName = "";
 
     this->sourceFileName = "";
+
+    this->transposeMatrixName = "";
 }
 
 /**

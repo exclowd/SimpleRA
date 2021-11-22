@@ -32,11 +32,11 @@ public:
 
     PageBase *getFromPool(const string &pageName);
 
-    Page* insertIntoPool(const string &tblName, size_t pageIndex);
+    Page *insertIntoPool(const string &tblName, size_t pageIndex);
 
-    MatrixPage* insertIntoPool(const string &matName, size_t rowIndex, size_t colIndex);
+    MatrixPage *insertIntoPool(const string &matName, size_t rowIndex, size_t colIndex);
 
-    MatrixPageSparse* insertIntoPoolSparse(const string &matName, size_t pgIndex);
+    MatrixPageSparse *insertIntoPoolSparse(const string &matName, size_t pgIndex);
 
     BufferManager();
 

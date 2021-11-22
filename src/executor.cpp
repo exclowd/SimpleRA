@@ -18,6 +18,8 @@ void executeCommand() {
         case EXPORTMATRIX:
             executeEXPORTMATRIX();
             break;
+        case GROUPBY:
+            executeGROUPBY();
         case INDEX:
             executeINDEX();
             break;

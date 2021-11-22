@@ -14,6 +14,8 @@ bool semanticParseEXPORT();
 
 bool semanticParseEXPORTMATRIX();
 
+bool semanticParseGROUPBY();
+
 bool semanticParseINDEX();
 
 bool semanticParseJOIN();

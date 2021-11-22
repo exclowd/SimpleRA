@@ -48,11 +48,11 @@ PageBase *BufferManager::getFromPool(const string &pageName) {
  * @param pageIndex 
  * @return Page 
  */
-Page* BufferManager::insertIntoPool(const string &tblName, size_t pageIndex) {
+Page *BufferManager::insertIntoPool(const string &tblName, size_t pageIndex) {
     logger.log("BufferManager::insertIntoPool");
     auto page = new Page(tblName, pageIndex);
     if (this->pages.size() >= BLOCK_COUNT) {
-        PageBase* temp = pages.front();
+        PageBase *temp = pages.front();
         pages.pop_front();
         delete temp;
     }
@@ -69,11 +69,11 @@ Page* BufferManager::insertIntoPool(const string &tblName, size_t pageIndex) {
  * @param pageIndex
  * @return Page
  */
-MatrixPage* BufferManager::insertIntoPool(const string &matName, size_t rowIndex, size_t colIndex) {
+MatrixPage *BufferManager::insertIntoPool(const string &matName, size_t rowIndex, size_t colIndex) {
     logger.log("BufferManager::insertIntoPool");
     auto page = new MatrixPage(matName, rowIndex, colIndex);
     if (this->pages.size() >= BLOCK_COUNT) {
-        PageBase* temp = pages.front();
+        PageBase *temp = pages.front();
         pages.pop_front();
         delete temp;
     }
@@ -90,11 +90,11 @@ MatrixPage* BufferManager::insertIntoPool(const string &matName, size_t rowIndex
  * @param pageIndex
  * @return Page
  */
-MatrixPageSparse* BufferManager::insertIntoPoolSparse(const string &matName, size_t pgIndex) {
+MatrixPageSparse *BufferManager::insertIntoPoolSparse(const string &matName, size_t pgIndex) {
     logger.log("BufferManager::insertIntoPoolSparse");
     auto page = new MatrixPageSparse(matName, pgIndex);
     if (this->pages.size() >= BLOCK_COUNT) {
-        PageBase* temp = pages.front();
+        PageBase *temp = pages.front();
         pages.pop_front();
         delete temp;
     }

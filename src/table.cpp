@@ -38,6 +38,8 @@ Table::Table(const string &tblName, const vector<string> &c) {
     this->tableName = tblName;
     this->columns = c;
     this->columnCount = c.size();
+    this->distinctValuesInColumns.assign(this->columnCount, {});
+    this->distinctValuesPerColumnCount.assign(this->columnCount, 0);
     this->maxRowsPerBlock = (size_t) ((BLOCK_SIZE * 1024) / (sizeof(int) * columnCount));
     this->writeRow<string>(c);
 }

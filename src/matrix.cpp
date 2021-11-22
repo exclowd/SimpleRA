@@ -192,7 +192,6 @@ struct hash_pair {
     }
 };
 
-
 void Matrix::print() const {
     logger.log("Matrix::print");
     if (this->isSparse) {
@@ -208,7 +207,7 @@ void Matrix::print() const {
                 auto[val, pgIndex] = mp[{x, y}];
                 mp.erase({x, y});
                 auto p = bufferManager.getPageSparse(this->matrixName, pgIndex);
-                if (pgPtr[pgIndex] != p.data.size()) { 
+                if (pgPtr[pgIndex] != p.data.size()) {
                     auto[a, b, c] = p.data[pgPtr[pgIndex]++];
                     mp[{a, b}] = {c, pgIndex};
                 }
@@ -261,7 +260,7 @@ void Matrix::makePermanent() {
                 auto[val, pgIndex] = mp[{x, y}];
                 mp.erase({x, y});
                 auto p = bufferManager.getPageSparse(this->matrixName, pgIndex);
-                if (pgPtr[pgIndex] != p.data.size()) { 
+                if (pgPtr[pgIndex] != p.data.size()) {
                     auto[a, b, c] = p.data[pgPtr[pgIndex]++];
                     mp[{a, b}] = {c, pgIndex};
                 }

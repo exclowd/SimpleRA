@@ -11,6 +11,7 @@ enum QueryType {
     DISTINCT,
     EXPORTMATRIX,
     EXPORT,
+    GROUPBY,
     INDEX,
     JOIN,
     LIST,
@@ -66,6 +67,12 @@ public:
 
     string exportRelationName;
     string exportMatrixName;
+
+    string groupByGroupingAttributeName;
+    string groupByResultRelationName;
+    string groupByRelationName;
+    string groupByOperatorName;
+    string groupByAttributeName;
 
     IndexingStrategy indexingStrategy = IndexingStrategy::NOTHING;
     string indexColumnName;
@@ -126,6 +133,8 @@ bool syntacticParseEXPORT();
 
 bool syntacticParseEXPORTMATRIX();
 
+bool syntacticParseGROUPBY();
+
 bool syntacticParseINDEX();
 
 bool syntacticParseJOIN();
@@ -157,3 +166,4 @@ bool syntacticParseTRANSPOSE();
 bool isFileExists(const string &tableName);
 
 bool isQueryFile(string fileName);
+

@@ -13,6 +13,8 @@ bool semanticParse() {
             return semanticParseEXPORT();
         case EXPORTMATRIX:
             return semanticParseEXPORTMATRIX();
+        case GROUPBY:
+            return semanticParseGROUPBY();
         case INDEX:
             return semanticParseINDEX();
         case JOIN:
