@@ -10,7 +10,13 @@
  */
 bool syntacticParseSORT() {
     logger.log("syntacticParseSORT");
-    if (tokenizedQuery.size() != 8 || tokenizedQuery[4] != "BY" || tokenizedQuery[6] != "IN") {
+
+    if ((tokenizedQuery.size() != 8 && tokenizedQuery.size() != 10) || tokenizedQuery[4] != "BY" ||
+        tokenizedQuery[6] != "IN") {
+        cout << "SYNTAX ERROR" << endl;
+        return false;
+    }
+    if (tokenizedQuery.size() == 10 && tokenizedQuery[8] != "BUFFER") {
         cout << "SYNTAX ERROR" << endl;
         return false;
     }
@@ -18,10 +24,11 @@ bool syntacticParseSORT() {
     parsedQuery.sortResultRelationName = tokenizedQuery[0];
     parsedQuery.sortColumnName = tokenizedQuery[3];
     parsedQuery.sortRelationName = tokenizedQuery[5];
-    string sortingStrateg = tokenizedQuery[7];
-    if (sortingStrateg == "ASC")
+    parsedQuery.sortBufferSize = tokenizedQuery.size() == 10 ? stoi(tokenizedQuery[9]) : 10;
+    string sortingStrategy = tokenizedQuery[7];
+    if (sortingStrategy == "ASC")
         parsedQuery.sortingStrategy = ASC;
-    else if (sortingStrateg == "DESC")
+    else if (sortingStrategy == "DESC")
         parsedQuery.sortingStrategy = DESC;
     else {
         cout << "SYNTAX ERROR" << endl;
@@ -53,4 +60,20 @@ bool semanticParseSORT() {
 
 void executeSORT() {
     logger.log("executeSORT");
+
+    Table *table = tableCatalogue.getTable(parsedQuery.sortRelationName);
+    auto *result = new Table(parsedQuery.sortResultRelationName, table->columns);
+    result->blockCount = table->blockCount;
+    result->columnCount = table->columnCount;
+    result->columns = table->columns;
+    result->maxRowsPerBlock = table->maxRowsPerBlock;
+    result->rowCount = table->rowCount;
+    result->rowsPerBlockCount.resize(table->blockCount * 3, 0);
+    tableCatalogue.insertTable(result);
+
+    Cursor cursor = table->getCursor();
+    vector<int> row = cursor.getNext();
+
+    // First pass
+
 }

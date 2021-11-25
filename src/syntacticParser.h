@@ -111,6 +111,7 @@ public:
     string sortResultRelationName;
     string sortColumnName;
     string sortRelationName;
+    int sortBufferSize;
 
     string transposeMatrixName;
 

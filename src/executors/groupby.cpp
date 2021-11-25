@@ -60,9 +60,8 @@ void executeGROUPBY() {
     map<int, int> result;
     map<int, int> count;
 
-    vector<int> row;
     Cursor cursor = table->getCursor();
-    row = cursor.getNext();
+    vector<int> row = cursor.getNext();
 
     while (!row.empty()) {
         if (parsedQuery.groupByOperatorName == "MAX") {
@@ -85,7 +84,7 @@ void executeGROUPBY() {
     }
 //
     vector<vector<int>> rows;
-    for (const auto& [x,y]: result) {
+    for (const auto&[x, y]: result) {
         if (parsedQuery.groupByOperatorName == "AVG") {
             resultantTable->updateStatistics({x, y / count[x]});
             rows.push_back({x, y / count[x]});
