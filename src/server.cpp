@@ -7,6 +7,7 @@ using namespace std;
 const size_t BLOCK_SIZE = 8;
 const size_t BLOCK_COUNT = 10;
 const size_t PRINT_COUNT = 20;
+
 Logger logger;
 vector<string> tokenizedQuery;
 ParsedQuery parsedQuery;
@@ -24,8 +25,12 @@ int main() {
 
     regex delim("[^\\s,]+");
     string command;
-    system("rm -rf ../data/temp");
-    system("mkdir ../data/temp");
+    if (!system("rm -rf ../data/temp")) {
+        return -1;
+    }
+    if (!system("mkdir ../data/temp")) {
+        return -1;
+    };
 
     while (!cin.eof()) {
         cout << "\n> ";
@@ -52,7 +57,7 @@ int main() {
             cout << "SYNTAX ERROR" << endl;
             continue;
         }
-
+       
         doCommand();
     }
 
