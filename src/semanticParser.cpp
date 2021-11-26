@@ -1,8 +1,8 @@
 #include"global.h"
 
 bool semanticParse() {
-    logger.log("semanticParse");
-    switch (parsedQuery.queryType) {
+    logger->log("semanticParse");
+    switch (parsedQuery->queryType) {
         case CLEAR:
             return semanticParseCLEAR();
         case CROSS:

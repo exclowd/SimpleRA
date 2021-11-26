@@ -7,14 +7,14 @@
 #include "global.h"
 
 Matrix::Matrix(const string &matName) {
-    logger.log("Matrix::Matrix");
+    logger->log("Matrix::Matrix");
     this->sourceFileName = "../data/" + matName + ".csv";
     this->matrixName = matName;
     this->maxDimPerBlock = floor(sqrt((1024 / sizeof(int)) * BLOCK_SIZE));
 }
 
 bool Matrix::load() {
-    logger.log("Matrix::load");
+    logger->log("Matrix::load");
     fstream fin(this->sourceFileName, ios::in);
     string line;
     if (getline(fin, line)) {
@@ -27,7 +27,7 @@ bool Matrix::load() {
 }
 
 bool Matrix::extractSize(const string &firstline) {
-    logger.log("Matrix:extractSize");
+    logger->log("Matrix:extractSize");
     string word;
     stringstream s(firstline);
     while (getline(s, word, ',')) {
@@ -43,7 +43,7 @@ bool Matrix::extractSize(const string &firstline) {
 }
 
 bool Matrix::blockify() {
-    logger.log("Matrix::blockify");
+    logger->log("Matrix::blockify");
     fstream fin(this->sourceFileName, ios::in);
     // decide whether sparse or not
     size_t zero{};
@@ -140,22 +140,22 @@ bool Matrix::blockify() {
 }
 
 void Matrix::transpose() {
-    logger.log("Matrix::transpose");
+    logger->log("Matrix::transpose");
     if (this->isSparse) {
         for (size_t pgIndex = 0; pgIndex < this->blockCount; pgIndex++) {
-            auto p1 = bufferManager.getPageSparse(this->matrixName, pgIndex);
+            auto p1 = bufferManager->getPageSparse(this->matrixName, pgIndex);
             for (auto&[x, y, z]: p1.data) {
                 swap(x, y);
             }
             sort(p1.data.begin(), p1.data.end());
             BufferManager::writePageSparse(this->matrixName, pgIndex, p1.data, this->rowsPerBlockCount[pgIndex]);
-            bufferManager.updatePageSparse(this->matrixName, pgIndex);
+            bufferManager->updatePageSparse(this->matrixName, pgIndex);
         }
     } else {
         for (size_t r = 0; r < this->blockCount; r++) {
             for (size_t c = r + 1; c < this->blockCount; c++) {
-                auto p1 = bufferManager.getPage(this->matrixName, r, c);
-                auto p2 = bufferManager.getPage(this->matrixName, c, r);
+                auto p1 = bufferManager->getPage(this->matrixName, r, c);
+                auto p2 = bufferManager->getPage(this->matrixName, c, r);
                 for (size_t i = 0; i < this->rowsPerBlockCount[r]; i++) {
                     for (size_t j = 0; j < this->columnsPerBlockCount[c]; j++) {
                         swap(p1.data[i][j], p2.data[j][i]);
@@ -165,12 +165,12 @@ void Matrix::transpose() {
                                          this->columnsPerBlockCount[c]);
                 BufferManager::writePage(this->matrixName, c, r, p2.data, this->rowsPerBlockCount[c],
                                          this->columnsPerBlockCount[r]);
-                bufferManager.updatePage(this->matrixName, r, c);
-                bufferManager.updatePage(this->matrixName, c, r);
+                bufferManager->updatePage(this->matrixName, r, c);
+                bufferManager->updatePage(this->matrixName, c, r);
             }
         }
         for (size_t r = 0; r < this->blockCount; r++) {
-            auto p1 = bufferManager.getPage(this->matrixName, r, r);
+            auto p1 = bufferManager->getPage(this->matrixName, r, r);
             for (size_t i = 0; i < this->rowsPerBlockCount[r]; i++) {
                 for (size_t j = i + 1; j < this->columnsPerBlockCount[r]; j++) {
                     swap(p1.data[i][j], p1.data[j][i]);
@@ -178,7 +178,7 @@ void Matrix::transpose() {
             }
             BufferManager::writePage(this->matrixName, r, r, p1.data, this->rowsPerBlockCount[r],
                                      this->columnsPerBlockCount[r]);
-            bufferManager.updatePage(this->matrixName, r, r);
+            bufferManager->updatePage(this->matrixName, r, r);
         }
     }
 }
@@ -193,12 +193,12 @@ struct hash_pair {
 };
 
 void Matrix::print() const {
-    logger.log("Matrix::print");
+    logger->log("Matrix::print");
     if (this->isSparse) {
         unordered_map<pair<size_t, size_t>, pair<int, int>, hash_pair> mp;
         vector<size_t> pgPtr(this->blockCount, 0);
         for (size_t pgIndex = 0; pgIndex < this->blockCount; pgIndex++) {
-            auto p = bufferManager.getPageSparse(this->matrixName, pgIndex);
+            auto p = bufferManager->getPageSparse(this->matrixName, pgIndex);
             auto[a, b, c] = p.data[pgPtr[pgIndex]++];
             mp[{a, b}] = {c, pgIndex};
         }
@@ -206,7 +206,7 @@ void Matrix::print() const {
             if (mp.count({x, y}) != 0) {
                 auto[val, pgIndex] = mp[{x, y}];
                 mp.erase({x, y});
-                auto p = bufferManager.getPageSparse(this->matrixName, pgIndex);
+                auto p = bufferManager->getPageSparse(this->matrixName, pgIndex);
                 if (pgPtr[pgIndex] != p.data.size()) {
                     auto[a, b, c] = p.data[pgPtr[pgIndex]++];
                     mp[{a, b}] = {c, pgIndex};
@@ -228,7 +228,7 @@ void Matrix::print() const {
             for (; i < this->rowsPerBlockCount[r] && i < 20; i++) {
                 size_t j = 0;
                 for (size_t c = 0; c < this->blockCount; c++) {
-                    auto p = bufferManager.getPage(this->matrixName, r, c);
+                    auto p = bufferManager->getPage(this->matrixName, r, c);
                     for (; j < this->columnsPerBlockCount[c] && j < 20; j++) {
                         if (j != 0) cout << ",";
                         cout << p.data[i][j];
@@ -242,7 +242,7 @@ void Matrix::print() const {
 
 
 void Matrix::makePermanent() {
-    logger.log("Matrix::makePermanent");
+    logger->log("Matrix::makePermanent");
     if (!this->isPermanent())
         BufferManager::deleteFile(this->sourceFileName);
     string newSourceFile = "../data/" + this->matrixName + ".csv";
@@ -251,7 +251,7 @@ void Matrix::makePermanent() {
         unordered_map<pair<size_t, size_t>, pair<int, int>, hash_pair> mp;
         vector<size_t> pgPtr(this->blockCount, 0);
         for (size_t pgIndex = 0; pgIndex < this->blockCount; pgIndex++) {
-            auto p = bufferManager.getPageSparse(this->matrixName, pgIndex);
+            auto p = bufferManager->getPageSparse(this->matrixName, pgIndex);
             auto[a, b, c] = p.data[pgPtr[pgIndex]++];
             mp[{a, b}] = {c, pgIndex};
         }
@@ -259,7 +259,7 @@ void Matrix::makePermanent() {
             if (mp.count({x, y}) != 0) {
                 auto[val, pgIndex] = mp[{x, y}];
                 mp.erase({x, y});
-                auto p = bufferManager.getPageSparse(this->matrixName, pgIndex);
+                auto p = bufferManager->getPageSparse(this->matrixName, pgIndex);
                 if (pgPtr[pgIndex] != p.data.size()) {
                     auto[a, b, c] = p.data[pgPtr[pgIndex]++];
                     mp[{a, b}] = {c, pgIndex};
@@ -279,7 +279,7 @@ void Matrix::makePermanent() {
         for (size_t r = 0; r < this->blockCount; r++) {
             for (size_t i = 0; i < this->rowsPerBlockCount[r]; i++) {
                 for (size_t c = 0; c < this->blockCount; c++) {
-                    auto p = bufferManager.getPage(this->matrixName, r, c);
+                    auto p = bufferManager->getPage(this->matrixName, r, c);
                     for (size_t j = 0; j < this->columnsPerBlockCount[c]; j++) {
                         if (c != 0 || j != 0) fout << ',';
                         fout << p.data[i][j];
@@ -292,22 +292,22 @@ void Matrix::makePermanent() {
 }
 
 bool Matrix::isPermanent() const {
-    logger.log("Matrix::isPermanent");
+    logger->log("Matrix::isPermanent");
     if (this->sourceFileName == "../data/" + this->matrixName + ".csv")
         return true;
     return false;
 }
 
 void Matrix::unload() const {
-    logger.log("Matrix::unload");
+    logger->log("Matrix::unload");
     if (this->isSparse) {
         for (size_t i = 0; i < this->blockCount; i++) {
-            bufferManager.deleteFileSparse(this->matrixName, i);
+            bufferManager->deleteFileSparse(this->matrixName, i);
         }
     } else {
         for (size_t i = 0; i < this->blockCount; i++) {
             for (size_t j = 0; j < this->blockCount; j++) {
-                bufferManager.deleteFile(this->matrixName, i, j);
+                bufferManager->deleteFile(this->matrixName, i, j);
             }
         }
     }

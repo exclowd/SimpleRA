@@ -5,24 +5,24 @@
  * SYNTAX: LOAD relation_name
  */
 bool syntacticParseLOADMATRIX() {
-    logger.log("syntacticParseLOADMATRIX");
+    logger->log("syntacticParseLOADMATRIX");
     if (tokenizedQuery.size() != 3) {
         cout << "SYNTAX ERROR" << endl;
         return false;
     }
-    parsedQuery.queryType = LOADMATRIX;
-    parsedQuery.loadMatrixName = tokenizedQuery[2];
+    parsedQuery->queryType = LOADMATRIX;
+    parsedQuery->loadMatrixName = tokenizedQuery[2];
     return true;
 }
 
 bool semanticParseLOADMATRIX() {
-    logger.log("semanticParseLOADMATRIX");
-    if (matrixCatalogue.isMatrix(parsedQuery.loadMatrixName)) {
+    logger->log("semanticParseLOADMATRIX");
+    if (matrixCatalogue->isMatrix(parsedQuery->loadMatrixName)) {
         cout << "SEMANTIC ERROR: Matrix already exists" << endl;
         return false;
     }
 
-    if (!isFileExists(parsedQuery.loadMatrixName)) {
+    if (!isFileExists(parsedQuery->loadMatrixName)) {
         cout << "SEMANTIC ERROR: Data file doesn't exist" << endl;
         return false;
     }
@@ -30,11 +30,11 @@ bool semanticParseLOADMATRIX() {
 }
 
 void executeLOADMATRIX() {
-    logger.log("executeLOADMATRIX");
+    logger->log("executeLOADMATRIX");
 
-    auto *matrix = new Matrix(parsedQuery.loadMatrixName);
+    auto *matrix = new Matrix(parsedQuery->loadMatrixName);
     if (matrix->load()) {
-        matrixCatalogue.insertMatrix(matrix);
+        matrixCatalogue->insertMatrix(matrix);
         cout << "Loaded Matrix. Size: " << matrix->size << endl;
     }
 }

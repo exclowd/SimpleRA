@@ -28,10 +28,10 @@ Page::Page() {
  * @param pgIndex
  */
 Page::Page(const string &tblName, size_t pgIndex) {
-    logger.log("Page::Page");
+    logger->log("Page::Page");
     this->entityName = tblName;
     this->pageName = "../data/temp/" + this->entityName + "_Page" + to_string(pgIndex);
-    Table table = *tableCatalogue.getTable(tblName);
+    Table table = *tableCatalogue->getTable(tblName);
     this->columnCount = table.columnCount;
     size_t maxRowCount = table.maxRowsPerBlock;
     vector<int> row(columnCount, 0);
@@ -55,7 +55,7 @@ Page::Page(const string &tblName, size_t pgIndex) {
  * @return vector<int> 
  */
 vector<int> Page::getRow(int rowIndex) {
-    logger.log("Page::getRow");
+    logger->log("Page::getRow");
     vector<int> result;
     result.clear();
     if (rowIndex >= (int) this->rowCount)
@@ -64,7 +64,7 @@ vector<int> Page::getRow(int rowIndex) {
 }
 
 Page::Page(string tblName, size_t pgIndex, vector<vector<int>> _rows, int rCount) {
-    logger.log("Page::Page");
+    logger->log("Page::Page");
     this->entityName = std::move(tblName);
     this->rows = _rows;
     this->rowCount = rCount;
@@ -77,7 +77,8 @@ Page::Page(string tblName, size_t pgIndex, vector<vector<int>> _rows, int rCount
  * 
  */
 void Page::writePage() {
-    logger.log("Page::writePage");
+    logger->log("Page::writePage");
+    logger->debug("Write page to disk");
     ofstream fout(this->pageName, ios::trunc);
     for (int rowCounter = 0; rowCounter < (int) this->rowCount; rowCounter++) {
         for (int columnCounter = 0; columnCounter < (int) this->columnCount; columnCounter++) {

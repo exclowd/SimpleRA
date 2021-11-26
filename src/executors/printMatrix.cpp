@@ -5,19 +5,19 @@
  * SYNTAX: PRINT relation_name
  */
 bool syntacticParsePRINTMATRIX() {
-    logger.log("syntacticParsePRINTMATRIX");
+    logger->log("syntacticParsePRINTMATRIX");
     if (tokenizedQuery.size() != 3) {
         cout << "SYNTAX ERROR" << endl;
         return false;
     }
-    parsedQuery.queryType = PRINTMATRIX;
-    parsedQuery.printMatrixName = tokenizedQuery[2];
+    parsedQuery->queryType = PRINTMATRIX;
+    parsedQuery->printMatrixName = tokenizedQuery[2];
     return true;
 }
 
 bool semanticParsePRINTMATRIX() {
-    logger.log("semanticParsePRINTMATRIX");
-    if (!matrixCatalogue.isMatrix(parsedQuery.printMatrixName)) {
+    logger->log("semanticParsePRINTMATRIX");
+    if (!matrixCatalogue->isMatrix(parsedQuery->printMatrixName)) {
         cout << "SEMANTIC ERROR: Matrix doesn't exist" << endl;
         return false;
     }
@@ -25,7 +25,7 @@ bool semanticParsePRINTMATRIX() {
 }
 
 void executePRINTMATRIX() {
-    logger.log("executePRINTMATRIX");
-    auto matrix = matrixCatalogue.getMatrix(parsedQuery.printMatrixName);
+    logger->log("executePRINTMATRIX");
+    auto matrix = matrixCatalogue->getMatrix(parsedQuery->printMatrixName);
     matrix->print();
 }

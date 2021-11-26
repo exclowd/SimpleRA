@@ -5,19 +5,19 @@
  * SYNTAX: TRANSPOSE matrix_name
  */
 bool syntacticParseTRANSPOSE() {
-    logger.log("syntacticParseTRANSPOSE");
+    logger->log("syntacticParseTRANSPOSE");
     if (tokenizedQuery.size() != 2) {
         cout << "SYNTAX ERROR" << endl;
         return false;
     }
-    parsedQuery.queryType = TRANSPOSE;
-    parsedQuery.transposeMatrixName = tokenizedQuery[1];
+    parsedQuery->queryType = TRANSPOSE;
+    parsedQuery->transposeMatrixName = tokenizedQuery[1];
     return true;
 }
 
 bool semanticParseTRANSPOSE() {
-    logger.log("semanticParseTRANSPOSE");
-    if (!matrixCatalogue.isMatrix(parsedQuery.transposeMatrixName)) {
+    logger->log("semanticParseTRANSPOSE");
+    if (!matrixCatalogue->isMatrix(parsedQuery->transposeMatrixName)) {
         cout << "SEMANTIC ERROR: Matrix doesn't exist" << endl;
         return false;
     }
@@ -25,7 +25,7 @@ bool semanticParseTRANSPOSE() {
 }
 
 void executeTRANSPOSE() {
-    logger.log("executeTRANSPOSE");
-    auto matrix = matrixCatalogue.getMatrix(parsedQuery.transposeMatrixName);
+    logger->log("executeTRANSPOSE");
+    auto matrix = matrixCatalogue->getMatrix(parsedQuery->transposeMatrixName);
     matrix->transpose();
 }

@@ -8,15 +8,15 @@ const size_t BLOCK_SIZE = 8;
 const size_t BLOCK_COUNT = 10;
 const size_t PRINT_COUNT = 20;
 
-Logger logger;
+Logger* logger;
 vector<string> tokenizedQuery;
-ParsedQuery parsedQuery;
-TableCatalogue tableCatalogue;
-MatrixCatalogue matrixCatalogue;
-BufferManager bufferManager;
+ParsedQuery* parsedQuery;
+TableCatalogue* tableCatalogue;
+MatrixCatalogue* matrixCatalogue;
+BufferManager* bufferManager;
 
 void doCommand() {
-    logger.log("doCommand");
+    logger->log("doCommand");
     if (syntacticParse() && semanticParse())
         executeCommand();
 }
@@ -25,20 +25,25 @@ int main() {
 
     regex delim("[^\\s,]+");
     string command;
-    if (!system("rm -rf ../data/temp")) {
+    if (system("rm -rf ../data/temp") < 0) {
         return -1;
     }
-    if (!system("mkdir ../data/temp")) {
+    if (system("mkdir ../data/temp") < 0) {
         return -1;
     };
+
+    logger = new Logger;
+    tableCatalogue = new TableCatalogue;
+    matrixCatalogue = new MatrixCatalogue;
+    bufferManager = new BufferManager;
 
     while (!cin.eof()) {
         cout << "\n> ";
         tokenizedQuery.clear();
-        parsedQuery.clear();
-        logger.log("\nReading New Command: ");
+        parsedQuery = new ParsedQuery;
+        logger->log("\nReading New Command: ");
         getline(cin, command);
-        logger.log(command);
+        logger->log(command);
 
         auto words_begin = std::sregex_iterator(command.begin(), command.end(), delim);
         auto words_end = std::sregex_iterator();
@@ -59,8 +64,17 @@ int main() {
         }
        
         doCommand();
+
+        delete parsedQuery;
     }
 
-    bufferManager.cleanUp();
+    delete tableCatalogue;
+    delete matrixCatalogue;
+
+    bufferManager->cleanUp();
+    delete bufferManager;
+
+    delete logger;
+
     return 0;
 }

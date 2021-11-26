@@ -7,7 +7,7 @@
 /**
  * @brief The TableCatalogue acts like an index of tables existing in the
  * system. Everytime a table is added(removed) to(from) the system, it needs to
- * be added(removed) to(from) the tableCatalogue. 
+ * be added(removed) to(from) the tableCatalogue-> 
  *
  */
 

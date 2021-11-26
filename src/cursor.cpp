@@ -2,8 +2,8 @@
 #include <vector>
 
 Cursor::Cursor(const string &tblName, int pgIndex) {
-    logger.log("Cursor::Cursor");
-    this->page = bufferManager.getPage(tblName, pgIndex);
+    logger->log("Cursor::Cursor");
+    this->page = bufferManager->getPage(tblName, pgIndex);
     this->pagePointer = 0;
     this->tableName = tblName;
     this->pageIndex = pgIndex;
@@ -17,11 +17,11 @@ Cursor::Cursor(const string &tblName, int pgIndex) {
  * @return vector<int> 
  */
 vector<int> Cursor::getNext() {
-    logger.log("Cursor::getNext");
+    logger->log("Cursor::getNext");
     vector<int> result = this->page.getRow(this->pagePointer);
     this->pagePointer++;
     if (result.empty()) {
-        tableCatalogue.getTable(this->tableName)->getNextPage(this);
+        tableCatalogue->getTable(this->tableName)->getNextPage(this);
         if (!this->pagePointer) {
             result = this->page.getRow(this->pagePointer);
             this->pagePointer++;
@@ -37,8 +37,8 @@ vector<int> Cursor::getNext() {
  * @param pgIndex
  */
 void Cursor::nextPage(int pgIndex) {
-    logger.log("Cursor::nextPage");
-    this->page = bufferManager.getPage(this->tableName, pgIndex);
+    logger->log("Cursor::nextPage");
+    this->page = bufferManager->getPage(this->tableName, pgIndex);
     this->pageIndex = pgIndex;
     this->pagePointer = 0;
 }

@@ -8,7 +8,7 @@
 #include "matrixPage.h"
 
 BufferManager::BufferManager() {
-    logger.log("BufferManager::BufferManager");
+    logger->log("BufferManager::BufferManager");
 }
 
 /**
@@ -19,7 +19,7 @@ BufferManager::BufferManager() {
  * @return false 
  */
 bool BufferManager::inPool(const string &pageName) {
-    logger.log("BufferManager::inPool");
+    logger->log("BufferManager::inPool");
     return any_of(this->pages.begin(), this->pages.end(), [&](auto x) { return x->pageName == pageName; });
 }
 
@@ -32,7 +32,7 @@ bool BufferManager::inPool(const string &pageName) {
  * @return Page 
  */
 PageBase *BufferManager::getFromPool(const string &pageName) {
-    logger.log("BufferManager::getFromPool");
+    logger->log("BufferManager::getFromPool");
     for (auto page: this->pages)
         if (pageName == page->pageName)
             return page;
@@ -49,7 +49,8 @@ PageBase *BufferManager::getFromPool(const string &pageName) {
  * @return Page 
  */
 Page *BufferManager::insertIntoPool(const string &tblName, size_t pageIndex) {
-    logger.log("BufferManager::insertIntoPool");
+    logger->log("BufferManager::insertIntoPool");
+    logger->debug("Loading page from disk");
     auto page = new Page(tblName, pageIndex);
     if (this->pages.size() >= BLOCK_COUNT) {
         PageBase *temp = pages.front();
@@ -70,7 +71,8 @@ Page *BufferManager::insertIntoPool(const string &tblName, size_t pageIndex) {
  * @return Page
  */
 MatrixPage *BufferManager::insertIntoPool(const string &matName, size_t rowIndex, size_t colIndex) {
-    logger.log("BufferManager::insertIntoPool");
+    logger->log("BufferManager::insertIntoPool");
+    logger->debug("Loading matrix page from disk");
     auto page = new MatrixPage(matName, rowIndex, colIndex);
     if (this->pages.size() >= BLOCK_COUNT) {
         PageBase *temp = pages.front();
@@ -91,7 +93,8 @@ MatrixPage *BufferManager::insertIntoPool(const string &matName, size_t rowIndex
  * @return Page
  */
 MatrixPageSparse *BufferManager::insertIntoPoolSparse(const string &matName, size_t pgIndex) {
-    logger.log("BufferManager::insertIntoPoolSparse");
+    logger->log("BufferManager::insertIntoPoolSparse");
+    logger->debug("Loading sparse matrix page from disk");
     auto page = new MatrixPageSparse(matName, pgIndex);
     if (this->pages.size() >= BLOCK_COUNT) {
         PageBase *temp = pages.front();
@@ -108,11 +111,11 @@ MatrixPageSparse *BufferManager::insertIntoPoolSparse(const string &matName, siz
  * @param fileName
  */
 void BufferManager::deleteFile(const string &fileName) {
-    logger.log("BufferManager::deleteFile");
+    logger->log("BufferManager::deleteFile");
     if (remove(fileName.c_str()))
-        logger.log("BufferManager::deleteFile: Err");
+        logger->log("BufferManager::deleteFile: Err");
     else
-        logger.log("BufferManager::deleteFile: Success");
+        logger->log("BufferManager::deleteFile: Success");
 }
 
 /**
@@ -124,7 +127,7 @@ void BufferManager::deleteFile(const string &fileName) {
  * @return Page
  */
 Page BufferManager::getPage(const string &tableName, size_t pgIndex) {
-    logger.log("BufferManager::getPage");
+    logger->log("BufferManager::getPage");
     string pageName = "../data/temp/" + tableName + "_Page" + to_string(pgIndex);
     if (this->inPool(pageName))
         return *dynamic_cast<Page *>(this->getFromPool(pageName));
@@ -142,7 +145,8 @@ Page BufferManager::getPage(const string &tableName, size_t pgIndex) {
  * @param rowCount 
  */
 void BufferManager::writePage(const string &tableName, size_t pgIndex, const vector<vector<int>> &rows, int rowCount) {
-    logger.log("BufferManager::writePage");
+    logger->log("BufferManager::writePage");
+    logger->debug("Write table page to disk");
     Page page(tableName, pgIndex, rows, rowCount);
     page.writePage();
 }
@@ -155,7 +159,7 @@ void BufferManager::writePage(const string &tableName, size_t pgIndex, const vec
  * @param pgIndex
  */
 void BufferManager::deleteFile(const string &tableName, int pgIndex) {
-    logger.log("BufferManager::deleteFile");
+    logger->log("BufferManager::deleteFile");
     string fileName = "../data/temp/" + tableName + "_Page" + to_string(pgIndex);
     this->deleteFile(fileName);
 }
@@ -169,7 +173,7 @@ void BufferManager::deleteFile(const string &tableName, int pgIndex) {
  * @return Page
  */
 MatrixPage BufferManager::getPage(const string &matrixName, size_t rowIndex, size_t colIndex) {
-    logger.log("BufferManager::getPage");
+    logger->log("BufferManager::getPage");
     string pageName = "../data/temp/" + matrixName + "_MPage" + to_string(rowIndex) + ":" + to_string(colIndex);
     if (this->inPool(pageName)) {
         return *dynamic_cast<MatrixPage *>(this->getFromPool(pageName));
@@ -180,7 +184,7 @@ MatrixPage BufferManager::getPage(const string &matrixName, size_t rowIndex, siz
 
 
 MatrixPageSparse BufferManager::getPageSparse(const string &matrixName, size_t pgIndex) {
-    logger.log("BufferManager::getPageSparse");
+    logger->log("BufferManager::getPageSparse");
     string pageName = "../data/temp/" + matrixName + "_MSPage" + to_string(pgIndex);
     if (this->inPool(pageName))
         return *dynamic_cast<MatrixPageSparse *>(this->getFromPool(pageName));
@@ -200,7 +204,7 @@ MatrixPageSparse BufferManager::getPageSparse(const string &matrixName, size_t p
 void
 BufferManager::writePage(const string &matrixName, size_t rowIndex, size_t colIndex, const vector<vector<int>> &data,
                          size_t rCount, size_t cCount) {
-    logger.log("BufferManager::writePage");
+    logger->log("BufferManager::writePage");
     assert(data.size() == rCount);
     assert(data[0].size() == cCount);
     vector<vector<int>> _data(rCount, vector<int>(cCount));
@@ -225,7 +229,7 @@ BufferManager::writePage(const string &matrixName, size_t rowIndex, size_t colIn
 void
 BufferManager::writePageSparse(const string &matrixName, size_t pgIndex, const vector<tuple<size_t, size_t, int>> &data,
                                size_t rCount) {
-    logger.log("BufferManager::writePageSparse");
+    logger->log("BufferManager::writePageSparse");
     MatrixPageSparse page(matrixName, pgIndex, data, rCount);
     page.writePage();
 }
@@ -238,20 +242,20 @@ BufferManager::writePageSparse(const string &matrixName, size_t pgIndex, const v
  * @param pageIndex
  */
 void BufferManager::deleteFile(const string &matrixName, size_t rowIndex, size_t colIndex) {
-    logger.log("BufferManager::deleteFile");
+    logger->log("BufferManager::deleteFile");
     string fileName = "../data/temp/" + matrixName + "_MPage" + to_string(rowIndex) + ":" + to_string(colIndex);
     this->deleteFile(fileName);
 }
 
 
 void BufferManager::deleteFileSparse(const string &matrixName, size_t pgIndex) {
-    logger.log("BufferManager::deleteFileSparse");
+    logger->log("BufferManager::deleteFileSparse");
     string fileName = "../data/temp/" + matrixName + "_MSPage" + to_string(pgIndex);
     this->deleteFile(fileName);
 }
 
 void BufferManager::updatePage(const string &tableName, size_t pgIndex) {
-    logger.log("BufferManager::updatePage");
+    logger->log("BufferManager::updatePage");
     string pageName = "../data/temp/" + tableName + "_Page" + to_string(pgIndex);
     if (this->inPool(pageName)) {
         for (auto &page: this->pages)
@@ -263,7 +267,7 @@ void BufferManager::updatePage(const string &tableName, size_t pgIndex) {
 }
 
 void BufferManager::updatePage(const string &matrixName, size_t rowIndex, size_t colIndex) {
-    logger.log("BufferManager::updatePage");
+    logger->log("BufferManager::updatePage");
     string pageName = "../data/temp/" + matrixName + "_MPage" + to_string(rowIndex) + ":" + to_string(colIndex);
     if (this->inPool(pageName)) {
         for (auto &page: this->pages)
@@ -275,7 +279,7 @@ void BufferManager::updatePage(const string &matrixName, size_t rowIndex, size_t
 }
 
 void BufferManager::updatePageSparse(const string &matrixName, size_t pgIndex) {
-    logger.log("BufferManager::updatePageSparse");
+    logger->log("BufferManager::updatePageSparse");
     string pageName = "../data/temp/" + matrixName + "_MSPage" + to_string(pgIndex);
     if (this->inPool(pageName)) {
         for (auto &page: this->pages)
@@ -287,7 +291,7 @@ void BufferManager::updatePageSparse(const string &matrixName, size_t pgIndex) {
 }
 
 void BufferManager::cleanUp() {
-    logger.log("BufferManager::clearUp");
+    logger->log("BufferManager::clearUp");
     while (!this->pages.empty()) {
         auto temp = pages.front();
         pages.pop_front();

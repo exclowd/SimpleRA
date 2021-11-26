@@ -18,10 +18,10 @@
  * @param pgIndex
  */
 MatrixPage::MatrixPage(const string &matName, size_t rowIndex, size_t colIndex) {
-    logger.log("MatrixPage::MatrixPage");
+    logger->log("MatrixPage::MatrixPage");
     this->entityName = matName;
     this->pageName = "../data/temp/" + this->entityName + "_MPage" + to_string(rowIndex) + ":" + to_string(colIndex);
-    Matrix matrix = *matrixCatalogue.getMatrix(matName);
+    Matrix matrix = *matrixCatalogue->getMatrix(matName);
     this->rowCount = matrix.rowsPerBlockCount[rowIndex];
     this->columnCount = matrix.columnsPerBlockCount[colIndex];
     this->data.assign(rowCount, vector<int>(columnCount));
@@ -39,7 +39,7 @@ MatrixPage::MatrixPage(const string &matName, size_t rowIndex, size_t colIndex) 
 
 MatrixPage::MatrixPage(const string &matName, size_t rowIndex, size_t colIndex,
                        vector<vector<int>> _data, size_t rCount, size_t cCount) {
-    logger.log("MatrixPage::MatrixPage");
+    logger->log("MatrixPage::MatrixPage");
     this->entityName = matName;
     this->data = std::move(_data);
     this->rowCount = rCount;
@@ -52,7 +52,8 @@ MatrixPage::MatrixPage(const string &matName, size_t rowIndex, size_t colIndex,
  * 
  */
 void MatrixPage::writePage() {
-    logger.log("MatrixPage::writePage");
+    logger->log("MatrixPage::writePage");
+    logger->debug("Write page to disk");
     ofstream fout(this->pageName, ios::trunc);
     for (int rowCounter = 0; rowCounter < (int) this->rowCount; rowCounter++) {
         for (int columnCounter = 0; columnCounter < (int) this->columnCount; columnCounter++) {
@@ -83,10 +84,10 @@ void MatrixPage::writePage() {
  * @param pgIndex
  */
 MatrixPageSparse::MatrixPageSparse(const string &matName, size_t pgIndex) {
-    logger.log("MatrixPageSparse::MatrixPageSparse");
+    logger->log("MatrixPageSparse::MatrixPageSparse");
     this->entityName = matName;
     this->pageName = "../data/temp/" + this->entityName + "_MSPage" + to_string(pgIndex);
-    Matrix matrix = *matrixCatalogue.getMatrix(matName);
+    Matrix matrix = *matrixCatalogue->getMatrix(matName);
     this->rowCount = matrix.rowsPerBlockCount[pgIndex];
     assert(matrix.columnsPerBlockCount[pgIndex] == 3);
     this->columnCount = matrix.columnsPerBlockCount[pgIndex];
@@ -102,7 +103,7 @@ MatrixPageSparse::MatrixPageSparse(const string &matName, size_t pgIndex) {
 
 MatrixPageSparse::MatrixPageSparse(const string &matName, size_t pgIndex, vector<tuple<size_t, size_t, int>> _data,
                                    size_t rCount) {
-    logger.log("MatrixPageSparse::MatrixPageSparse");
+    logger->log("MatrixPageSparse::MatrixPageSparse");
     this->entityName = matName;
     this->data = std::move(_data);
     this->rowCount = rCount;
@@ -115,7 +116,8 @@ MatrixPageSparse::MatrixPageSparse(const string &matName, size_t pgIndex, vector
  *
  */
 void MatrixPageSparse::writePage() {
-    logger.log("MatrixPageSparse::writePage");
+    logger->log("MatrixPageSparse::writePage");
+    logger->debug("Write page to disk");
     ofstream fout(this->pageName, ios::trunc);
     for (int rowCounter = 0; rowCounter < (int) this->rowCount; rowCounter++) {
         fout << get<0>(this->data[rowCounter]) << " " << get<1>(this->data[rowCounter]) << " "

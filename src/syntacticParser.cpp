@@ -2,7 +2,7 @@
 #include <sys/stat.h>
 
 bool syntacticParse() {
-    logger.log("syntacticParse");
+    logger->log("syntacticParse");
     string possibleQueryType = tokenizedQuery[0];
 
     if (tokenizedQuery.size() < 2) {
@@ -60,7 +60,7 @@ bool syntacticParse() {
 ParsedQuery::ParsedQuery() = default;
 
 void ParsedQuery::clear() {
-    logger.log("ParseQuery::clear");
+    logger->log("ParseQuery::clear");
     this->queryType = UNDETERMINED;
 
     this->clearRelationName = "";

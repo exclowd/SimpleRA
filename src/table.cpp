@@ -8,7 +8,7 @@
  *
  */
 Table::Table() {
-    logger.log("Table::Table");
+    logger->log("Table::Table");
 }
 
 /**
@@ -19,7 +19,7 @@ Table::Table() {
  * @param tblName
  */
 Table::Table(const string &tblName) {
-    logger.log("Table::Table");
+    logger->log("Table::Table");
     this->sourceFileName = "../data/" + tblName + ".csv";
     this->tableName = tblName;
 }
@@ -33,7 +33,7 @@ Table::Table(const string &tblName) {
  * @param c
  */
 Table::Table(const string &tblName, const vector<string> &c) {
-    logger.log("Table::Table");
+    logger->log("Table::Table");
     this->sourceFileName = "../data/temp/" + tblName + ".csv";
     this->tableName = tblName;
     this->columns = c;
@@ -53,7 +53,7 @@ Table::Table(const string &tblName, const vector<string> &c) {
  * @return false if an error occurred 
  */
 bool Table::load() {
-    logger.log("Table::load");
+    logger->log("Table::load");
     fstream fin(this->sourceFileName, ios::in);
     string line;
     if (getline(fin, line)) {
@@ -76,7 +76,7 @@ bool Table::load() {
  * @return false otherwise
  */
 bool Table::extractColumnNames(const string &firstLine) {
-    logger.log("Table::extractColumnNames");
+    logger->log("Table::extractColumnNames");
     unordered_set<string> columnNames;
     string word;
     stringstream s(firstLine);
@@ -100,7 +100,7 @@ bool Table::extractColumnNames(const string &firstLine) {
  * @return false otherwise
  */
 bool Table::blockify() {
-    logger.log("Table::blockify");
+    logger->log("Table::blockify");
     ifstream fin(this->sourceFileName, ios::in);
     string line, word;
     vector<int> row(this->columnCount, 0);
@@ -166,7 +166,7 @@ void Table::updateStatistics(vector<int> row) {
  * @return false 
  */
 bool Table::isColumn(const string &columnName) {
-    logger.log("Table::isColumn");
+    logger->log("Table::isColumn");
     return any_of(this->columns.begin(), this->columns.end(), [columnName](auto col) {
         return col == columnName;
     });
@@ -181,7 +181,7 @@ bool Table::isColumn(const string &columnName) {
  * @param toColumnName 
  */
 void Table::renameColumn(const string &fromColumnName, const string &toColumnName) {
-    logger.log("Table::renameColumn");
+    logger->log("Table::renameColumn");
     for (int columnCounter = 0; columnCounter < (int) this->columnCount; columnCounter++) {
         if (columns[columnCounter] == fromColumnName) {
             columns[columnCounter] = toColumnName;
@@ -197,7 +197,7 @@ void Table::renameColumn(const string &fromColumnName, const string &toColumnNam
  *
  */
 void Table::print() {
-    logger.log("Table::print");
+    logger->log("Table::print");
     size_t count = min(PRINT_COUNT, this->rowCount);
 
     //print headings
@@ -220,7 +220,7 @@ void Table::print() {
  * @return vector<int> 
  */
 void Table::getNextPage(Cursor *cursor) const {
-    logger.log("Table::getNext");
+    logger->log("Table::getNext");
 
     if (cursor->pageIndex < (int) this->blockCount - 1) {
         cursor->nextPage(cursor->pageIndex + 1);
@@ -233,7 +233,7 @@ void Table::getNextPage(Cursor *cursor) const {
  *
  */
 void Table::makePermanent() {
-    logger.log("Table::makePermanent");
+    logger->log("Table::makePermanent");
     if (!this->isPermanent())
         BufferManager::deleteFile(this->sourceFileName);
     string newSourceFile = "../data/" + this->tableName + ".csv";
@@ -258,7 +258,7 @@ void Table::makePermanent() {
  * @return false otherwise
  */
 bool Table::isPermanent() const {
-    logger.log("Table::isPermanent");
+    logger->log("Table::isPermanent");
     if (this->sourceFileName == "../data/" + this->tableName + ".csv")
         return true;
     return false;
@@ -270,9 +270,9 @@ bool Table::isPermanent() const {
  *
  */
 void Table::unload() const {
-    logger.log("Table::~unload");
+    logger->log("Table::~unload");
     for (int pageCounter = 0; pageCounter < (int) this->blockCount; pageCounter++)
-        bufferManager.deleteFile(this->tableName, pageCounter);
+        bufferManager->deleteFile(this->tableName, pageCounter);
     if (!isPermanent())
         BufferManager::deleteFile(this->sourceFileName);
 }
@@ -283,7 +283,7 @@ void Table::unload() const {
  * @return Cursor 
  */
 Cursor Table::getCursor() const {
-    logger.log("Table::getCursor");
+    logger->log("Table::getCursor");
     Cursor cursor(this->tableName, 0);
     return cursor;
 }
@@ -295,7 +295,7 @@ Cursor Table::getCursor() const {
  * @return int 
  */
 int Table::getColumnIndex(const string &columnName) {
-    logger.log("Table::getColumnIndex");
+    logger->log("Table::getColumnIndex");
     for (int columnCounter = 0; columnCounter < (int) this->columnCount; columnCounter++) {
         if (this->columns[columnCounter] == columnName)
             return columnCounter;

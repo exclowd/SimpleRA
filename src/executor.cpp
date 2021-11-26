@@ -2,7 +2,7 @@
 
 void executeCommand() {
 
-    switch (parsedQuery.queryType) {
+    switch (parsedQuery->queryType) {
         case CLEAR:
             executeCLEAR();
             break;
