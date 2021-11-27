@@ -3,6 +3,7 @@
 //
 #include <sstream>
 #include <algorithm>
+#include <regex>
 #include "matrix.h"
 #include "global.h"
 
@@ -48,6 +49,7 @@ bool Matrix::blockify() {
     // decide whether sparse or not
     size_t zero{};
     string line;
+    regex numeric("[-]?[0-9]+");
     for (size_t i = 0; i < this->size; i++) {
         getline(fin, line);
         std::stringstream ss(line);
@@ -55,6 +57,9 @@ bool Matrix::blockify() {
         for (size_t j = 0; j < this->size; j++) {
             if (!getline(ss, cell, ','))
                 return false;
+            if (!regex_match(cell, numeric)) {
+                return false;
+            }
             auto p = stoi(cell);
             if (p == 0LL) zero++;
         }
@@ -81,6 +86,9 @@ bool Matrix::blockify() {
             for (size_t j = 0; j < this->size; j++) {
                 if (!getline(ss, cell, ','))
                     return false;
+                if (!regex_match(cell, numeric)) {
+                    return false;
+                }
                 auto p = stoi(cell);
                 if (p == 0) continue;
                 rowsInPage.emplace_back(i, j, p);
@@ -125,6 +133,9 @@ bool Matrix::blockify() {
                     vector<int> rowdata;
                     for (col = 0; col < this->columnsPerBlockCount[j]; col++) {
                         if (!getline(ss, word, ',')) {
+                            return false;
+                        }
+                        if (!regex_match(word, numeric)) {
                             return false;
                         }
                         rowdata.push_back(stoi(word));

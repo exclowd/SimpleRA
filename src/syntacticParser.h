@@ -39,6 +39,12 @@ enum BinaryOperator {
     NO_BINOP_CLAUSE
 };
 
+enum JoinStrategy {
+    NESTED,
+    PARTHASH,
+    NO_JOIN_CLAUSE
+};
+
 enum SortingStrategy {
     ASC,
     DESC,
@@ -80,10 +86,12 @@ public:
 
     BinaryOperator joinBinaryOperator = NO_BINOP_CLAUSE;
     string joinResultRelationName;
+    JoinStrategy joinStrategy = NO_JOIN_CLAUSE;
     string joinFirstRelationName;
     string joinSecondRelationName;
     string joinFirstColumnName;
     string joinSecondColumnName;
+    int joinBufferSize = 0;
 
     string loadRelationName;
     string loadMatrixName;
@@ -111,7 +119,7 @@ public:
     string sortResultRelationName;
     string sortColumnName;
     string sortRelationName;
-    int sortBufferSize;
+    int sortBufferSize = 0;
 
     string transposeMatrixName;
 
@@ -120,6 +128,8 @@ public:
     ParsedQuery();
 
     void clear();
+
+
 };
 
 bool syntacticParse();

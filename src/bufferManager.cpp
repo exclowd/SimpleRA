@@ -61,6 +61,7 @@ Page *BufferManager::insertIntoPool(const string &tblName, size_t pageIndex) {
     return page;
 }
 
+
 /**
  * @brief Inserts page indicated by entityName and pageIndex into pool. If the
  * pool is full, the pool ejects the oldest inserted page from the pool and adds
@@ -94,7 +95,6 @@ MatrixPage *BufferManager::insertIntoPool(const string &matName, size_t rowIndex
  */
 MatrixPageSparse *BufferManager::insertIntoPoolSparse(const string &matName, size_t pgIndex) {
     logger->log("BufferManager::insertIntoPoolSparse");
-    logger->debug("Loading sparse matrix page from disk");
     auto page = new MatrixPageSparse(matName, pgIndex);
     if (this->pages.size() >= BLOCK_COUNT) {
         PageBase *temp = pages.front();
@@ -146,7 +146,6 @@ Page BufferManager::getPage(const string &tableName, size_t pgIndex) {
  */
 void BufferManager::writePage(const string &tableName, size_t pgIndex, const vector<vector<int>> &rows, int rowCount) {
     logger->log("BufferManager::writePage");
-    logger->debug("Write table page to disk");
     Page page(tableName, pgIndex, rows, rowCount);
     page.writePage();
 }

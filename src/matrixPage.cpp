@@ -53,7 +53,6 @@ MatrixPage::MatrixPage(const string &matName, size_t rowIndex, size_t colIndex,
  */
 void MatrixPage::writePage() {
     logger->log("MatrixPage::writePage");
-    logger->debug("Write page to disk");
     ofstream fout(this->pageName, ios::trunc);
     for (int rowCounter = 0; rowCounter < (int) this->rowCount; rowCounter++) {
         for (int columnCounter = 0; columnCounter < (int) this->columnCount; columnCounter++) {

@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <sstream>
+#include <regex>
 
 /**
  * @brief Construct a new Table:: Table object
@@ -109,12 +110,16 @@ bool Table::blockify() {
     unordered_set<int> temp{};
     this->distinctValuesInColumns.assign(this->columnCount, temp);
     this->distinctValuesPerColumnCount.assign(this->columnCount, 0);
-    getline(fin, line);
+    regex numeric("[-]?[0-9]+");
+    getline(fin, line); // throw away columns
     while (getline(fin, line)) {
         stringstream s(line);
         for (int columnCounter = 0; columnCounter < (int) this->columnCount; columnCounter++) {
             if (!getline(s, word, ','))
                 return false;
+            if (!regex_match(word, numeric)) {
+                return false;
+            }
             row[columnCounter] = stoi(word);
             rowsInPage[pageCounter][columnCounter] = row[columnCounter];
         }

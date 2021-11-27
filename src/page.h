@@ -43,6 +43,5 @@ public:
 
     ~Page() override = default;
 
-private:
     vector<vector<int>> rows{};
 };

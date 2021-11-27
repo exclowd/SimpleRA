@@ -31,6 +31,7 @@ Page::Page(const string &tblName, size_t pgIndex) {
     logger->log("Page::Page");
     this->entityName = tblName;
     this->pageName = "../data/temp/" + this->entityName + "_Page" + to_string(pgIndex);
+    logger->debug("Read page: " + this->pageName + " from disk ");
     Table table = *tableCatalogue->getTable(tblName);
     this->columnCount = table.columnCount;
     size_t maxRowCount = table.maxRowsPerBlock;
@@ -78,7 +79,7 @@ Page::Page(string tblName, size_t pgIndex, vector<vector<int>> _rows, int rCount
  */
 void Page::writePage() {
     logger->log("Page::writePage");
-    logger->debug("Write page to disk");
+    logger->debug("Write page: " + this->pageName + " to disk ");
     ofstream fout(this->pageName, ios::trunc);
     for (int rowCounter = 0; rowCounter < (int) this->rowCount; rowCounter++) {
         for (int columnCounter = 0; columnCounter < (int) this->columnCount; columnCounter++) {
