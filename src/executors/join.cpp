@@ -245,10 +245,8 @@ void executeJOIN() {
                 cout << "loaded into hashmap" << endl;
                 // Now iterate over the  pages of S in partition
                 for (int i = 0; i < pS->blockCount; i++) {
-//                    cout << i << endl;
-                    auto *pageS = new HashPage(resultantName,  partition, secondName, i);
+                    auto *pageS = new HashPage(resultantName, partition, secondName, i);
                     for (const auto &row: pageS->rows) {
-//                        cout << "hi" << endl;
                         for (const auto &x: hash_table[row[col2]]) {
                             vector<int> to_add = x;
                             // make the resultant row
@@ -268,6 +266,10 @@ void executeJOIN() {
                     delete pageS;
                 }
             }
+            auto dir = "../data/temp/" + resultantName + to_string(partition);
+            if (system(("rm -rf " + dir + "*").c_str()) < 0) {
+                cout << "Could not clear disk" << endl;
+            }
         }
 
         if (!rows.empty()) {
@@ -277,6 +279,7 @@ void executeJOIN() {
             resultantTable->blockCount++;
             rows.clear();
         }
+
     }
 
 

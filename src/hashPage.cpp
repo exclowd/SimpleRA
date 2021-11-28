@@ -58,9 +58,8 @@ HashPage::HashPage(const string &tblName, const string &firstName, size_t partit
     logger->log("HashPage::HashPage");
     this->columnCount = cCount;
     this->rowCount = 0;
-    this->tableName = tblName;
     this->entityName = firstName;
-    this->tableName = "../data/temp/" + this->tableName + to_string(partition) + "_HPage" + this->entityName + "_" +
+    this->tableName = "../data/temp/" + tblName + to_string(partition) + "_HPage" + this->entityName + "_" +
                       to_string(pgIndex);
 }
 
