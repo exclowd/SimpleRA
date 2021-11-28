@@ -11,6 +11,7 @@ enum QueryType {
     DISTINCT,
     EXPORTMATRIX,
     EXPORT,
+    GROUPBY,
     INDEX,
     JOIN,
     LIST,
@@ -36,6 +37,12 @@ enum BinaryOperator {
     EQUAL,
     NOT_EQUAL,
     NO_BINOP_CLAUSE
+};
+
+enum JoinStrategy {
+    NESTED,
+    PARTHASH,
+    NO_JOIN_CLAUSE
 };
 
 enum SortingStrategy {
@@ -67,16 +74,24 @@ public:
     string exportRelationName;
     string exportMatrixName;
 
+    string groupByGroupingAttributeName;
+    string groupByResultRelationName;
+    string groupByRelationName;
+    string groupByOperatorName;
+    string groupByAttributeName;
+
     IndexingStrategy indexingStrategy = IndexingStrategy::NOTHING;
     string indexColumnName;
     string indexRelationName;
 
     BinaryOperator joinBinaryOperator = NO_BINOP_CLAUSE;
     string joinResultRelationName;
+    JoinStrategy joinStrategy = NO_JOIN_CLAUSE;
     string joinFirstRelationName;
     string joinSecondRelationName;
     string joinFirstColumnName;
     string joinSecondColumnName;
+    int joinBufferSize = 0;
 
     string loadRelationName;
     string loadMatrixName;
@@ -104,6 +119,7 @@ public:
     string sortResultRelationName;
     string sortColumnName;
     string sortRelationName;
+    int sortBufferSize = 0;
 
     string transposeMatrixName;
 
@@ -112,6 +128,8 @@ public:
     ParsedQuery();
 
     void clear();
+
+
 };
 
 bool syntacticParse();
@@ -125,6 +143,8 @@ bool syntacticParseDISTINCT();
 bool syntacticParseEXPORT();
 
 bool syntacticParseEXPORTMATRIX();
+
+bool syntacticParseGROUPBY();
 
 bool syntacticParseINDEX();
 
@@ -157,3 +177,4 @@ bool syntacticParseTRANSPOSE();
 bool isFileExists(const string &tableName);
 
 bool isQueryFile(string fileName);
+

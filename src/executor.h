@@ -14,6 +14,8 @@ void executeEXPORT();
 
 void executeEXPORTMATRIX();
 
+void executeGROUPBY();
+
 void executeINDEX();
 
 void executeJOIN();

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "logger.h"
+#include "page.h"
 #include <vector>
 
 /**
@@ -14,34 +15,22 @@
  *</p>
  */
 
-class PageBase {
-public:
-    string pageName;
-
-    size_t rowCount;
-    size_t columnCount;
-
-    string entityName;
-
-    virtual void writePage() = 0;
-
-    virtual ~PageBase() = default;
-};
-
-class Page : public PageBase {
+class HashPage : public PageBase {
 
 public:
-    Page();
+    string tableName;
 
-    Page(const string &tblName, size_t pgIndex);
+    HashPage();
 
-    Page(string tblName, size_t pgIndex, vector<vector<int>> _rows, int rCount);
+    HashPage(const string &rsltName, size_t partition, const string &tblName, size_t pgIndex);
 
-    vector<int> getRow(int rowIndex);
+    HashPage(const string &tblName, const string &firstName, size_t partition, size_t pgIndex, int cCount);
+
+    void addRow(const vector<int> &row);
 
     void writePage() override;
 
-    ~Page() override = default;
+    ~HashPage() override = default;
 
     vector<vector<int>> rows{};
 };

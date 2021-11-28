@@ -2,7 +2,7 @@
 #include <sys/stat.h>
 
 bool syntacticParse() {
-    logger.log("syntacticParse");
+    logger->log("syntacticParse");
     string possibleQueryType = tokenizedQuery[0];
 
     if (tokenizedQuery.size() < 2) {
@@ -47,6 +47,8 @@ bool syntacticParse() {
             return syntacticParseDISTINCT();
         else if (possibleQueryType == "SORT")
             return syntacticParseSORT();
+        else if (possibleQueryType == "GROUP")
+            return syntacticParseGROUPBY();
         else {
             cout << "SYNTAX ERROR" << endl;
             return false;
@@ -58,7 +60,7 @@ bool syntacticParse() {
 ParsedQuery::ParsedQuery() = default;
 
 void ParsedQuery::clear() {
-    logger.log("ParseQuery::clear");
+    logger->log("ParseQuery::clear");
     this->queryType = UNDETERMINED;
 
     this->clearRelationName = "";
@@ -71,6 +73,8 @@ void ParsedQuery::clear() {
     this->distinctRelationName = "";
 
     this->exportRelationName = "";
+    this->exportMatrixName = "";
+
 
     this->indexingStrategy = IndexingStrategy::NOTHING;
     this->indexColumnName = "";
@@ -78,14 +82,18 @@ void ParsedQuery::clear() {
 
     this->joinBinaryOperator = NO_BINOP_CLAUSE;
     this->joinResultRelationName = "";
+    this->joinStrategy = NO_JOIN_CLAUSE;
     this->joinFirstRelationName = "";
     this->joinSecondRelationName = "";
     this->joinFirstColumnName = "";
     this->joinSecondColumnName = "";
+    this->joinBufferSize = 0;
 
     this->loadRelationName = "";
+    this->loadMatrixName = "";
 
     this->printRelationName = "";
+    this->printMatrixName = "";
 
     this->projectionResultRelationName = "";
     this->projectionColumnList.clear();
@@ -109,6 +117,8 @@ void ParsedQuery::clear() {
     this->sortRelationName = "";
 
     this->sourceFileName = "";
+
+    this->transposeMatrixName = "";
 }
 
 /**

@@ -2,7 +2,7 @@
 
 void executeCommand() {
 
-    switch (parsedQuery.queryType) {
+    switch (parsedQuery->queryType) {
         case CLEAR:
             executeCLEAR();
             break;
@@ -18,6 +18,8 @@ void executeCommand() {
         case EXPORTMATRIX:
             executeEXPORTMATRIX();
             break;
+        case GROUPBY:
+            executeGROUPBY();
         case INDEX:
             executeINDEX();
             break;

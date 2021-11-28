@@ -6,7 +6,10 @@ project(SimpleRA)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wshadow")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0")
 
-# add the src directory
-add_subdirectory(src)
+# get all the source files
+file(GLOB_RECURSE sources "src/*.cpp")
+
+# add the executable
+add_executable(server ${sources})

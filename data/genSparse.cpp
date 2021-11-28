@@ -8,15 +8,13 @@
 using namespace std;
 
 int main() {
+    srand(time(0));
     const int n = 1000;
+    cout << "A,B,C,D,E,F" << endl;
     for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
+        for (int j = 0; j < 6; j++) {
             if (j != 0) printf(",");
-            if (rand() % 10 < 2) {
-                printf("1");
-            } else {
-                printf("0");
-            }
+            printf("%d", rand() % 100);
         }
         printf("\n");
     }
