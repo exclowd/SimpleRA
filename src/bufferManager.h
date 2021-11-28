@@ -1,6 +1,7 @@
 #pragma once
 
 #include "page.h"
+#include "hashPage.h"
 #include "matrixPage.h"
 #include <deque>
 

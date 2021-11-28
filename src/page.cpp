@@ -36,15 +36,17 @@ Page::Page(const string &tblName, size_t pgIndex) {
     this->columnCount = table.columnCount;
     size_t maxRowCount = table.maxRowsPerBlock;
     vector<int> row(columnCount, 0);
-    this->rows.assign(maxRowCount, row);
     ifstream fin(pageName, ios::in);
     this->rowCount = table.rowsPerBlockCount[pgIndex];
+    this->rows.resize(rowCount);
     int number;
     for (int rowCounter = 0; rowCounter < (int) this->rowCount; rowCounter++) {
+        vector<int> temp;
         for (int columnCounter = 0; columnCounter < (int) columnCount; columnCounter++) {
             fin >> number;
-            this->rows[rowCounter][columnCounter] = number;
+            temp.push_back(number);
         }
+        this->rows[rowCounter] = std::move(temp);
     }
     fin.close();
 }

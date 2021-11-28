@@ -4,16 +4,17 @@
 
 using namespace std;
 
-const size_t BLOCK_SIZE = 8;
+const size_t BLOCK_SIZE = 1;
 const size_t BLOCK_COUNT = 10;
 const size_t PRINT_COUNT = 20;
 
-Logger* logger;
+Logger *logger;
 vector<string> tokenizedQuery;
-ParsedQuery* parsedQuery;
-TableCatalogue* tableCatalogue;
-MatrixCatalogue* matrixCatalogue;
-BufferManager* bufferManager;
+ParsedQuery *parsedQuery;
+TableCatalogue *tableCatalogue;
+MatrixCatalogue *matrixCatalogue;
+BufferManager *bufferManager;
+PartitionCatalogue *partitionCatalogue;
 
 void doCommand() {
     logger->log("doCommand");
@@ -36,7 +37,7 @@ int main() {
     tableCatalogue = new TableCatalogue;
     matrixCatalogue = new MatrixCatalogue;
     bufferManager = new BufferManager;
-
+    partitionCatalogue = nullptr;
     while (!cin.eof()) {
         cout << "\n> ";
         tokenizedQuery.clear();
@@ -62,7 +63,7 @@ int main() {
             cout << "SYNTAX ERROR" << endl;
             continue;
         }
-       
+
         doCommand();
 
         delete parsedQuery;
