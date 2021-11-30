@@ -1,4 +1,6 @@
 #include "global.h"
+#include "cursor.h"
+
 #include <vector>
 
 Cursor::Cursor(const string &tblName, int pgIndex) {
@@ -41,4 +43,10 @@ void Cursor::nextPage(int pgIndex) {
     this->page = bufferManager->getPage(this->tableName, pgIndex);
     this->pageIndex = pgIndex;
     this->pagePointer = 0;
+}
+
+vector<int> Cursor::getCurrent() {
+    logger->log("Cursor::getCurrent");
+    vector<int> result = this->page.getRow(this->pagePointer);
+    return result;
 }

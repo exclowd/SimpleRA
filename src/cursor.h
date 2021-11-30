@@ -19,6 +19,8 @@ public:
 public:
     Cursor(const string &tblName, int pgIndex);
 
+    vector<int> getCurrent();
+
     vector<int> getNext();
 
     void nextPage(int pgIndex);

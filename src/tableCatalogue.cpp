@@ -27,6 +27,7 @@ bool TableCatalogue::isTable(const string &tableName) {
     return false;
 }
 
+
 bool TableCatalogue::isColumnFromTable(const string &columnName, const string &tableName) {
     logger->log("TableCatalogue::isColumnFromTable");
     if (this->isTable(tableName)) {
