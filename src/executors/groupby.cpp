@@ -107,7 +107,7 @@ void executeGROUPBY() {
         resultantTable->blockCount++;
         rows.clear();
     }
-
+    cout << resultantTable->rowCount << endl;
     if (resultantTable->rowCount)
         tableCatalogue->insertTable(resultantTable);
     else {

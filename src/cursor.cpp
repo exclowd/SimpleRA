@@ -1,4 +1,6 @@
 #include "global.h"
+#include "cursor.h"
+
 #include <vector>
 
 Cursor::Cursor(const string &tblName, int pgIndex) {

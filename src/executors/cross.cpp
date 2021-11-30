@@ -88,5 +88,4 @@ void executeCROSS() {
     }
     resultantTable->blockify();
     tableCatalogue->insertTable(resultantTable);
-    return;
 }

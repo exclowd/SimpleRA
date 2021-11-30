@@ -146,6 +146,7 @@ void executeJOIN() {
                 resultantTable->blockCount++;
                 rows.clear();
             }
+            for (auto& x: buffer) delete x;
             buffer.clear();
         }
     } else if (parsedQuery->joinStrategy == PARTHASH) {
@@ -279,6 +280,9 @@ void executeJOIN() {
             resultantTable->blockCount++;
             rows.clear();
         }
+
+        delete partitionCatalogue;
+        partitionCatalogue = nullptr;
 
     }
 
