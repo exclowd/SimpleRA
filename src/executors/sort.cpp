@@ -56,6 +56,11 @@ bool semanticParseSORT() {
         return false;
     }
 
+    if (parsedQuery->sortBufferSize < 3) {
+        cout << "SEMANTIC ERROR: Cannot perform merge with less than three buckets" << endl;
+        return false;
+    }
+
     return true;
 }
 

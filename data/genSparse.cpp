@@ -11,10 +11,10 @@ int main() {
     srand(time(0));
     const int n = 1000;
     cout << "A,B,C,D,E,F" << endl;
-    for (int i = 0; i < n; i++) {
+    for (int i = n - 1; i >= 0; i--) {
         for (int j = 0; j < 6; j++) {
             if (j != 0) printf(",");
-            printf("%d", rand() % 100);
+            printf(" %d", i * 6 + j);
         }
         printf("\n");
     }

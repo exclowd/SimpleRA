@@ -44,9 +44,3 @@ void Cursor::nextPage(int pgIndex) {
     this->pageIndex = pgIndex;
     this->pagePointer = 0;
 }
-
-vector<int> Cursor::getCurrent() {
-    logger->log("Cursor::getCurrent");
-    vector<int> result = this->page.getRow(this->pagePointer);
-    return result;
-}
