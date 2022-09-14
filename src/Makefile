@@ -2,7 +2,17 @@
 # Variables to control Makefile operation
 
 CXX = g++
-CXXFLAGS = -g -I .
+#ifeq ($(DEBUG),1)
+#CXXFLAGS = -std=c++17 -ggdb3 -fsanitize=address -fsanitize=undefined -fno-sanitize-recover -Wall -Wextra -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -D_FORTIFY_SOURCE=2
+#else
+#CXXFLAGS = -std=c++17 -Wall -O2
+#endif
+
+CXXFLAGS = -std=c++17 -O0 -ggdb3
+LINKFLAGS = -ltcmalloc
+
+
+VALGRIND=valgrind --tool=memcheck --leak-check=yes
 
 SRC := $(wildcard *.cpp)
 OBJS = $(SRC:.cpp=.o)
@@ -17,7 +27,10 @@ EXEC_OBJS = $(EXEC_SRC:.cpp=.o)
 all: server
 
 server: $(OBJS) $(EXEC_OBJS)
-	$(CXX) $(CXXFLAGS) -o $@ $(OBJS) $(EXEC_OBJS)
+	$(CXX) $(CXXFLAGS) -o $@ $(OBJS) $(EXEC_OBJS) $(LINKFLAGS)
+
+run: server
+	$(VALGRIND) ./server
 
 clean:
 	rm -f *.o *~

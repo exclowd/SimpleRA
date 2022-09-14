@@ -1,8 +1,6 @@
 #pragma once
 
 #include<iostream>
-#include<bits/stdc++.h>
-#include<sys/stat.h>
 #include<fstream>
 
 using namespace std;
@@ -11,12 +9,14 @@ class Logger {
 
     string logFile = "log";
     ofstream fout;
+    int times = 0;
 
 public:
-
     Logger();
 
-    void log(const string& logString);
+    void debug(const string &logString);
+
+    void log(const string &logString);
 };
 
-extern Logger logger;
+extern Logger *logger;

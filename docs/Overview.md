@@ -7,7 +7,7 @@ backgroundColor: black
 
 # SimpleRA
 
-_A laughably-minimalist, integer-only, read-only Relational Database Management System that makes the author question why they ever bothered to write it up!_  
+_A laughably-minimalist, integer-only, read-only Relational Database Management System that makes the author question why they ever bothered to write it up!  
   
 
 ## _Data Systems, Monsoon 2020_
@@ -70,7 +70,7 @@ Syntax:
 LOAD <table_name>
 ```
 - To successfully load a table, there should be a csv file names <table_name>.csv consisiting of comma-seperated integers in the data folder
-- None of the columns in the data file should have the same name
+- None of the columns in the data file should have the same tableName
 - every cell in the table should have a value
 
 Run: `LOAD A`
@@ -112,7 +112,7 @@ RENAME <toColumnName> TO <fromColumnName> FROM <table_name>
 ```
 
 - Naturally <table_name> should be a loaded table in the system and <fromColumnName> should be an exsiting column in the table
-- <toColumnName> should not be another column in the table
+- \<toColumnName> should not be another column in the table 
 
 Run: `RENAME b TO c FROM B`
 
@@ -207,7 +207,7 @@ Syntax
 ```
 
 - Both the tables being crossed should exist in the system
-- If there are columns with the same names in the two tables, the columns are indexed with the table name. If both tables being crossed are the same, table names are indexed with '1' and '2'
+- If there are columns with the same names in the two tables, the columns are indexed with the table tableName. If both tables being crossed are the same, table names are indexed with '1' and '2'
 
 Run: `cross_AA <- CROSS A A`
 
@@ -300,7 +300,7 @@ Syntax
 SOURCE <query_name>
 ```
 - Special command that takes in a file script from the data directory
-- file name should end in ".ra" indicating it's a query file
+- file tableName should end in ".ra" indicating it's a query file
 - File to be present in the data folder
 - Used in last phase of project
 

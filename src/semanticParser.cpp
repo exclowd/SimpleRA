@@ -1,8 +1,8 @@
 #include"global.h"
 
 bool semanticParse() {
-    logger.log("semanticParse");
-    switch (parsedQuery.queryType) {
+    logger->log("semanticParse");
+    switch (parsedQuery->queryType) {
         case CLEAR:
             return semanticParseCLEAR();
         case CROSS:
@@ -11,16 +11,26 @@ bool semanticParse() {
             return semanticParseDISTINCT();
         case EXPORT:
             return semanticParseEXPORT();
+        case EXPORTMATRIX:
+            return semanticParseEXPORTMATRIX();
+        case GROUPBY:
+            return semanticParseGROUPBY();
         case INDEX:
             return semanticParseINDEX();
         case JOIN:
             return semanticParseJOIN();
         case LIST:
             return semanticParseLIST();
+        case LISTMATRIX:
+            return semanticParseLISTMATRIX();
         case LOAD:
             return semanticParseLOAD();
+        case LOADMATRIX:
+            return semanticParseLOADMATRIX();
         case PRINT:
             return semanticParsePRINT();
+        case PRINTMATRIX:
+            return semanticParsePRINTMATRIX();
         case PROJECTION:
             return semanticParsePROJECTION();
         case RENAME:
@@ -31,6 +41,8 @@ bool semanticParse() {
             return semanticParseSORT();
         case SOURCE:
             return semanticParseSOURCE();
+        case TRANSPOSE:
+            return semanticParseTRANSPOSE();
         default:
             cout << "SEMANTIC ERROR" << endl;
     }

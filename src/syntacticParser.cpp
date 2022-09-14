@@ -1,7 +1,8 @@
 #include "global.h"
+#include <sys/stat.h>
 
 bool syntacticParse() {
-    logger.log("syntacticParse");
+    logger->log("syntacticParse");
     string possibleQueryType = tokenizedQuery[0];
 
     if (tokenizedQuery.size() < 2) {
@@ -14,17 +15,19 @@ bool syntacticParse() {
     else if (possibleQueryType == "INDEX")
         return syntacticParseINDEX();
     else if (possibleQueryType == "LIST")
-        return syntacticParseLIST();
+        return tokenizedQuery[1] == "MATRIX" ? syntacticParseLISTMATRIX() : syntacticParseLIST();
     else if (possibleQueryType == "LOAD")
-        return syntacticParseLOAD();
+        return tokenizedQuery[1] == "MATRIX" ? syntacticParseLOADMATRIX() : syntacticParseLOAD();
     else if (possibleQueryType == "PRINT")
-        return syntacticParsePRINT();
+        return tokenizedQuery[1] == "MATRIX" ? syntacticParsePRINTMATRIX() : syntacticParsePRINT();
     else if (possibleQueryType == "RENAME")
         return syntacticParseRENAME();
     else if (possibleQueryType == "EXPORT")
-        return syntacticParseEXPORT();
+        return tokenizedQuery[1] == "MATRIX" ? syntacticParseEXPORTMATRIX() : syntacticParseEXPORT();
     else if (possibleQueryType == "SOURCE")
         return syntacticParseSOURCE();
+    else if (possibleQueryType == "TRANSPOSE")
+        return syntacticParseTRANSPOSE();
     else {
         string resultantRelationName = possibleQueryType;
         if (tokenizedQuery[1] != "<-" || tokenizedQuery.size() < 3) {
@@ -44,6 +47,8 @@ bool syntacticParse() {
             return syntacticParseDISTINCT();
         else if (possibleQueryType == "SORT")
             return syntacticParseSORT();
+        else if (possibleQueryType == "GROUP")
+            return syntacticParseGROUPBY();
         else {
             cout << "SYNTAX ERROR" << endl;
             return false;
@@ -55,7 +60,7 @@ bool syntacticParse() {
 ParsedQuery::ParsedQuery() = default;
 
 void ParsedQuery::clear() {
-    logger.log("ParseQuery::clear");
+    logger->log("ParseQuery::clear");
     this->queryType = UNDETERMINED;
 
     this->clearRelationName = "";
@@ -68,21 +73,27 @@ void ParsedQuery::clear() {
     this->distinctRelationName = "";
 
     this->exportRelationName = "";
+    this->exportMatrixName = "";
 
-    this->indexingStrategy = NOTHING;
+
+    this->indexingStrategy = IndexingStrategy::NOTHING;
     this->indexColumnName = "";
     this->indexRelationName = "";
 
     this->joinBinaryOperator = NO_BINOP_CLAUSE;
     this->joinResultRelationName = "";
+    this->joinStrategy = NO_JOIN_CLAUSE;
     this->joinFirstRelationName = "";
     this->joinSecondRelationName = "";
     this->joinFirstColumnName = "";
     this->joinSecondColumnName = "";
+    this->joinBufferSize = 0;
 
     this->loadRelationName = "";
+    this->loadMatrixName = "";
 
     this->printRelationName = "";
+    this->printMatrixName = "";
 
     this->projectionResultRelationName = "";
     this->projectionColumnList.clear();
@@ -106,6 +117,8 @@ void ParsedQuery::clear() {
     this->sortRelationName = "";
 
     this->sourceFileName = "";
+
+    this->transposeMatrixName = "";
 }
 
 /**
@@ -116,7 +129,7 @@ void ParsedQuery::clear() {
  * @return true 
  * @return false 
  */
-bool isFileExists(const string& tableName) {
+bool isFileExists(const string &tableName) {
     string fileName = "../data/" + tableName + ".csv";
     struct stat buffer{};
     return (stat(fileName.c_str(), &buffer) == 0);

@@ -1,6 +1,9 @@
 #pragma once
 
 #include "page.h"
+#include "hashPage.h"
+#include "matrixPage.h"
+#include <deque>
 
 /**
  * @brief The BufferManager is responsible for reading pages to the main memory.
@@ -23,26 +26,49 @@
  *
  */
 class BufferManager {
-
-    deque<Page> pages;
-
-    bool inPool(const string& pageName);
-
-    Page getFromPool(const string& pageName);
-
-    Page insertIntoPool(string tableName, int pageIndex);
-
 public:
+    deque<PageBase *> pages;
+
+    bool inPool(const string &pageName);
+
+    PageBase *getFromPool(const string &pageName);
+
+    Page *insertIntoPool(const string &tblName, size_t pageIndex);
+
+    MatrixPage *insertIntoPool(const string &matName, size_t rowIndex, size_t colIndex);
+
+    MatrixPageSparse *insertIntoPoolSparse(const string &matName, size_t pgIndex);
 
     BufferManager();
 
-    Page getPage(string tableName, int pageIndex);
+    static void deleteFile(const string &fileName);
 
-    void writePage(string pageName, vector<vector<int>> rows);
+    Page getPage(const string &tableName, size_t pgIndex);
 
-    void deleteFile(const string& tableName, int pageIndex);
+    void updatePage(const string &tableName, size_t pgIndex);
 
-    static void deleteFile(const string& fileName);
+    static void writePage(const string &tableName, size_t pgIndex, const vector<vector<int>> &rows, int rowCount);
 
-    static void writePage(string tableName, int pageIndex, vector<vector<int>> rows, int rowCount);
+    void deleteFile(const string &tableName, int pgIndex);
+
+    MatrixPage getPage(const string &matrixName, size_t rowIndex, size_t colIndex);
+
+    MatrixPageSparse getPageSparse(const string &matrixName, size_t pgIndex);
+
+    void updatePage(const string &matrixName, size_t rowIndex, size_t colIndex);
+
+    void updatePageSparse(const string &matrixName, size_t pgIndex);
+
+    static void writePage(const string &matrixName, size_t rowIndex, size_t colIndex, const vector<vector<int>> &data,
+                          size_t rCount, size_t cCount);
+
+    static void
+    writePageSparse(const string &matrixName, size_t pgIndex, const vector<tuple<size_t, size_t, int>> &data,
+                    size_t rCount);
+
+    void deleteFile(const string &matrixName, size_t rowIndex, size_t colIndex);
+
+    void deleteFileSparse(const string &matrixName, size_t pgIndex);
+
+    void cleanUp();
 };

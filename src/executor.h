@@ -12,15 +12,25 @@ void executeDISTINCT();
 
 void executeEXPORT();
 
+void executeEXPORTMATRIX();
+
+void executeGROUPBY();
+
 void executeINDEX();
 
 void executeJOIN();
 
 void executeLIST();
 
+void executeLISTMATRIX();
+
 void executeLOAD();
 
+void executeLOADMATRIX();
+
 void executePRINT();
+
+void executePRINTMATRIX();
 
 void executePROJECTION();
 
@@ -32,6 +42,11 @@ void executeSORT();
 
 void executeSOURCE();
 
+void executeTRANSPOSE();
+
 bool evaluateBinOp(int value1, int value2, BinaryOperator binaryOperator);
 
-void printRowCount(int rowCount);
+template<typename T>
+void printRowCount(T rowCount) {
+    cout << "\n\nRow Count: " << rowCount << endl;
+}
