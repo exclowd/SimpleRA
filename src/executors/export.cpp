@@ -1,8 +1,8 @@
 #include "../global.h"
 
 /**
- * @brief 
- * SYNTAX: EXPORT <relation_name> 
+ * @brief
+ * SYNTAX: EXPORT <relation_name>
  */
 
 bool syntacticParseEXPORT() {
@@ -18,7 +18,7 @@ bool syntacticParseEXPORT() {
 
 bool semanticParseEXPORT() {
     logger->log("semanticParseEXPORT");
-    //Table should exist
+    // Table should exist
     if (tableCatalogue->isTable(parsedQuery->exportRelationName))
         return true;
     cout << "SEMANTIC ERROR: No such relation exists" << endl;

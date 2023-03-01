@@ -1,9 +1,10 @@
 #pragma once
 
+#include <cassert>
+#include <vector>
+
 #include "executor.h"
 #include "partitionCatalogue.h"
-#include <vector>
-#include <cassert>
 
 extern const size_t BLOCK_SIZE;
 extern const size_t BLOCK_COUNT;

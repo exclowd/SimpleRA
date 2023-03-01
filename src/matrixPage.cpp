@@ -1,9 +1,10 @@
+#include "matrixPage.h"
+
+#include <cassert>
 #include <utility>
+#include <vector>
 
 #include "global.h"
-#include "matrixPage.h"
-#include <vector>
-#include <cassert>
 
 /**
  * @brief Construct a new MatrixPage:: MatrixPage object given the matrix entityName and page
@@ -26,8 +27,8 @@ MatrixPage::MatrixPage(const string &matName, size_t rowIndex, size_t colIndex) 
     this->columnCount = matrix.columnsPerBlockCount[colIndex];
     this->data.assign(rowCount, vector<int>(columnCount));
     ifstream fin(pageName, ios::in);
-    for (int rowCounter = 0; rowCounter < (int) this->rowCount; rowCounter++) {
-        for (int columnCounter = 0; columnCounter < (int) this->columnCount; columnCounter++) {
+    for (int rowCounter = 0; rowCounter < (int)this->rowCount; rowCounter++) {
+        for (int columnCounter = 0; columnCounter < (int)this->columnCount; columnCounter++) {
             int number;
             fin >> number;
             this->data[rowCounter][columnCounter] = number;
@@ -35,7 +36,6 @@ MatrixPage::MatrixPage(const string &matName, size_t rowIndex, size_t colIndex) 
     }
     fin.close();
 }
-
 
 MatrixPage::MatrixPage(const string &matName, size_t rowIndex, size_t colIndex,
                        vector<vector<int>> _data, size_t rCount, size_t cCount) {
@@ -49,13 +49,13 @@ MatrixPage::MatrixPage(const string &matName, size_t rowIndex, size_t colIndex,
 
 /**
  * @brief writes current page contents to file.
- * 
+ *
  */
 void MatrixPage::writePage() {
     logger->log("MatrixPage::writePage");
     ofstream fout(this->pageName, ios::trunc);
-    for (int rowCounter = 0; rowCounter < (int) this->rowCount; rowCounter++) {
-        for (int columnCounter = 0; columnCounter < (int) this->columnCount; columnCounter++) {
+    for (int rowCounter = 0; rowCounter < (int)this->rowCount; rowCounter++) {
+        for (int columnCounter = 0; columnCounter < (int)this->columnCount; columnCounter++) {
             if (columnCounter != 0)
                 fout << " ";
             fout << this->data[rowCounter][columnCounter];
@@ -64,7 +64,6 @@ void MatrixPage::writePage() {
     }
     fout.close();
 }
-
 
 /**
  * SPARSE MATRIX
@@ -91,14 +90,13 @@ MatrixPageSparse::MatrixPageSparse(const string &matName, size_t pgIndex) {
     assert(matrix.columnsPerBlockCount[pgIndex] == 3);
     this->columnCount = matrix.columnsPerBlockCount[pgIndex];
     ifstream fin(pageName, ios::in);
-    for (int rowCounter = 0; rowCounter < (int) this->rowCount; rowCounter++) {
+    for (int rowCounter = 0; rowCounter < (int)this->rowCount; rowCounter++) {
         int x, y, z;
         fin >> x >> y >> z;
         this->data.emplace_back(x, y, z);
     }
     fin.close();
 }
-
 
 MatrixPageSparse::MatrixPageSparse(const string &matName, size_t pgIndex, vector<tuple<size_t, size_t, int>> _data,
                                    size_t rCount) {
@@ -118,7 +116,7 @@ void MatrixPageSparse::writePage() {
     logger->log("MatrixPageSparse::writePage");
     logger->debug("Write page to disk");
     ofstream fout(this->pageName, ios::trunc);
-    for (int rowCounter = 0; rowCounter < (int) this->rowCount; rowCounter++) {
+    for (int rowCounter = 0; rowCounter < (int)this->rowCount; rowCounter++) {
         fout << get<0>(this->data[rowCounter]) << " " << get<1>(this->data[rowCounter]) << " "
              << get<2>(this->data[rowCounter]) << "\n";
     }

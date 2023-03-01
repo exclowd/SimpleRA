@@ -1,7 +1,6 @@
-#include"global.h"
+#include "global.h"
 
 void executeCommand() {
-
     switch (parsedQuery->queryType) {
         case CLEAR:
             executeCLEAR();
@@ -65,5 +64,4 @@ void executeCommand() {
         default:
             cout << "PARSING ERROR" << endl;
     }
-
 }

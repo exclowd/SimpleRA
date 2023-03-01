@@ -1,10 +1,11 @@
-#include <utility>
-#include <vector>
+#include "bufferManager.h"
+
 #include <algorithm>
 #include <cassert>
+#include <utility>
+#include <vector>
 
 #include "global.h"
-#include "bufferManager.h"
 #include "matrixPage.h"
 
 BufferManager::BufferManager() {
@@ -14,9 +15,9 @@ BufferManager::BufferManager() {
 /**
  * @brief Checks to see if a page exists in the pool
  *
- * @param pageName 
- * @return true 
- * @return false 
+ * @param pageName
+ * @return true
+ * @return false
  */
 bool BufferManager::inPool(const string &pageName) {
     logger->log("BufferManager::inPool");
@@ -28,12 +29,12 @@ bool BufferManager::inPool(const string &pageName) {
  * page. Note that this function will fail if the page is not present in the
  * pool.
  *
- * @param pageName 
- * @return Page 
+ * @param pageName
+ * @return Page
  */
 PageBase *BufferManager::getFromPool(const string &pageName) {
     logger->log("BufferManager::getFromPool");
-    for (auto page: this->pages)
+    for (auto page : this->pages)
         if (pageName == page->pageName)
             return page;
     return nullptr;
@@ -42,11 +43,11 @@ PageBase *BufferManager::getFromPool(const string &pageName) {
 /**
  * @brief Inserts page indicated by entityName and pageIndex into pool. If the
  * pool is full, the pool ejects the oldest inserted page from the pool and adds
- * the current page at the end. It naturally follows a queue data structure. 
+ * the current page at the end. It naturally follows a queue data structure.
  *
  * @param tblName
- * @param pageIndex 
- * @return Page 
+ * @param pageIndex
+ * @return Page
  */
 Page *BufferManager::insertIntoPool(const string &tblName, size_t pageIndex) {
     logger->log("BufferManager::insertIntoPool");
@@ -60,7 +61,6 @@ Page *BufferManager::insertIntoPool(const string &tblName, size_t pageIndex) {
     pages.push_back(page);
     return page;
 }
-
 
 /**
  * @brief Inserts page indicated by entityName and pageIndex into pool. If the
@@ -139,10 +139,10 @@ Page BufferManager::getPage(const string &tableName, size_t pgIndex) {
  * @brief The buffer manager is also responsible for writing pages. This is
  * called when new tables are created using assignment statements.
  *
- * @param tableName 
+ * @param tableName
  * @param pgIndex
- * @param rows 
- * @param rowCount 
+ * @param rows
+ * @param rowCount
  */
 void BufferManager::writePage(const string &tableName, size_t pgIndex, const vector<vector<int>> &rows, int rowCount) {
     logger->log("BufferManager::writePage");
@@ -181,7 +181,6 @@ MatrixPage BufferManager::getPage(const string &matrixName, size_t rowIndex, siz
     }
 }
 
-
 MatrixPageSparse BufferManager::getPageSparse(const string &matrixName, size_t pgIndex) {
     logger->log("BufferManager::getPageSparse");
     string pageName = "../data/temp/" + matrixName + "_MSPage" + to_string(pgIndex);
@@ -200,9 +199,8 @@ MatrixPageSparse BufferManager::getPageSparse(const string &matrixName, size_t p
  * @param rows
  * @param rowCount
  */
-void
-BufferManager::writePage(const string &matrixName, size_t rowIndex, size_t colIndex, const vector<vector<int>> &data,
-                         size_t rCount, size_t cCount) {
+void BufferManager::writePage(const string &matrixName, size_t rowIndex, size_t colIndex, const vector<vector<int>> &data,
+                              size_t rCount, size_t cCount) {
     logger->log("BufferManager::writePage");
     assert(data.size() == rCount);
     assert(data[0].size() == cCount);
@@ -225,9 +223,8 @@ BufferManager::writePage(const string &matrixName, size_t rowIndex, size_t colIn
  * @param rows
  * @param rowCount
  */
-void
-BufferManager::writePageSparse(const string &matrixName, size_t pgIndex, const vector<tuple<size_t, size_t, int>> &data,
-                               size_t rCount) {
+void BufferManager::writePageSparse(const string &matrixName, size_t pgIndex, const vector<tuple<size_t, size_t, int>> &data,
+                                    size_t rCount) {
     logger->log("BufferManager::writePageSparse");
     MatrixPageSparse page(matrixName, pgIndex, data, rCount);
     page.writePage();
@@ -246,7 +243,6 @@ void BufferManager::deleteFile(const string &matrixName, size_t rowIndex, size_t
     this->deleteFile(fileName);
 }
 
-
 void BufferManager::deleteFileSparse(const string &matrixName, size_t pgIndex) {
     logger->log("BufferManager::deleteFileSparse");
     string fileName = "../data/temp/" + matrixName + "_MSPage" + to_string(pgIndex);
@@ -257,7 +253,7 @@ void BufferManager::updatePage(const string &tableName, size_t pgIndex) {
     logger->log("BufferManager::updatePage");
     string pageName = "../data/temp/" + tableName + "_Page" + to_string(pgIndex);
     if (this->inPool(pageName)) {
-        for (auto &page: this->pages)
+        for (auto &page : this->pages)
             if (pageName == page->pageName) {
                 delete page;
                 page = new Page(tableName, pgIndex);
@@ -269,7 +265,7 @@ void BufferManager::updatePage(const string &matrixName, size_t rowIndex, size_t
     logger->log("BufferManager::updatePage");
     string pageName = "../data/temp/" + matrixName + "_MPage" + to_string(rowIndex) + ":" + to_string(colIndex);
     if (this->inPool(pageName)) {
-        for (auto &page: this->pages)
+        for (auto &page : this->pages)
             if (pageName == page->pageName) {
                 delete page;
                 page = new MatrixPage(matrixName, rowIndex, colIndex);
@@ -281,7 +277,7 @@ void BufferManager::updatePageSparse(const string &matrixName, size_t pgIndex) {
     logger->log("BufferManager::updatePageSparse");
     string pageName = "../data/temp/" + matrixName + "_MSPage" + to_string(pgIndex);
     if (this->inPool(pageName)) {
-        for (auto &page: this->pages)
+        for (auto &page : this->pages)
             if (pageName == page->pageName) {
                 delete page;
                 page = new MatrixPageSparse(matrixName, pgIndex);

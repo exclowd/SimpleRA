@@ -1,7 +1,7 @@
 #include "../global.h"
 
 /**
- * @brief 
+ * @brief
  * SYNTAX: R <- PROJECT column_name1, ... FROM relation_name
  */
 bool syntacticParsePROJECTION() {
@@ -13,7 +13,7 @@ bool syntacticParsePROJECTION() {
     parsedQuery->queryType = PROJECTION;
     parsedQuery->projectionResultRelationName = tokenizedQuery[0];
     parsedQuery->projectionRelationName = tokenizedQuery[tokenizedQuery.size() - 1];
-    for (int i = 3; i < (int) tokenizedQuery.size() - 2; i++)
+    for (int i = 3; i < (int)tokenizedQuery.size() - 2; i++)
         parsedQuery->projectionColumnList.emplace_back(tokenizedQuery[i]);
     return true;
 }
@@ -32,7 +32,7 @@ bool semanticParsePROJECTION() {
     }
 
     Table table = *tableCatalogue->getTable(parsedQuery->projectionRelationName);
-    for (const auto &col: parsedQuery->projectionColumnList) {
+    for (const auto &col : parsedQuery->projectionColumnList) {
         if (!table.isColumn(col)) {
             cout << "SEMANTIC ERROR: Column doesn't exist in relation";
             return false;
@@ -47,16 +47,15 @@ void executePROJECTION() {
     Table table = *tableCatalogue->getTable(parsedQuery->projectionRelationName);
     Cursor cursor = table.getCursor();
     vector<int> columnIndices;
-    columnIndices.reserve((int) parsedQuery->projectionColumnList.size());
-    for (auto &columnCounter: parsedQuery->projectionColumnList) {
+    columnIndices.reserve((int)parsedQuery->projectionColumnList.size());
+    for (auto &columnCounter : parsedQuery->projectionColumnList) {
         columnIndices.emplace_back(table.getColumnIndex(columnCounter));
     }
     vector<int> row = cursor.getNext();
     vector<int> resultantRow(columnIndices.size(), 0);
 
     while (!row.empty()) {
-
-        for (int columnCounter = 0; columnCounter < (int) columnIndices.size(); columnCounter++) {
+        for (int columnCounter = 0; columnCounter < (int)columnIndices.size(); columnCounter++) {
             resultantRow[columnCounter] = row[columnIndices[columnCounter]];
         }
         resultantTable->writeRow<int>(resultantRow);

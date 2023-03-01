@@ -1,8 +1,8 @@
-#include "global.h"
-
 #include <algorithm>
-#include <sstream>
 #include <regex>
+#include <sstream>
+
+#include "global.h"
 
 /**
  * @brief Construct a new Table:: Table object
@@ -41,8 +41,8 @@ Table::Table(const string &tblName, const vector<string> &c) {
     this->columnCount = c.size();
     this->distinctValuesInColumns.assign(this->columnCount, {});
     this->distinctValuesPerColumnCount.assign(this->columnCount, 0);
-    this->maxRowsPerBlock = (size_t) ((BLOCK_SIZE * 1024) / (sizeof(int) * columnCount));
-//    this->writeRow<string>(c);
+    this->maxRowsPerBlock = (size_t)((BLOCK_SIZE * 1024) / (sizeof(int) * columnCount));
+    //    this->writeRow<string>(c);
 }
 
 /**
@@ -50,8 +50,8 @@ Table::Table(const string &tblName, const vector<string> &c) {
  * reads data from the source file, splits it into blocks and updates table
  * statistics.
  *
- * @return true if the table has been successfully loaded 
- * @return false if an error occurred 
+ * @return true if the table has been successfully loaded
+ * @return false if an error occurred
  */
 bool Table::load() {
     logger->log("Table::load");
@@ -69,9 +69,9 @@ bool Table::load() {
 
 /**
  * @brief Function extracts column names from the header line of the .csv data
- * file. 
+ * file.
  *
- * @param line 
+ * @param line
  * @return true if column names successfully extracted (i.e. no column entityName
  * repeats)
  * @return false otherwise
@@ -89,13 +89,13 @@ bool Table::extractColumnNames(const string &firstLine) {
         this->columns.emplace_back(word);
     }
     this->columnCount = this->columns.size();
-    this->maxRowsPerBlock = (size_t) ((BLOCK_SIZE * 1024) / (sizeof(int) * this->columnCount));
+    this->maxRowsPerBlock = (size_t)((BLOCK_SIZE * 1024) / (sizeof(int) * this->columnCount));
     return true;
 }
 
 /**
  * @brief This function splits all the rows and stores them in multiple files of
- * one block size. 
+ * one block size.
  *
  * @return true if successfully blockified
  * @return false otherwise
@@ -111,10 +111,10 @@ bool Table::blockify() {
     this->distinctValuesInColumns.assign(this->columnCount, temp);
     this->distinctValuesPerColumnCount.assign(this->columnCount, 0);
     regex numeric("[-]?[0-9]+");
-    getline(fin, line); // throw away columns
+    getline(fin, line);  // throw away columns
     while (getline(fin, line)) {
         stringstream s(line);
-        for (int columnCounter = 0; columnCounter < (int) this->columnCount; columnCounter++) {
+        for (int columnCounter = 0; columnCounter < (int)this->columnCount; columnCounter++) {
             if (!getline(s, word, ','))
                 return false;
             if (!regex_match(word, numeric)) {
@@ -125,7 +125,7 @@ bool Table::blockify() {
         }
         pageCounter++;
         this->updateStatistics(row);
-        if (pageCounter == (int) this->maxRowsPerBlock) {
+        if (pageCounter == (int)this->maxRowsPerBlock) {
             BufferManager::writePage(this->tableName, this->blockCount, rowsInPage, pageCounter);
             this->blockCount++;
             this->rowsPerBlockCount.emplace_back(pageCounter);
@@ -151,11 +151,11 @@ bool Table::blockify() {
  * the number of distinct values present in each column. These statistics are to
  * be used during optimisation.
  *
- * @param row 
+ * @param row
  */
 void Table::updateStatistics(vector<int> row) {
     this->rowCount++;
-    for (int columnCounter = 0; columnCounter < (int) this->columnCount; columnCounter++) {
+    for (int columnCounter = 0; columnCounter < (int)this->columnCount; columnCounter++) {
         if (!this->distinctValuesInColumns[columnCounter].count(row[columnCounter])) {
             this->distinctValuesInColumns[columnCounter].insert(row[columnCounter]);
             this->distinctValuesPerColumnCount[columnCounter]++;
@@ -166,9 +166,9 @@ void Table::updateStatistics(vector<int> row) {
 /**
  * @brief Checks if the given column is present in this table.
  *
- * @param columnName 
- * @return true 
- * @return false 
+ * @param columnName
+ * @return true
+ * @return false
  */
 bool Table::isColumn(const string &columnName) {
     logger->log("Table::isColumn");
@@ -182,12 +182,12 @@ bool Table::isColumn(const string &columnName) {
  * assumed that checks such as the existence of fromColumnName and the non prior
  * existence of toColumnName are done.
  *
- * @param fromColumnName 
- * @param toColumnName 
+ * @param fromColumnName
+ * @param toColumnName
  */
 void Table::renameColumn(const string &fromColumnName, const string &toColumnName) {
     logger->log("Table::renameColumn");
-    for (int columnCounter = 0; columnCounter < (int) this->columnCount; columnCounter++) {
+    for (int columnCounter = 0; columnCounter < (int)this->columnCount; columnCounter++) {
         if (columns[columnCounter] == fromColumnName) {
             columns[columnCounter] = toColumnName;
             break;
@@ -205,12 +205,12 @@ void Table::print() {
     logger->log("Table::print");
     size_t count = min(PRINT_COUNT, this->rowCount);
 
-    //print headings
+    // print headings
     this->writeRow(this->columns, cout);
 
     Cursor cursor(this->tableName, 0);
     vector<int> row;
-    for (int rowCounter = 0; rowCounter < (int) count; rowCounter++) {
+    for (int rowCounter = 0; rowCounter < (int)count; rowCounter++) {
         row = cursor.getNext();
         this->writeRow(row, cout);
     }
@@ -221,13 +221,13 @@ void Table::print() {
  * @brief This function returns one row of the table using the cursor object. It
  * returns an empty row is all rows have been read.
  *
- * @param cursor 
- * @return vector<int> 
+ * @param cursor
+ * @return vector<int>
  */
 void Table::getNextPage(Cursor *cursor) const {
     logger->log("Table::getNext");
 
-    if (cursor->pageIndex < (int) this->blockCount - 1) {
+    if (cursor->pageIndex < (int)this->blockCount - 1) {
         cursor->nextPage(cursor->pageIndex + 1);
     }
 }
@@ -244,12 +244,12 @@ void Table::makePermanent() {
     string newSourceFile = "../data/" + this->tableName + ".csv";
     ofstream fout(newSourceFile, ios::out);
 
-    //print headings
+    // print headings
     this->writeRow(this->columns, fout);
 
     Cursor cursor(this->tableName, 0);
     vector<int> row;
-    for (int rowCounter = 0; rowCounter < (int) this->rowCount; rowCounter++) {
+    for (int rowCounter = 0; rowCounter < (int)this->rowCount; rowCounter++) {
         row = cursor.getNext();
         this->writeRow(row, fout);
     }
@@ -276,7 +276,7 @@ bool Table::isPermanent() const {
  */
 void Table::unload() const {
     logger->log("Table::~unload");
-    for (int pageCounter = 0; pageCounter < (int) this->blockCount; pageCounter++)
+    for (int pageCounter = 0; pageCounter < (int)this->blockCount; pageCounter++)
         bufferManager->deleteFile(this->tableName, pageCounter);
     if (!isPermanent())
         BufferManager::deleteFile(this->sourceFileName);
@@ -284,8 +284,8 @@ void Table::unload() const {
 
 /**
  * @brief Function that returns a cursor that reads rows from this table
- * 
- * @return Cursor 
+ *
+ * @return Cursor
  */
 Cursor Table::getCursor() const {
     logger->log("Table::getCursor");
@@ -295,13 +295,13 @@ Cursor Table::getCursor() const {
 
 /**
  * @brief Function that returns the index of column indicated by columnName
- * 
- * @param columnName 
- * @return int 
+ *
+ * @param columnName
+ * @return int
  */
 int Table::getColumnIndex(const string &columnName) {
     logger->log("Table::getColumnIndex");
-    for (int columnCounter = 0; columnCounter < (int) this->columnCount; columnCounter++) {
+    for (int columnCounter = 0; columnCounter < (int)this->columnCount; columnCounter++) {
         if (this->columns[columnCounter] == columnName)
             return columnCounter;
     }

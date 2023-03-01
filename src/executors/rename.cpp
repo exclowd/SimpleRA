@@ -1,7 +1,7 @@
 #include "../global.h"
 
 /**
- * @brief 
+ * @brief
  * SYNTAX: RENAME column_name TO column_name FROM relation_name
  */
 bool syntacticParseRENAME() {

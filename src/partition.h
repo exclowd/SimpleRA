@@ -2,17 +2,16 @@
 // Created by exclowd on 28/11/21.
 //
 
-
 #ifndef SIMPLERA_PARTITION_H
 #define SIMPLERA_PARTITION_H
 
 #include <map>
-#include <vector>
 #include <string>
+#include <vector>
+
 #include "hashPage.h"
 
 struct Partition {
-
     explicit Partition(string _tableName, const vector<string> &c);
 
     ~Partition() = default;
@@ -27,5 +26,4 @@ struct Partition {
     vector<size_t> rowsPerBlockCount{};
 };
 
-
-#endif //SIMPLERA_PARTITION_H
+#endif  // SIMPLERA_PARTITION_H

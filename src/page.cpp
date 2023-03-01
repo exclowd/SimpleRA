@@ -1,7 +1,7 @@
 #include <utility>
+#include <vector>
 
 #include "global.h"
-#include <vector>
 
 /**
  * @brief Construct a new Page object. Never used as part of the code
@@ -40,9 +40,9 @@ Page::Page(const string &tblName, size_t pgIndex) {
     this->rowCount = table.rowsPerBlockCount[pgIndex];
     this->rows.resize(rowCount);
     int number;
-    for (int rowCounter = 0; rowCounter < (int) this->rowCount; rowCounter++) {
+    for (int rowCounter = 0; rowCounter < (int)this->rowCount; rowCounter++) {
         vector<int> temp;
-        for (int columnCounter = 0; columnCounter < (int) columnCount; columnCounter++) {
+        for (int columnCounter = 0; columnCounter < (int)columnCount; columnCounter++) {
             fin >> number;
             temp.push_back(number);
         }
@@ -53,15 +53,15 @@ Page::Page(const string &tblName, size_t pgIndex) {
 
 /**
  * @brief Get row from page indexed by rowIndex
- * 
- * @param rowIndex 
- * @return vector<int> 
+ *
+ * @param rowIndex
+ * @return vector<int>
  */
 vector<int> Page::getRow(int rowIndex) {
     logger->log("Page::getRow");
     vector<int> result;
     result.clear();
-    if (rowIndex >= (int) this->rowCount)
+    if (rowIndex >= (int)this->rowCount)
         return result;
     return this->rows[rowIndex];
 }
@@ -71,20 +71,20 @@ Page::Page(string tblName, size_t pgIndex, vector<vector<int>> _rows, int rCount
     this->entityName = std::move(tblName);
     this->rows = _rows;
     this->rowCount = rCount;
-    this->columnCount = (int) _rows[0].size();
+    this->columnCount = (int)_rows[0].size();
     this->pageName = "../data/temp/" + this->entityName + "_Page" + to_string(pgIndex);
 }
 
 /**
  * @brief writes current page contents to file.
- * 
+ *
  */
 void Page::writePage() {
     logger->log("Page::writePage");
     logger->debug("Write page: " + this->pageName + " to disk ");
     ofstream fout(this->pageName, ios::trunc);
-    for (int rowCounter = 0; rowCounter < (int) this->rowCount; rowCounter++) {
-        for (int columnCounter = 0; columnCounter < (int) this->columnCount; columnCounter++) {
+    for (int rowCounter = 0; rowCounter < (int)this->rowCount; rowCounter++) {
+        for (int columnCounter = 0; columnCounter < (int)this->columnCount; columnCounter++) {
             if (columnCounter != 0)
                 fout << " ";
             fout << this->rows[rowCounter][columnCounter];

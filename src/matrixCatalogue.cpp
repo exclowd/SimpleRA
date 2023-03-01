@@ -2,7 +2,7 @@
 // Created by exclowd on 9/10/21.
 //
 #include "global.h"
-//#include "matrixCatalogue.h"
+// #include "matrixCatalogue.h"
 
 void MatrixCatalogue::insertMatrix(Matrix *matrix) {
     logger->log("MatrixCatalogue::insertMatrix");
@@ -33,7 +33,7 @@ void MatrixCatalogue::print() {
     cout << "\nMATRICES" << endl;
 
     int rowCount = 0;
-    for (const auto &rel: this->matrices) {
+    for (const auto &rel : this->matrices) {
         cout << rel.first << endl;
         rowCount++;
     }
@@ -42,7 +42,7 @@ void MatrixCatalogue::print() {
 
 MatrixCatalogue::~MatrixCatalogue() {
     logger->log("MatrixCatalogue::~MatrixCatalogue");
-    for (const auto &matrix: this->matrices) {
+    for (const auto &matrix : this->matrices) {
         matrix.second->unload();
         delete matrix.second;
     }

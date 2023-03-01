@@ -1,7 +1,7 @@
 #include "../global.h"
 
 /**
- * @brief 
+ * @brief
  * SYNTAX: PRINT relation_name
  */
 bool syntacticParsePRINTMATRIX() {

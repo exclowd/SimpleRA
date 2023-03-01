@@ -1,8 +1,8 @@
 #pragma once
 
-#include "cursor.h"
 #include <unordered_set>
 
+#include "cursor.h"
 
 enum class IndexingStrategy {
     BTREE,
@@ -16,13 +16,13 @@ enum class IndexingStrategy {
  * and the buffer manager. There are typically 2 ways a table object gets
  * created through the course of the workflow - the first is by using the LOAD
  * command and the second is to use assignment statements (SELECT, PROJECT,
- * JOIN, SORT, CROSS and DISTINCT). 
+ * JOIN, SORT, CROSS and DISTINCT).
  *
  */
 class Table {
     vector<unordered_set<int>> distinctValuesInColumns;
 
-public:
+   public:
     string sourceFileName;
     string tableName;
     vector<string> columns;
@@ -69,16 +69,16 @@ public:
     void unload() const;
 
     /**
- * @brief Static function that takes a vector of valued and prints them out in a
- * comma seperated format.
- *
- * @tparam T current usaages include int and string
- * @param row 
- */
-    template<typename T>
+     * @brief Static function that takes a vector of valued and prints them out in a
+     * comma seperated format.
+     *
+     * @tparam T current usaages include int and string
+     * @param row
+     */
+    template <typename T>
     void writeRow(vector<T> row, ostream &fout) {
         logger->log("Table::writeRow");
-        for (int columnCounter = 0; columnCounter < (int) row.size(); columnCounter++) {
+        for (int columnCounter = 0; columnCounter < (int)row.size(); columnCounter++) {
             if (columnCounter != 0)
                 fout << ", ";
             fout << row[columnCounter];
@@ -86,14 +86,14 @@ public:
         fout << endl;
     }
 
-/**
- * @brief Static function that takes a vector of valued and prints them out in a
- * comma seperated format.
- *
- * @tparam T current usaages include int and string
- * @param row 
- */
-    template<typename T>
+    /**
+     * @brief Static function that takes a vector of valued and prints them out in a
+     * comma seperated format.
+     *
+     * @tparam T current usaages include int and string
+     * @param row
+     */
+    template <typename T>
     void writeRow(vector<T> row) {
         logger->log("Table::writeRow");
         ofstream fout(this->sourceFileName, ios::app);

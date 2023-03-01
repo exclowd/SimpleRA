@@ -1,6 +1,7 @@
-//Server Code
-#include "global.h"
+// Server Code
 #include <regex>
+
+#include "global.h"
 
 using namespace std;
 
@@ -23,7 +24,6 @@ void doCommand() {
 }
 
 int main() {
-
     regex delim("[^\\s,]+");
     string command;
     if (system("rm -rf ../data/temp") < 0) {

@@ -1,5 +1,6 @@
-#include "global.h"
 #include <sys/stat.h>
+
+#include "global.h"
 
 bool syntacticParse() {
     logger->log("syntacticParse");
@@ -75,7 +76,6 @@ void ParsedQuery::clear() {
     this->exportRelationName = "";
     this->exportMatrixName = "";
 
-
     this->indexingStrategy = IndexingStrategy::NOTHING;
     this->indexColumnName = "";
     this->indexRelationName = "";
@@ -125,13 +125,13 @@ void ParsedQuery::clear() {
  * @brief Checks to see if source file exists. Called when LOAD command is
  * invoked.
  *
- * @param tableName 
- * @return true 
- * @return false 
+ * @param tableName
+ * @return true
+ * @return false
  */
 bool isFileExists(const string &tableName) {
     string fileName = "../data/" + tableName + ".csv";
-    struct stat buffer{};
+    struct stat buffer {};
     return (stat(fileName.c_str(), &buffer) == 0);
 }
 
@@ -139,12 +139,12 @@ bool isFileExists(const string &tableName) {
  * @brief Checks to see if source file exists. Called when SOURCE command is
  * invoked.
  *
- * @param tableName 
- * @return true 
- * @return false 
+ * @param tableName
+ * @return true
+ * @return false
  */
 bool isQueryFile(string fileName) {
     fileName = "../data/" + fileName + ".ra";
-    struct stat buffer{};
+    struct stat buffer {};
     return (stat(fileName.c_str(), &buffer) == 0);
 }

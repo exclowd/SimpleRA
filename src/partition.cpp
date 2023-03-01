@@ -3,14 +3,15 @@
 //
 
 #include "partition.h"
-#include "global.h"
 
 #include <utility>
+
+#include "global.h"
 
 Partition::Partition(string _tableName, const vector<string> &c) : tableName(std::move(_tableName)), columns(c) {
     logger->log("Partition::Partition");
     this->columnCount = c.size();
-    this->maxRowsPerBlock = (size_t) ((BLOCK_SIZE * 1024) / (sizeof(int) * columnCount));
+    this->maxRowsPerBlock = (size_t)((BLOCK_SIZE * 1024) / (sizeof(int) * columnCount));
 }
 
 void Partition::addPage(HashPage *p) {
@@ -19,4 +20,3 @@ void Partition::addPage(HashPage *p) {
     this->blockCount++;
     this->rowsPerBlockCount.push_back(p->rowCount);
 }
-

@@ -4,10 +4,11 @@
 #pragma once
 
 #include <cmath>
+
 #include "cursor.h"
 
 class Matrix {
-public:
+   public:
     Matrix() = default;
 
     explicit Matrix(const string &);
@@ -37,4 +38,3 @@ public:
     size_t size{};
     size_t blockCount{};
 };
-

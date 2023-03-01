@@ -1,7 +1,7 @@
 #include "../global.h"
 
 /**
- * @brief 
+ * @brief
  * SYNTAX: R <- DISTINCT relation_name
  */
 bool syntacticParseDISTINCT() {
@@ -18,7 +18,7 @@ bool syntacticParseDISTINCT() {
 
 bool semanticParseDISTINCT() {
     logger->log("semanticParseDISTINCT");
-    //The resultant table shouldn't exist and the table argument should
+    // The resultant table shouldn't exist and the table argument should
     if (tableCatalogue->isTable(parsedQuery->distinctResultRelationName)) {
         cout << "SEMANTIC ERROR: Resultant relation already exists" << endl;
         return false;

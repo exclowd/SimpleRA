@@ -46,7 +46,7 @@ void executeTRANSPOSE();
 
 bool evaluateBinOp(int value1, int value2, BinaryOperator binaryOperator);
 
-template<typename T>
+template <typename T>
 void printRowCount(T rowCount) {
     cout << "\n\nRow Count: " << rowCount << endl;
 }

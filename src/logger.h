@@ -1,17 +1,16 @@
 #pragma once
 
-#include<iostream>
-#include<fstream>
+#include <fstream>
+#include <iostream>
 
 using namespace std;
 
 class Logger {
-
     string logFile = "log";
     ofstream fout;
     int times = 0;
 
-public:
+   public:
     Logger();
 
     void debug(const string &logString);

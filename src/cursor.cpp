@@ -1,7 +1,8 @@
-#include "global.h"
 #include "cursor.h"
 
 #include <vector>
+
+#include "global.h"
 
 Cursor::Cursor(const string &tblName, int pgIndex) {
     logger->log("Cursor::Cursor");
@@ -16,7 +17,7 @@ Cursor::Cursor(const string &tblName, int pgIndex) {
  * current row read from the page is indicated by the pagePointer(points to row
  * in page the cursor is pointing to).
  *
- * @return vector<int> 
+ * @return vector<int>
  */
 vector<int> Cursor::getNext() {
     logger->log("Cursor::getNext");

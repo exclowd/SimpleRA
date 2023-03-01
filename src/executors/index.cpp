@@ -1,7 +1,7 @@
 #include "../global.h"
 
 /**
- * @brief 
+ * @brief
  * SYNTAX: INDEX ON column_name FROM relation_name USING indexing_strategy
  * indexing_strategy: ASC | DESC | NOTHING
  */

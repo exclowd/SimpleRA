@@ -1,7 +1,7 @@
 #include "../global.h"
 
 /**
- * @brief 
+ * @brief
  * SYNTAX: LIST TABLES
  */
 bool syntacticParseLISTMATRIX() {

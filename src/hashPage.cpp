@@ -1,10 +1,10 @@
+#include "hashPage.h"
+
 #include <utility>
+#include <vector>
 
 #include "global.h"
 #include "partition.h"
-#include "hashPage.h"
-
-#include <vector>
 
 /**
  * @brief Construct a new HashPage object. Never used as part of the code
@@ -44,9 +44,9 @@ HashPage::HashPage(const string &rsltName, size_t partition, const string &tblNa
     this->rowCount = entry->rowsPerBlockCount[pgIndex];
     this->rows.resize(rowCount);
     int number;
-    for (int rowCounter = 0; rowCounter < (int) this->rowCount; rowCounter++) {
+    for (int rowCounter = 0; rowCounter < (int)this->rowCount; rowCounter++) {
         vector<int> temp(columnCount);
-        for (int columnCounter = 0; columnCounter < (int) columnCount; columnCounter++) {
+        for (int columnCounter = 0; columnCounter < (int)columnCount; columnCounter++) {
             fin >> temp[columnCounter];
         }
         this->rows[rowCounter] = std::move(temp);
@@ -65,14 +65,14 @@ HashPage::HashPage(const string &tblName, const string &firstName, size_t partit
 
 /**
  * @brief writes current HashPage contents to file.
- * 
+ *
  */
 void HashPage::writePage() {
     logger->log("HashPage::writeHashPage");
     logger->debug("Write HashPage: " + this->tableName + " to disk ");
     ofstream fout(this->tableName, ios::trunc);
-    for (int rowCounter = 0; rowCounter < (int) this->rowCount; rowCounter++) {
-        for (int columnCounter = 0; columnCounter < (int) this->columnCount; columnCounter++) {
+    for (int rowCounter = 0; rowCounter < (int)this->rowCount; rowCounter++) {
+        for (int columnCounter = 0; columnCounter < (int)this->columnCount; columnCounter++) {
             if (columnCounter != 0)
                 fout << " ";
             fout << this->rows[rowCounter][columnCounter];

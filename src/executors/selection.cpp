@@ -1,8 +1,9 @@
-#include "../global.h"
 #include <regex>
 
+#include "../global.h"
+
 /**
- * @brief 
+ * @brief
  * SYNTAX: R <- SELECT column_name bin_op [column_name | int_literal] FROM relation_name
  */
 bool syntacticParseSELECTION() {
@@ -65,7 +66,7 @@ bool semanticParseSELECTION() {
 
     if (parsedQuery->selectType == COLUMN) {
         if (!tableCatalogue->isColumnFromTable(parsedQuery->selectionSecondColumnName,
-                                              parsedQuery->selectionRelationName)) {
+                                               parsedQuery->selectionRelationName)) {
             cout << "SEMANTIC ERROR: Column doesn't exist in relation" << endl;
             return false;
         }
@@ -104,7 +105,6 @@ void executeSELECTION() {
     if (parsedQuery->selectType == COLUMN)
         secondColumnIndex = table.getColumnIndex(parsedQuery->selectionSecondColumnName);
     while (!row.empty()) {
-
         int value1 = row[firstColumnIndex];
         int value2;
         if (parsedQuery->selectType == INT_LITERAL)

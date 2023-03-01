@@ -9,5 +9,5 @@ void Logger::log(const string &logString) {
 }
 
 void Logger::debug(const string &logString) {
-    cerr << "[DEBUG "  << times++ << "]: "  << logString << endl;
+    cerr << "[DEBUG " << times++ << "]: " << logString << endl;
 }

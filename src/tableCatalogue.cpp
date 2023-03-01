@@ -27,7 +27,6 @@ bool TableCatalogue::isTable(const string &tableName) {
     return false;
 }
 
-
 bool TableCatalogue::isColumnFromTable(const string &columnName, const string &tableName) {
     logger->log("TableCatalogue::isColumnFromTable");
     if (this->isTable(tableName)) {
@@ -43,7 +42,7 @@ void TableCatalogue::print() {
     cout << "\nRELATIONS" << endl;
 
     int rowCount = 0;
-    for (const auto &rel: this->tables) {
+    for (const auto &rel : this->tables) {
         cout << rel.first << endl;
         rowCount++;
     }
@@ -52,7 +51,7 @@ void TableCatalogue::print() {
 
 TableCatalogue::~TableCatalogue() {
     logger->log("TableCatalogue::~TableCatalogue");
-    for (const auto &table: this->tables) {
+    for (const auto &table : this->tables) {
         table.second->unload();
         delete table.second;
     }

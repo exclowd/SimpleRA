@@ -1,7 +1,7 @@
 #pragma once
 
-#include "tableCatalogue.h"
 #include "matrixCatalogue.h"
+#include "tableCatalogue.h"
 
 using namespace std;
 
@@ -58,8 +58,7 @@ enum SelectType {
 };
 
 class ParsedQuery {
-
-public:
+   public:
     QueryType queryType = UNDETERMINED;
 
     string clearRelationName;
@@ -128,8 +127,6 @@ public:
     ParsedQuery();
 
     void clear();
-
-
 };
 
 bool syntacticParse();
@@ -177,4 +174,3 @@ bool syntacticParseTRANSPOSE();
 bool isFileExists(const string &tableName);
 
 bool isQueryFile(string fileName);
-

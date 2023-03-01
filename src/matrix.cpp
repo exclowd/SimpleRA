@@ -1,10 +1,12 @@
 //
 // Created by exclowd on 9/2/21.
 //
-#include <sstream>
+#include "matrix.h"
+
 #include <algorithm>
 #include <regex>
-#include "matrix.h"
+#include <sstream>
+
 #include "global.h"
 
 Matrix::Matrix(const string &matName) {
@@ -64,11 +66,11 @@ bool Matrix::blockify() {
             if (p == 0LL) zero++;
         }
     }
-    if ((double) zero >= 0.6 * (double) this->size * (double) this->size) this->isSparse = true;
+    if ((double)zero >= 0.6 * (double)this->size * (double)this->size) this->isSparse = true;
     fin.close();
     if (this->isSparse) {
         auto nz = this->size * this->size - zero;
-        this->maxDimPerBlock = (size_t) ((BLOCK_SIZE * 1024) / (sizeof(int) * 3));
+        this->maxDimPerBlock = (size_t)((BLOCK_SIZE * 1024) / (sizeof(int) * 3));
         while (nz >= this->maxDimPerBlock) {
             nz -= this->maxDimPerBlock;
             this->rowsPerBlockCount.push_back(this->maxDimPerBlock);
@@ -155,7 +157,7 @@ void Matrix::transpose() {
     if (this->isSparse) {
         for (size_t pgIndex = 0; pgIndex < this->blockCount; pgIndex++) {
             auto p1 = bufferManager->getPageSparse(this->matrixName, pgIndex);
-            for (auto&[x, y, z]: p1.data) {
+            for (auto &[x, y, z] : p1.data) {
                 swap(x, y);
             }
             sort(p1.data.begin(), p1.data.end());
@@ -195,7 +197,7 @@ void Matrix::transpose() {
 }
 
 struct hash_pair {
-    template<class T1, class T2>
+    template <class T1, class T2>
     size_t operator()(const pair<T1, T2> &p) const {
         auto hash1 = hash<T1>{}(p.first);
         auto hash2 = hash<T2>{}(p.second);
@@ -210,16 +212,16 @@ void Matrix::print() const {
         vector<size_t> pgPtr(this->blockCount, 0);
         for (size_t pgIndex = 0; pgIndex < this->blockCount; pgIndex++) {
             auto p = bufferManager->getPageSparse(this->matrixName, pgIndex);
-            auto[a, b, c] = p.data[pgPtr[pgIndex]++];
+            auto [a, b, c] = p.data[pgPtr[pgIndex]++];
             mp[{a, b}] = {c, pgIndex};
         }
         auto getVal = [&](size_t x, size_t y) {
             if (mp.count({x, y}) != 0) {
-                auto[val, pgIndex] = mp[{x, y}];
+                auto [val, pgIndex] = mp[{x, y}];
                 mp.erase({x, y});
                 auto p = bufferManager->getPageSparse(this->matrixName, pgIndex);
                 if (pgPtr[pgIndex] != p.data.size()) {
-                    auto[a, b, c] = p.data[pgPtr[pgIndex]++];
+                    auto [a, b, c] = p.data[pgPtr[pgIndex]++];
                     mp[{a, b}] = {c, pgIndex};
                 }
                 return val;
@@ -251,7 +253,6 @@ void Matrix::print() const {
     }
 }
 
-
 void Matrix::makePermanent() {
     logger->log("Matrix::makePermanent");
     if (!this->isPermanent())
@@ -263,16 +264,16 @@ void Matrix::makePermanent() {
         vector<size_t> pgPtr(this->blockCount, 0);
         for (size_t pgIndex = 0; pgIndex < this->blockCount; pgIndex++) {
             auto p = bufferManager->getPageSparse(this->matrixName, pgIndex);
-            auto[a, b, c] = p.data[pgPtr[pgIndex]++];
+            auto [a, b, c] = p.data[pgPtr[pgIndex]++];
             mp[{a, b}] = {c, pgIndex};
         }
         auto getVal = [&](size_t x, size_t y) {
             if (mp.count({x, y}) != 0) {
-                auto[val, pgIndex] = mp[{x, y}];
+                auto [val, pgIndex] = mp[{x, y}];
                 mp.erase({x, y});
                 auto p = bufferManager->getPageSparse(this->matrixName, pgIndex);
                 if (pgPtr[pgIndex] != p.data.size()) {
-                    auto[a, b, c] = p.data[pgPtr[pgIndex]++];
+                    auto [a, b, c] = p.data[pgPtr[pgIndex]++];
                     mp[{a, b}] = {c, pgIndex};
                 }
                 return val;
@@ -323,5 +324,3 @@ void Matrix::unload() const {
         }
     }
 }
-
-

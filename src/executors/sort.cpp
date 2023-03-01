@@ -1,13 +1,14 @@
 #include <algorithm>
-#include"../global.h"
+
+#include "../global.h"
 
 /**
  * @brief File contains method to process SORT commands.
- * 
+ *
  * syntax:
  * R <- SORT relation_name BY column_name IN sorting_order
- * 
- * sorting_order = ASC | DESC 
+ *
+ * sorting_order = ASC | DESC
  */
 bool syntacticParseSORT() {
     logger->log("syntacticParseSORT");
@@ -76,8 +77,8 @@ void executeSORT() {
 
     int M = parsedQuery->sortBufferSize;
     // number of rows that can be loaded into the buffer
-    int ROWS = M * (int) table->maxRowsPerBlock;
-    int CHUNKS = ((int) table->rowCount + ROWS - 1) / ROWS;
+    int ROWS = M * (int)table->maxRowsPerBlock;
+    int CHUNKS = ((int)table->rowCount + ROWS - 1) / ROWS;
     vector<int> pagesInChunk(CHUNKS);
     auto getSortTableName = [](const string &tableName, int bufferNo) {
         return tableName + "_sort_" + to_string(bufferNo);
@@ -93,7 +94,7 @@ void executeSORT() {
     for (int it = 0; it * ROWS < table->rowCount; it++) {
         chunks[it] = new Table(getSortTableName(result->tableName, it), table->columns);
         tableCatalogue->insertTable(chunks[it]);
-        int end = min((int) table->rowCount - it * ROWS, ROWS);
+        int end = min((int)table->rowCount - it * ROWS, ROWS);
         vector<vector<int>> rows;
         rows.reserve(ROWS);
         for (int i = 0; i < end; i++) {
@@ -109,11 +110,11 @@ void executeSORT() {
             });
         }
         // Now it is time to write the sorted buffer to disk
-        for (int i = 0; i < rows.size(); i += (int) table->maxRowsPerBlock) {
-            int num = (int) min(rows.size() - i, table->maxRowsPerBlock);
+        for (int i = 0; i < rows.size(); i += (int)table->maxRowsPerBlock) {
+            int num = (int)min(rows.size() - i, table->maxRowsPerBlock);
             vector<vector<int>> temp{rows.begin() + i, rows.begin() + i + num};
             chunks[it]->rowsPerBlockCount.emplace_back(temp.size());
-            BufferManager::writePage(chunks[it]->tableName, chunks[it]->blockCount, temp, (int) temp.size());
+            BufferManager::writePage(chunks[it]->tableName, chunks[it]->blockCount, temp, (int)temp.size());
             chunks[it]->blockCount++;
         };
     }
@@ -121,9 +122,9 @@ void executeSORT() {
 
     // Now merge the runs
     int N = M - 1;
-    int passes = (int) ceil(log(CHUNKS) / log(N));
+    int passes = (int)ceil(log(CHUNKS) / log(N));
     int K = CHUNKS;
-    for (int pass = 0; pass < passes; pass++) { // logn passes
+    for (int pass = 0; pass < passes; pass++) {  // logn passes
         // load the chunks in batches on N into memory and merge
         vector<Table *> tempChunks;
         for (int it = 0; it * N < K; it++) {
@@ -149,7 +150,8 @@ void executeSORT() {
                                                 if (parsedQuery->sortingStrategy == ASC)
                                                     return I[columnIndex] < J[columnIndex];
                                                 return I[columnIndex] > J[columnIndex];
-                                            }) - mergeVector.begin();
+                                            }) -
+                                mergeVector.begin();
                 rows.push_back(mergeVector[req_index]);
                 mergeVector[req_index] = cursors[req_index].getNext();
                 for (int i = 0; i < mergeVector.size(); i++) {
@@ -166,7 +168,7 @@ void executeSORT() {
                 if (rows.size() == table->maxRowsPerBlock) {
                     tempChunks[it]->rowsPerBlockCount.emplace_back(rows.size());
                     BufferManager::writePage(tempChunks[it]->tableName, tempChunks[it]->blockCount, rows,
-                                             (int) rows.size());
+                                             (int)rows.size());
                     tempChunks[it]->blockCount++;
                     rows.clear();
                 }
@@ -177,15 +179,15 @@ void executeSORT() {
             if (!rows.empty()) {
                 tempChunks[it]->rowsPerBlockCount.emplace_back(rows.size());
                 BufferManager::writePage(tempChunks[it]->tableName, tempChunks[it]->blockCount, rows,
-                                         (int) rows.size());
+                                         (int)rows.size());
                 tempChunks[it]->blockCount++;
             }
         }
-        for (auto &x: chunks) {
+        for (auto &x : chunks) {
             tableCatalogue->deleteTable(x->tableName);
         };
         chunks.clear();
-        K = (int) tempChunks.size();
+        K = (int)tempChunks.size();
         chunks = move(tempChunks);
     }
     assert(chunks.size() == 1);
@@ -197,7 +199,7 @@ void executeSORT() {
         rows.push_back(row);
         if (rows.size() == result->maxRowsPerBlock) {
             result->rowsPerBlockCount.emplace_back(rows.size());
-            BufferManager::writePage(result->tableName, result->blockCount, rows, (int) rows.size());
+            BufferManager::writePage(result->tableName, result->blockCount, rows, (int)rows.size());
             result->blockCount++;
             rows.clear();
         }
@@ -205,7 +207,7 @@ void executeSORT() {
     }
     if (!rows.empty()) {
         result->rowsPerBlockCount.emplace_back(rows.size());
-        BufferManager::writePage(result->tableName, result->blockCount, rows, (int) rows.size());
+        BufferManager::writePage(result->tableName, result->blockCount, rows, (int)rows.size());
         result->blockCount++;
     }
     tableCatalogue->deleteTable(chunks[0]->tableName);

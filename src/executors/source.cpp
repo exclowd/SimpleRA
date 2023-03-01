@@ -1,7 +1,7 @@
 #include "../global.h"
 
 /**
- * @brief 
+ * @brief
  * SYNTAX: SOURCE filename
  */
 bool syntacticParseSOURCE() {

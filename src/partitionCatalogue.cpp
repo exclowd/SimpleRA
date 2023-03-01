@@ -3,12 +3,15 @@
 //
 
 #include "partitionCatalogue.h"
+
 #include <cassert>
 
-PartitionCatalogue::PartitionCatalogue(string _entityName, size_t sz, Table *first, Table *second) : entityName(
-        std::move(_entityName)), partitions(sz), firstName(first->tableName), secondName(second->tableName) {
+PartitionCatalogue::PartitionCatalogue(string _entityName, size_t sz, Table *first, Table *second) : entityName(std::move(_entityName)),
+                                                                                                     partitions(sz),
+                                                                                                     firstName(first->tableName),
+                                                                                                     secondName(second->tableName) {
     logger->log("PartitionCatalogue::PartitionCatalogue");
-    for (auto &x: this->partitions) {
+    for (auto &x : this->partitions) {
         x[first->tableName] = new Partition(first->tableName, first->columns);
         x[second->tableName] = new Partition(second->tableName, second->columns);
     }
@@ -16,8 +19,8 @@ PartitionCatalogue::PartitionCatalogue(string _entityName, size_t sz, Table *fir
 
 PartitionCatalogue::~PartitionCatalogue() {
     logger->log("PartitionCatalogue::~PartitionCatalogue");
-    for (auto &x: this->partitions) {
-        for (auto &[k, v]: x) {
+    for (auto &x : this->partitions) {
+        for (auto &[k, v] : x) {
             delete v;
         }
     }
@@ -36,5 +39,3 @@ void PartitionCatalogue::writePage(size_t partition, const string &tblName, Hash
     page->writePage();
     delete page;
 }
-
-

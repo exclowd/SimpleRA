@@ -1,7 +1,7 @@
 #include "../global.h"
 
 /**
- * @brief 
+ * @brief
  * SYNTAX: LOAD MATRIX relation_name
  */
 bool syntacticParseLOAD() {

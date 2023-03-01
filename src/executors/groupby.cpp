@@ -1,8 +1,9 @@
-#include "../global.h"
 #include <map>
 
+#include "../global.h"
+
 /**
- * @brief 
+ * @brief
  * SYNTAX: <new_table> <- GROUP BY <grouping_attribute> FROM <table_name> RETURN MAX|MIN|SUM|AVG(<attribute>)
  */
 bool syntacticParseGROUPBY() {
@@ -51,8 +52,8 @@ void executeGROUPBY() {
     logger->log("executeGROUPBY");
     Table *table = tableCatalogue->getTable(parsedQuery->groupByRelationName);
     auto *resultantTable = new Table(parsedQuery->groupByResultRelationName, {parsedQuery->groupByGroupingAttributeName,
-                                                                             parsedQuery->groupByOperatorName +
-                                                                             parsedQuery->groupByAttributeName});
+                                                                              parsedQuery->groupByOperatorName +
+                                                                                  parsedQuery->groupByAttributeName});
 
     int i = table->getColumnIndex(parsedQuery->groupByGroupingAttributeName);
     int j = table->getColumnIndex(parsedQuery->groupByAttributeName);
@@ -82,9 +83,9 @@ void executeGROUPBY() {
         }
         row = cursor.getNext();
     }
-//
+    //
     vector<vector<int>> rows;
-    for (const auto&[x, y]: result) {
+    for (const auto &[x, y] : result) {
         if (parsedQuery->groupByOperatorName == "AVG") {
             resultantTable->updateStatistics({x, y / count[x]});
             rows.push_back({x, y / count[x]});
@@ -95,15 +96,15 @@ void executeGROUPBY() {
 
         if (rows.size() == resultantTable->maxRowsPerBlock) {
             resultantTable->rowsPerBlockCount.emplace_back(rows.size());
-            BufferManager::writePage(resultantTable->tableName, resultantTable->blockCount, rows, (int) rows.size());
+            BufferManager::writePage(resultantTable->tableName, resultantTable->blockCount, rows, (int)rows.size());
             resultantTable->blockCount++;
             rows.clear();
         }
     }
-//
+    //
     if (!rows.empty()) {
         resultantTable->rowsPerBlockCount.emplace_back(rows.size());
-        BufferManager::writePage(resultantTable->tableName, resultantTable->blockCount, rows, (int) rows.size());
+        BufferManager::writePage(resultantTable->tableName, resultantTable->blockCount, rows, (int)rows.size());
         resultantTable->blockCount++;
         rows.clear();
     }

@@ -1,8 +1,8 @@
 #include "../global.h"
 
 /**
- * @brief 
- * SYNTAX: EXPORTMATRIX <relation_name> 
+ * @brief
+ * SYNTAX: EXPORTMATRIX <relation_name>
  */
 
 bool syntacticParseEXPORTMATRIX() {
@@ -18,7 +18,7 @@ bool syntacticParseEXPORTMATRIX() {
 
 bool semanticParseEXPORTMATRIX() {
     logger->log("semanticParseEXPORTMATRIX");
-    //Matrix should exist
+    // Matrix should exist
     if (matrixCatalogue->isMatrix(parsedQuery->exportMatrixName))
         return true;
     cout << "SEMANTIC ERROR: No such matrix exists" << endl;
